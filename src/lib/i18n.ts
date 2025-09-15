@@ -15,7 +15,9 @@ export interface I18nStrings {
   employers: string;
   government: string;
   help: string;
+  internship: string;
   login: string;
+  results?: string;
   
   // Hero
   heroTitle: string;
@@ -90,7 +92,9 @@ export const i18n: Record<Language, I18nStrings> = {
     employers: "Employers",
     government: "Government",
     help: "Help",
+    internship: "Internship",
     login: "Login",
+    results: "Results",
     
     // Hero
     heroTitle: "Prime Minister's Internship Scheme (PMIS)",
@@ -163,7 +167,9 @@ export const i18n: Record<Language, I18nStrings> = {
     employers: "Employers",
     government: "Government",
     help: "Help",
+    internship: "Internship",
     login: "Login",
+    results: "Results",
     
     // Hero
     heroTitle: "Prime Minister's Internship Scheme (PMIS)",
@@ -236,7 +242,9 @@ export const i18n: Record<Language, I18nStrings> = {
     employers: "Employers",
     government: "Government",
     help: "Help",
+    internship: "Internship",
     login: "Login",
+    results: "Results",
     
     // Hero
     heroTitle: "Prime Minister's Internship Scheme (PMIS)",

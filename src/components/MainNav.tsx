@@ -68,6 +68,18 @@ export function MainNav({ language }: MainNavProps) {
               {strings.government}
             </a>
             <a
+              href="/internship"
+              className="text-gov-text hover:text-gov-blue font-medium transition-colors text-lg"
+            >
+              {strings.internship}
+            </a>
+            <a
+              href="/internship/results"
+              className="text-gov-text hover:text-gov-blue font-medium transition-colors text-lg"
+            >
+              {strings.results ?? "Results"}
+            </a>
+            <a
               href="#"
               className="text-gov-text hover:text-gov-blue font-medium transition-colors text-lg"
             >
