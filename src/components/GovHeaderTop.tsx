@@ -41,7 +41,7 @@ export function GovHeaderTop({
   };
 
   return (
-    <div className="bg-gov-blue text-white">
+    <div className="bg-black text-white">
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex items-center justify-between py-4 text-sm">
           {/* Left side - Government branding */}
@@ -65,7 +65,7 @@ export function GovHeaderTop({
             {/* Language dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="text-white hover:bg-gov-blueDark text-base">
+                <Button variant="ghost" size="sm" className="text-white hover:bg-gray-600 text-base">
                   {strings.language}
                   <ChevronDown className="ml-1 h-4 w-4" />
                 </Button>
@@ -88,7 +88,7 @@ export function GovHeaderTop({
               <Button
                 variant="ghost"
                 size="sm"
-                className="text-white hover:bg-gov-blueDark p-2"
+                className="text-white hover:bg-gray-600 p-2"
                 onClick={() => handleTextSizeChange("small")}
                 disabled={textSize === "small"}
               >
@@ -98,7 +98,7 @@ export function GovHeaderTop({
               <Button
                 variant="ghost"
                 size="sm"
-                className="text-white hover:bg-gov-blueDark p-2"
+                className="text-white hover:bg-gray-600 p-2"
                 onClick={() => handleTextSizeChange("large")}
                 disabled={textSize === "large"}
               >
@@ -110,7 +110,7 @@ export function GovHeaderTop({
             <Button
               variant="ghost"
               size="sm"
-              className="text-white hover:bg-gov-blueDark text-base"
+              className="text-white hover:bg-gray-600 text-base"
               onClick={handleContrastChange}
             >
               <Monitor className="h-5 w-5 mr-2" />

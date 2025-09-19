@@ -9,12 +9,39 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        // Official Indian Government Colors
         gov: {
+          saffron: "#FF9933",
+          white: "#FFFFFF", 
+          green: "#138808",
+          navy: "#0B3D91",
           blue: "#0B5CAB",
           blueDark: "#084B8A",
           gold: "#C9A227",
-          gray: "#F5F7FA",
+          gray: "#F5F5F5",
           text: "#1B1B1B",
+          darkGray: "#6B7280",
+          lightBlue: "#EBF4FF",
+        },
+        // Additional government portal colors
+        primary: {
+          50: "#EBF4FF",
+          100: "#DBEAFE", 
+          500: "#0B3D91",
+          600: "#084B8A",
+          700: "#0B5CAB",
+        },
+        secondary: {
+          50: "#FFF7ED",
+          100: "#FFEDD5",
+          500: "#FF9933",
+          600: "#EA580C",
+        },
+        success: {
+          50: "#F0FDF4",
+          100: "#DCFCE7",
+          500: "#138808",
+          600: "#16A34A",
         },
       },
       container: {

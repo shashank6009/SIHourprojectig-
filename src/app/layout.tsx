@@ -1,14 +1,17 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Noto_Sans } from "next/font/google";
 import "./globals.css";
 import { AppWrapper } from "@/components/AppWrapper";
 
-const inter = Inter({ subsets: ["latin"] });
+const notoSans = Noto_Sans({ subsets: ["latin"], display: "swap" });
 
 export const metadata: Metadata = {
   title: "Prime Minister's Internship Scheme (PMIS)",
   description: "Official portal for the Prime Minister's Internship Scheme",
-  themeColor: "#0B5CAB",
+};
+
+export const viewport: Viewport = {
+  themeColor: "#0B3D91",
 };
 
 export default function RootLayout({
@@ -20,13 +23,12 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content="#0B5CAB" />
       </head>
-      <body className={inter.className}>
+      <body className={notoSans.className}>
         {/* Skip to content link for accessibility */}
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-gov-blue text-white px-4 py-2 rounded z-50"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-gov-navy text-white px-4 py-2 rounded z-50"
         >
           Skip to content
         </a>

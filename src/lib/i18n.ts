@@ -8,6 +8,7 @@ export interface I18nStrings {
   language: string;
   textSize: string;
   contrast: string;
+  secureSite: string;
   
   // Navigation
   home: string;
@@ -15,9 +16,13 @@ export interface I18nStrings {
   employers: string;
   government: string;
   help: string;
-  internship: string;
   login: string;
-  results?: string;
+  aboutScheme: string;
+  applyRegister: string;
+  forStudents: string;
+  forEmployers: string;
+  guidelinesFaqs: string;
+  contactUs: string;
   
   // Hero
   heroTitle: string;
@@ -25,6 +30,7 @@ export interface I18nStrings {
   studentLogin: string;
   employerLogin: string;
   governmentDashboard: string;
+  applyNow: string;
   
   // Trust Strip
   secure: string;
@@ -42,7 +48,7 @@ export interface I18nStrings {
   guidedJourney: string;
   guidedJourneyDesc: string;
   
-  // How It Works
+  // How It Works / Process
   howItWorksTitle: string;
   howItWorksSubtitle: string;
   step1: string;
@@ -65,6 +71,18 @@ export interface I18nStrings {
   faqs: string;
   helpdesk: string;
   
+  // New Sections
+  aboutTitle: string;
+  aboutBody: string;
+  processTitle: string;
+  statsTitle: string;
+  announcementsTitle: string;
+  testimonialsTitle: string;
+  statsInternships: string;
+  statsStudents: string;
+  statsEmployers: string;
+  statsStates: string;
+  
   // Footer
   footerTitle: string;
   about: string;
@@ -74,6 +92,7 @@ export interface I18nStrings {
   helpline: string;
   copyright: string;
   digitalIndia: string;
+  disclaimer: string;
 }
 
 export const i18n: Record<Language, I18nStrings> = {
@@ -85,6 +104,7 @@ export const i18n: Record<Language, I18nStrings> = {
     language: "Language",
     textSize: "Text Size",
     contrast: "Contrast",
+    secureSite: "Secure Site",
     
     // Navigation
     home: "Home",
@@ -92,16 +112,21 @@ export const i18n: Record<Language, I18nStrings> = {
     employers: "Employers",
     government: "Government",
     help: "Help",
-    internship: "Internship",
     login: "Login",
-    results: "Results",
+    aboutScheme: "About the Scheme",
+    applyRegister: "Apply / Register",
+    forStudents: "For Students",
+    forEmployers: "For Employers",
+    guidelinesFaqs: "Guidelines & FAQs",
+    contactUs: "Contact Us",
     
     // Hero
     heroTitle: "Prime Minister's Internship Scheme (PMIS)",
-    heroSubtext: "Empowering students with real-world experience through government and industry internships. A bridge between education and employment for India's future workforce.",
+    heroSubtext: "Empowering Youth through Real-World Experience – PM Internship Scheme",
     studentLogin: "Student Login / Register",
     employerLogin: "Employer Login / Register",
     governmentDashboard: "Government Dashboard",
+    applyNow: "Apply Now",
     
     // Trust Strip
     secure: "Secure",
@@ -119,8 +144,8 @@ export const i18n: Record<Language, I18nStrings> = {
     guidedJourney: "Inclusive access for students nationwide",
     guidedJourneyDesc: "Open to students from recognized universities and colleges across all disciplines and regions.",
     
-    // How It Works
-    howItWorksTitle: "How It Works",
+    // How It Works / Process
+    howItWorksTitle: "Eligibility & Process",
     howItWorksSubtitle: "Simple steps to get started",
     step1: "Registration",
     step1Desc: "Create your account and verify your student credentials through the official portal.",
@@ -142,6 +167,18 @@ export const i18n: Record<Language, I18nStrings> = {
     faqs: "FAQs",
     helpdesk: "Helpdesk",
     
+    // New Sections
+    aboutTitle: "About the PM Internship Scheme",
+    aboutBody: "The PM Internship Scheme provides students across India with practical exposure through internships in government departments, PSUs, and the private sector, fostering employability and nation-building.",
+    processTitle: "How to Apply",
+    statsTitle: "Key Statistics",
+    announcementsTitle: "Announcements / Latest Updates",
+    testimonialsTitle: "Testimonials",
+    statsInternships: "Internships Offered",
+    statsStudents: "Students Benefited",
+    statsEmployers: "Registered Employers",
+    statsStates: "States & UTs Covered",
+    
     // Footer
     footerTitle: "Prime Minister's Internship Scheme (PMIS) — Ministry of Corporate Affairs, Government of India",
     about: "About",
@@ -151,6 +188,7 @@ export const i18n: Record<Language, I18nStrings> = {
     helpline: "1800-XXX-XXXX",
     copyright: "© 2024 Government of India. All rights reserved.",
     digitalIndia: "Digital India",
+    disclaimer: "This is a government platform. Content is owned and managed by the Ministry of Corporate Affairs.",
   },
   hi: {
     // Header
@@ -160,6 +198,7 @@ export const i18n: Record<Language, I18nStrings> = {
     language: "Language",
     textSize: "Text Size",
     contrast: "Contrast",
+    secureSite: "Secure Site",
     
     // Navigation
     home: "Home",
@@ -167,16 +206,21 @@ export const i18n: Record<Language, I18nStrings> = {
     employers: "Employers",
     government: "Government",
     help: "Help",
-    internship: "Internship",
     login: "Login",
-    results: "Results",
+    aboutScheme: "About the Scheme",
+    applyRegister: "Apply / Register",
+    forStudents: "For Students",
+    forEmployers: "For Employers",
+    guidelinesFaqs: "Guidelines & FAQs",
+    contactUs: "Contact Us",
     
     // Hero
     heroTitle: "Prime Minister's Internship Scheme (PMIS)",
-    heroSubtext: "Empowering students with real-world experience through government and industry internships. A bridge between education and employment for India's future workforce.",
+    heroSubtext: "Empowering Youth through Real-World Experience – PM Internship Scheme",
     studentLogin: "Student Login / Register",
     employerLogin: "Employer Login / Register",
     governmentDashboard: "Government Dashboard",
+    applyNow: "Apply Now",
     
     // Trust Strip
     secure: "Secure",
@@ -194,8 +238,8 @@ export const i18n: Record<Language, I18nStrings> = {
     guidedJourney: "Inclusive access for students nationwide",
     guidedJourneyDesc: "Open to students from recognized universities and colleges across all disciplines and regions.",
     
-    // How It Works
-    howItWorksTitle: "How It Works",
+    // How It Works / Process
+    howItWorksTitle: "Eligibility & Process",
     howItWorksSubtitle: "Simple steps to get started",
     step1: "Registration",
     step1Desc: "Create your account and verify your student credentials through the official portal.",
@@ -217,6 +261,18 @@ export const i18n: Record<Language, I18nStrings> = {
     faqs: "FAQs",
     helpdesk: "Helpdesk",
     
+    // New Sections
+    aboutTitle: "About the PM Internship Scheme",
+    aboutBody: "The PM Internship Scheme provides students across India with practical exposure through internships in government departments, PSUs, and the private sector, fostering employability and nation-building.",
+    processTitle: "How to Apply",
+    statsTitle: "Key Statistics",
+    announcementsTitle: "Announcements / Latest Updates",
+    testimonialsTitle: "Testimonials",
+    statsInternships: "Internships Offered",
+    statsStudents: "Students Benefited",
+    statsEmployers: "Registered Employers",
+    statsStates: "States & UTs Covered",
+    
     // Footer
     footerTitle: "Prime Minister's Internship Scheme (PMIS) — Ministry of Corporate Affairs, Government of India",
     about: "About",
@@ -226,6 +282,7 @@ export const i18n: Record<Language, I18nStrings> = {
     helpline: "1800-XXX-XXXX",
     copyright: "© 2024 Government of India. All rights reserved.",
     digitalIndia: "Digital India",
+    disclaimer: "This is a government platform. Content is owned and managed by the Ministry of Corporate Affairs.",
   },
   ta: {
     // Header
@@ -235,6 +292,7 @@ export const i18n: Record<Language, I18nStrings> = {
     language: "Language",
     textSize: "Text Size",
     contrast: "Contrast",
+    secureSite: "Secure Site",
     
     // Navigation
     home: "Home",
@@ -242,16 +300,21 @@ export const i18n: Record<Language, I18nStrings> = {
     employers: "Employers",
     government: "Government",
     help: "Help",
-    internship: "Internship",
     login: "Login",
-    results: "Results",
+    aboutScheme: "About the Scheme",
+    applyRegister: "Apply / Register",
+    forStudents: "For Students",
+    forEmployers: "For Employers",
+    guidelinesFaqs: "Guidelines & FAQs",
+    contactUs: "Contact Us",
     
     // Hero
     heroTitle: "Prime Minister's Internship Scheme (PMIS)",
-    heroSubtext: "Empowering students with real-world experience through government and industry internships. A bridge between education and employment for India's future workforce.",
+    heroSubtext: "Empowering Youth through Real-World Experience – PM Internship Scheme",
     studentLogin: "Student Login / Register",
     employerLogin: "Employer Login / Register",
     governmentDashboard: "Government Dashboard",
+    applyNow: "Apply Now",
     
     // Trust Strip
     secure: "Secure",
@@ -269,8 +332,8 @@ export const i18n: Record<Language, I18nStrings> = {
     guidedJourney: "Inclusive access for students nationwide",
     guidedJourneyDesc: "Open to students from recognized universities and colleges across all disciplines and regions.",
     
-    // How It Works
-    howItWorksTitle: "How It Works",
+    // How It Works / Process
+    howItWorksTitle: "Eligibility & Process",
     howItWorksSubtitle: "Simple steps to get started",
     step1: "Registration",
     step1Desc: "Create your account and verify your student credentials through the official portal.",
@@ -292,6 +355,18 @@ export const i18n: Record<Language, I18nStrings> = {
     faqs: "FAQs",
     helpdesk: "Helpdesk",
     
+    // New Sections
+    aboutTitle: "About the PM Internship Scheme",
+    aboutBody: "The PM Internship Scheme provides students across India with practical exposure through internships in government departments, PSUs, and the private sector, fostering employability and nation-building.",
+    processTitle: "How to Apply",
+    statsTitle: "Key Statistics",
+    announcementsTitle: "Announcements / Latest Updates",
+    testimonialsTitle: "Testimonials",
+    statsInternships: "Internships Offered",
+    statsStudents: "Students Benefited",
+    statsEmployers: "Registered Employers",
+    statsStates: "States & UTs Covered",
+    
     // Footer
     footerTitle: "Prime Minister's Internship Scheme (PMIS) — Ministry of Corporate Affairs, Government of India",
     about: "About",
@@ -301,5 +376,6 @@ export const i18n: Record<Language, I18nStrings> = {
     helpline: "1800-XXX-XXXX",
     copyright: "© 2024 Government of India. All rights reserved.",
     digitalIndia: "Digital India",
+    disclaimer: "This is a government platform. Content is owned and managed by the Ministry of Corporate Affairs.",
   },
 };

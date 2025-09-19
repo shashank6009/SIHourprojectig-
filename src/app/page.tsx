@@ -14,9 +14,9 @@ export default function HomePage() {
   const strings = i18n[language];
 
   const images = [
-    { src: "/modi1.png", alt: "Prime Minister Narendra Modi" },
-    { src: "/modi2.png", alt: "Prime Minister Narendra Modi" },
-    { src: "/modi3.png", alt: "Prime Minister Narendra Modi" },
+    { src: "/Modi1.png", alt: "Prime Minister Narendra Modi" },
+    { src: "/Modi2.png", alt: "Prime Minister Narendra Modi" },
+    { src: "/Modi3.png", alt: "Prime Minister Narendra Modi" },
   ];
 
   // Auto-rotate images every 4 seconds
@@ -44,35 +44,388 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero Section */}
-      <section className="bg-gradient-to-br from-gov-blue to-gov-blueDark text-white py-16 md:py-24">
+      {/* Hero Video Section */}
+      <section className="relative overflow-hidden">
+        <video
+          className="w-full h-[60vh] md:h-[70vh] object-cover"
+          src="/home.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="metadata"
+          aria-label="PMIS hero video"
+        />
+      </section>
+
+      {/* Companies Video Section - No Gap */}
+      <section className="py-2 bg-white">
+        <div className="container mx-auto px-4 md:px-6">
+          <video
+            className="w-full h-16 md:h-20 lg:h-24 rounded-lg shadow-sm object-cover"
+            src="/companies.mp4"
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="metadata"
+            aria-label="Companies showcase video"
+          />
+        </div>
+      </section>
+
+      {/* Page Below Image Section */}
+      <section className="relative bg-white py-8">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="relative w-full max-w-6xl mx-auto">
+            <Image
+              src="/pagebelow.png"
+              alt="PMIS Information Section"
+              width={1920}
+              height={800}
+              className="w-full h-auto object-contain rounded-lg shadow-md"
+              priority
+            />
+            
+            {/* Interactive overlay areas - adjusted for contained image */}
+            <div className="absolute inset-0">
+              {/* Left Section - "Are you Eligible?" */}
+              <div className="absolute top-[8%] left-[8%] w-[35%] h-[85%] group cursor-pointer">
+                <div className="absolute inset-0 bg-transparent hover:bg-gov-saffron/15 transition-all duration-300 rounded-lg border-2 border-transparent hover:border-gov-saffron/60"></div>
+                <div className="relative z-10 h-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="bg-white/95 p-3 rounded-lg shadow-lg text-center">
+                    <h3 className="font-bold text-gov-navy text-sm mb-1">Check Eligibility</h3>
+                    <p className="text-xs text-gov-text">See if you qualify for PM Internship</p>
+                    <div className="mt-1 text-xs text-gov-darkGray">
+                      • Age: 21-24 Years<br/>
+                      • Job Status: Not Employed Full Time<br/>
+                      • Education: Not Enrolled Full Time
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Section - "Core Benefits for PM Internship Scheme" */}
+              <div className="absolute top-[8%] left-[57%] w-[35%] h-[85%] group cursor-pointer">
+                <div className="absolute inset-0 bg-transparent hover:bg-gov-saffron/15 transition-all duration-300 rounded-lg border-2 border-transparent hover:border-gov-saffron/60"></div>
+                <div className="relative z-10 h-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="bg-white/95 p-3 rounded-lg shadow-lg text-center">
+                    <h3 className="font-bold text-gov-navy text-sm mb-1">Program Benefits</h3>
+                    <p className="text-xs text-gov-text">Core benefits of PM Internship Scheme</p>
+                    <div className="mt-1 text-xs text-gov-darkGray">
+                      • 12 months real-life experience<br/>
+                      • Monthly assistance of ₹4500 + ₹500<br/>
+                      • One-time Grant of ₹6000<br/>
+                      • Top Companies across sectors
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Age criteria hover area */}
+              <div className="absolute top-[28%] left-[18%] w-[15%] h-[20%] group cursor-pointer">
+                <div className="absolute inset-0 bg-transparent hover:bg-blue-200/30 transition-all duration-300 rounded-lg border-2 border-transparent hover:border-blue-400"></div>
+                <div className="relative z-10 h-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="bg-white/95 p-2 rounded shadow-lg text-center">
+                    <h4 className="font-semibold text-blue-700 text-xs">Age Requirement</h4>
+                    <p className="text-xs text-gray-600">Must be 21-24 years old</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Job Status hover area */}
+              <div className="absolute top-[28%] left-[28%] w-[15%] h-[20%] group cursor-pointer">
+                <div className="absolute inset-0 bg-transparent hover:bg-orange-200/30 transition-all duration-300 rounded-lg border-2 border-transparent hover:border-orange-400"></div>
+                <div className="relative z-10 h-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="bg-white/95 p-2 rounded shadow-lg text-center">
+                    <h4 className="font-semibold text-orange-700 text-xs">Employment Status</h4>
+                    <p className="text-xs text-gray-600">Not employed full time</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Education Status hover area */}
+              <div className="absolute top-[52%] left-[18%] w-[15%] h-[20%] group cursor-pointer">
+                <div className="absolute inset-0 bg-transparent hover:bg-purple-200/30 transition-all duration-300 rounded-lg border-2 border-transparent hover:border-purple-400"></div>
+                <div className="relative z-10 h-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="bg-white/95 p-2 rounded shadow-lg text-center">
+                    <h4 className="font-semibold text-purple-700 text-xs">Education Status</h4>
+                    <p className="text-xs text-gray-600">Not enrolled full time</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Family Income hover area */}
+              <div className="absolute top-[52%] left-[28%] w-[15%] h-[20%] group cursor-pointer">
+                <div className="absolute inset-0 bg-transparent hover:bg-teal-200/30 transition-all duration-300 rounded-lg border-2 border-transparent hover:border-teal-400"></div>
+                <div className="relative z-10 h-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="bg-white/95 p-2 rounded shadow-lg text-center">
+                    <h4 className="font-semibold text-teal-700 text-xs">Family Income</h4>
+                    <p className="text-xs text-gray-600">Income criteria apply</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Real-life experience hover area */}
+              <div className="absolute top-[28%] left-[67%] w-[20%] h-[20%] group cursor-pointer">
+                <div className="absolute inset-0 bg-transparent hover:bg-green-200/30 transition-all duration-300 rounded-lg border-2 border-transparent hover:border-green-400"></div>
+                <div className="relative z-10 h-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="bg-white/95 p-2 rounded shadow-lg text-center">
+                    <h4 className="font-semibold text-green-700 text-xs">Experience</h4>
+                    <p className="text-xs text-gray-600">12 months in top companies</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Monthly assistance hover area */}
+              <div className="absolute top-[28%] left-[72%] w-[20%] h-[20%] group cursor-pointer">
+                <div className="absolute inset-0 bg-transparent hover:bg-yellow-200/30 transition-all duration-300 rounded-lg border-2 border-transparent hover:border-yellow-500"></div>
+                <div className="relative z-10 h-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="bg-white/95 p-2 rounded shadow-lg text-center">
+                    <h4 className="font-semibold text-yellow-700 text-xs">Monthly Support</h4>
+                    <p className="text-xs text-gray-600">₹4500 by Govt + ₹500 by Industry</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* One-time grant hover area */}
+              <div className="absolute top-[52%] left-[67%] w-[20%] h-[20%] group cursor-pointer">
+                <div className="absolute inset-0 bg-transparent hover:bg-red-200/30 transition-all duration-300 rounded-lg border-2 border-transparent hover:border-red-400"></div>
+                <div className="relative z-10 h-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="bg-white/95 p-2 rounded shadow-lg text-center">
+                    <h4 className="font-semibold text-red-700 text-xs">One-time Grant</h4>
+                    <p className="text-xs text-gray-600">₹6000 for incidentals</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Company selection hover area */}
+              <div className="absolute top-[52%] left-[72%] w-[20%] h-[20%] group cursor-pointer">
+                <div className="absolute inset-0 bg-transparent hover:bg-indigo-200/30 transition-all duration-300 rounded-lg border-2 border-transparent hover:border-indigo-400"></div>
+                <div className="relative z-10 h-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="bg-white/95 p-2 rounded shadow-lg text-center">
+                    <h4 className="font-semibold text-indigo-700 text-xs">Company Selection</h4>
+                    <p className="text-xs text-gray-600">Various sectors & top companies</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Below Page Below Image Section */}
+      <section className="relative bg-white py-8">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="relative w-full max-w-6xl mx-auto">
+            <Image
+              src="/belowpagebelow.png"
+              alt="PM Internship States Information"
+              width={1920}
+              height={800}
+              className="w-full h-auto object-contain rounded-lg shadow-md"
+              priority
+            />
+            
+            {/* Interactive overlay areas for states - positioned to match India map */}
+            <div className="absolute inset-0">
+              {/* Dashboard section hover - right side */}
+              <div className="absolute top-[25%] left-[65%] w-[30%] h-[60%] group cursor-pointer">
+                <div className="absolute inset-0 bg-transparent hover:bg-gov-saffron/15 transition-all duration-300 rounded-lg border-2 border-transparent hover:border-gov-saffron/60"></div>
+                <div className="relative z-10 h-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="bg-white/95 p-3 rounded-lg shadow-lg text-center">
+                    <h3 className="font-bold text-gov-navy text-sm">Dashboard Statistics</h3>
+                    <p className="text-xs text-gov-text">118K+ Internship Opportunities<br/>25 Sectors • 36 States/UTs<br/>734 Districts • 5 Qualifications</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* India Map - Left side with actual state positions */}
+              
+              {/* Kashmir/J&K - Top of map */}
+              <div className="absolute top-[15%] left-[18%] w-[8%] h-[8%] group cursor-pointer">
+                <div className="absolute inset-0 bg-transparent hover:bg-blue-200/40 transition-all duration-300 rounded-lg border-2 border-transparent hover:border-blue-400"></div>
+                <div className="relative z-10 h-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="bg-white/95 p-1 rounded shadow-lg text-center">
+                    <h4 className="font-semibold text-blue-700 text-xs">J&K</h4>
+                  </div>
+                </div>
+              </div>
+
+              {/* Punjab - Northwest */}
+              <div className="absolute top-[22%] left-[14%] w-[6%] h-[6%] group cursor-pointer">
+                <div className="absolute inset-0 bg-transparent hover:bg-green-200/40 transition-all duration-300 rounded-lg border-2 border-transparent hover:border-green-400"></div>
+                <div className="relative z-10 h-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="bg-white/95 p-1 rounded shadow-lg text-center">
+                    <h4 className="font-semibold text-green-700 text-xs">Punjab</h4>
+                  </div>
+                </div>
+              </div>
+
+              {/* Haryana & Delhi - North central */}
+              <div className="absolute top-[25%] left-[17%] w-[6%] h-[6%] group cursor-pointer">
+                <div className="absolute inset-0 bg-transparent hover:bg-orange-200/40 transition-all duration-300 rounded-lg border-2 border-transparent hover:border-orange-400"></div>
+                <div className="relative z-10 h-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="bg-white/95 p-1 rounded shadow-lg text-center">
+                    <h4 className="font-semibold text-orange-700 text-xs">Haryana</h4>
+                  </div>
+                </div>
+              </div>
+
+              {/* Uttar Pradesh - Large north central state */}
+              <div className="absolute top-[28%] left-[20%] w-[12%] h-[10%] group cursor-pointer">
+                <div className="absolute inset-0 bg-transparent hover:bg-purple-200/40 transition-all duration-300 rounded-lg border-2 border-transparent hover:border-purple-400"></div>
+                <div className="relative z-10 h-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="bg-white/95 p-1 rounded shadow-lg text-center">
+                    <h4 className="font-semibold text-purple-700 text-xs">Uttar Pradesh</h4>
+                  </div>
+                </div>
+              </div>
+
+              {/* Rajasthan - Large western state */}
+              <div className="absolute top-[32%] left-[8%] w-[12%] h-[12%] group cursor-pointer">
+                <div className="absolute inset-0 bg-transparent hover:bg-pink-200/40 transition-all duration-300 rounded-lg border-2 border-transparent hover:border-pink-400"></div>
+                <div className="relative z-10 h-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="bg-white/95 p-1 rounded shadow-lg text-center">
+                    <h4 className="font-semibold text-pink-700 text-xs">Rajasthan</h4>
+                  </div>
+                </div>
+              </div>
+
+              {/* Gujarat - Western coast */}
+              <div className="absolute top-[45%] left-[5%] w-[8%] h-[10%] group cursor-pointer">
+                <div className="absolute inset-0 bg-transparent hover:bg-teal-200/40 transition-all duration-300 rounded-lg border-2 border-transparent hover:border-teal-400"></div>
+                <div className="relative z-10 h-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="bg-white/95 p-1 rounded shadow-lg text-center">
+                    <h4 className="font-semibold text-teal-700 text-xs">Gujarat</h4>
+                  </div>
+                </div>
+              </div>
+
+              {/* Maharashtra - Large western state */}
+              <div className="absolute top-[48%] left-[12%] w-[10%] h-[10%] group cursor-pointer">
+                <div className="absolute inset-0 bg-transparent hover:bg-red-200/40 transition-all duration-300 rounded-lg border-2 border-transparent hover:border-red-400"></div>
+                <div className="relative z-10 h-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="bg-white/95 p-1 rounded shadow-lg text-center">
+                    <h4 className="font-semibold text-red-700 text-xs">Maharashtra</h4>
+                  </div>
+                </div>
+              </div>
+
+              {/* Madhya Pradesh - Central India */}
+              <div className="absolute top-[40%] left-[20%] w-[12%] h-[10%] group cursor-pointer">
+                <div className="absolute inset-0 bg-transparent hover:bg-indigo-200/40 transition-all duration-300 rounded-lg border-2 border-transparent hover:border-indigo-400"></div>
+                <div className="relative z-10 h-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="bg-white/95 p-1 rounded shadow-lg text-center">
+                    <h4 className="font-semibold text-indigo-700 text-xs">Madhya Pradesh</h4>
+                  </div>
+                </div>
+              </div>
+
+              {/* West Bengal - Eastern state with label shown */}
+              <div className="absolute top-[50%] left-[35%] w-[8%] h-[8%] group cursor-pointer">
+                <div className="absolute inset-0 bg-transparent hover:bg-rose-200/40 transition-all duration-300 rounded-lg border-2 border-transparent hover:border-rose-400"></div>
+                <div className="relative z-10 h-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="bg-white/95 p-1 rounded shadow-lg text-center">
+                    <h4 className="font-semibold text-rose-700 text-xs">West Bengal</h4>
+                    <p className="text-xs text-gray-600">Cultural Capital</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Odisha - Eastern coast */}
+              <div className="absolute top-[55%] left-[32%] w-[8%] h-[8%] group cursor-pointer">
+                <div className="absolute inset-0 bg-transparent hover:bg-violet-200/40 transition-all duration-300 rounded-lg border-2 border-transparent hover:border-violet-400"></div>
+                <div className="relative z-10 h-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="bg-white/95 p-1 rounded shadow-lg text-center">
+                    <h4 className="font-semibold text-violet-700 text-xs">Odisha</h4>
+                  </div>
+                </div>
+              </div>
+
+              {/* Karnataka - Southern state */}
+              <div className="absolute top-[62%] left-[18%] w-[8%] h-[8%] group cursor-pointer">
+                <div className="absolute inset-0 bg-transparent hover:bg-emerald-200/40 transition-all duration-300 rounded-lg border-2 border-transparent hover:border-emerald-400"></div>
+                <div className="relative z-10 h-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="bg-white/95 p-1 rounded shadow-lg text-center">
+                    <h4 className="font-semibold text-emerald-700 text-xs">Karnataka</h4>
+                  </div>
+                </div>
+              </div>
+
+              {/* Tamil Nadu - Southern tip */}
+              <div className="absolute top-[70%] left-[20%] w-[8%] h-[8%] group cursor-pointer">
+                <div className="absolute inset-0 bg-transparent hover:bg-amber-200/40 transition-all duration-300 rounded-lg border-2 border-transparent hover:border-amber-400"></div>
+                <div className="relative z-10 h-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="bg-white/95 p-1 rounded shadow-lg text-center">
+                    <h4 className="font-semibold text-amber-700 text-xs">Tamil Nadu</h4>
+                  </div>
+                </div>
+              </div>
+
+              {/* Kerala - Southwest coast */}
+              <div className="absolute top-[68%] left-[15%] w-[6%] h-[10%] group cursor-pointer">
+                <div className="absolute inset-0 bg-transparent hover:bg-cyan-200/40 transition-all duration-300 rounded-lg border-2 border-transparent hover:border-cyan-400"></div>
+                <div className="relative z-10 h-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="bg-white/95 p-1 rounded shadow-lg text-center">
+                    <h4 className="font-semibold text-cyan-700 text-xs">Kerala</h4>
+                  </div>
+                </div>
+              </div>
+
+              {/* Andhra Pradesh - Southeast */}
+              <div className="absolute top-[60%] left-[25%] w-[8%] h-[8%] group cursor-pointer">
+                <div className="absolute inset-0 bg-transparent hover:bg-lime-200/40 transition-all duration-300 rounded-lg border-2 border-transparent hover:border-lime-400"></div>
+                <div className="relative z-10 h-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="bg-white/95 p-1 rounded shadow-lg text-center">
+                    <h4 className="font-semibold text-lime-700 text-xs">Andhra Pradesh</h4>
+                  </div>
+                </div>
+              </div>
+
+              {/* Assam - Northeast */}
+              <div className="absolute top-[35%] left-[42%] w-[8%] h-[6%] group cursor-pointer">
+                <div className="absolute inset-0 bg-transparent hover:bg-sky-200/40 transition-all duration-300 rounded-lg border-2 border-transparent hover:border-sky-400"></div>
+                <div className="relative z-10 h-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="bg-white/95 p-1 rounded shadow-lg text-center">
+                    <h4 className="font-semibold text-sky-700 text-xs">Assam</h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Hero Content Section */}
+      <section className="bg-white py-10 md:py-14 border-b border-gray-200">
         <div className="container mx-auto px-4 md:px-6">
           <motion.div 
-            className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center"
+            className="grid grid-cols-1 gap-10 items-center"
             initial="initial"
             animate="animate"
             variants={staggerContainer}
           >
-            <motion.div className="space-y-6" variants={fadeInUp}>
+            <motion.div className="space-y-6 text-center" variants={fadeInUp}>
               <motion.h1 
-                className="text-4xl md:text-5xl font-bold leading-tight"
+                className="text-4xl md:text-5xl font-bold leading-tight text-gov-navy"
                 variants={fadeInUp}
               >
                 {strings.heroTitle}
               </motion.h1>
               <motion.p 
-                className="text-xl text-gray-100 leading-relaxed"
+                className="text-xl text-gov-text leading-relaxed max-w-4xl mx-auto"
                 variants={fadeInUp}
               >
                 {strings.heroSubtext}
               </motion.p>
               <motion.div 
-                className="flex flex-col sm:flex-row gap-4"
+                className="flex flex-col sm:flex-row gap-4 justify-center"
                 variants={fadeInUp}
               >
                 <Button 
                   size="lg" 
-                  className="bg-white text-gov-blue hover:bg-gray-100 hover:shadow-md transition-all duration-200 hover:-translate-y-1"
+                  className="bg-gov-navy text-white hover:bg-gov-blue hover:shadow-md transition-all duration-200 hover:-translate-y-1"
                   aria-label="Student Login and Registration"
                 >
                   <User className="mr-2 h-5 w-5" />
@@ -81,83 +434,34 @@ export default function HomePage() {
                 <Button 
                   size="lg" 
                   variant="outline" 
-                  className="border-white text-white hover:bg-white hover:text-gov-blue hover:shadow-md transition-all duration-200 hover:-translate-y-1"
+                  className="border-gov-navy text-gov-navy hover:bg-gov-navy hover:text-white hover:shadow-md transition-all duration-200 hover:-translate-y-1"
                   aria-label="Employer Login and Registration"
                 >
                   <Building className="mr-2 h-5 w-5" />
                   {strings.employerLogin}
                 </Button>
               </motion.div>
-              <motion.div className="pt-4" variants={fadeInUp}>
+              <motion.div className="pt-4 space-y-4" variants={fadeInUp}>
                 <Button 
-                  variant="link" 
-                  className="text-white underline hover:text-gray-200 transition-colors"
-                  aria-label="Government Dashboard Access"
+                  variant="saffron"
+                  size="lg"
+                  className="w-full sm:w-auto text-lg font-semibold"
+                  aria-label="Apply Now for PM Internship Scheme"
+                  asChild
                 >
-                  {strings.governmentDashboard}
+                  <a href="/internship">{strings.applyNow}</a>
                 </Button>
+                <div>
+                  <Button 
+                    variant="link" 
+                    className="text-gov-navy underline hover:text-gov-blue transition-colors"
+                    aria-label="Government Dashboard Access"
+                  >
+                    {strings.governmentDashboard}
+                  </Button>
+                </div>
               </motion.div>
             </motion.div>
-            <motion.div 
-              className="hidden lg:block"
-              variants={fadeInUp}
-            >
-              <div className="w-full h-80 bg-gradient-to-br from-gov-blue to-gov-blueDark rounded-lg overflow-hidden relative">
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={currentImageIndex}
-                    initial={{ opacity: 0, scale: 1.1 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.9 }}
-                    transition={{ duration: 0.8, ease: "easeInOut" }}
-                    className="absolute inset-0"
-                  >
-                    <Image
-                      src={images[currentImageIndex].src}
-                      alt={images[currentImageIndex].alt}
-                      fill
-                      className="object-cover object-center"
-                      priority
-                    />
-                  </motion.div>
-                </AnimatePresence>
-                
-                {/* Image indicators */}
-                <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-                  {images.map((_, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setCurrentImageIndex(index)}
-                      className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                        index === currentImageIndex 
-                          ? 'bg-white scale-110' 
-                          : 'bg-white/50 hover:bg-white/75'
-                      }`}
-                    />
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-
-          {/* Full-width video under the Government Dashboard link */}
-          <motion.div
-            className="mt-8"
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-          >
-            <video
-              className="w-full h-40 md:h-56 lg:h-64 rounded-lg shadow-sm"
-              src="/companies.mp4"
-              autoPlay
-              loop
-              muted
-              playsInline
-              preload="metadata"
-              aria-label="Companies showcase video"
-            />
           </motion.div>
         </div>
       </section>
@@ -186,6 +490,92 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* About Section */}
+      <section id="about" className="py-16 bg-white">
+        <div className="container mx-auto px-4 md:px-6">
+          <motion.div 
+            className="text-center mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-3xl font-bold text-gov-navy mb-4 relative group">
+              {strings.aboutTitle}
+              <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-gov-saffron group-hover:w-1/2 transition-all duration-300"></span>
+            </h2>
+            <div className="max-w-4xl mx-auto">
+              <p className="text-lg text-gov-text leading-relaxed mb-6">
+                {strings.aboutBody}
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+                <div className="text-center p-6 bg-gov-gray rounded-lg">
+                  <div className="w-16 h-16 bg-gov-navy rounded-full flex items-center justify-center mx-auto mb-4">
+                    <School className="h-8 w-8 text-white" />
+                  </div>
+                  <h3 className="font-semibold text-gov-navy mb-2">For Students</h3>
+                  <p className="text-sm text-gov-darkGray">Gain practical experience and enhance employability</p>
+                </div>
+                <div className="text-center p-6 bg-gov-gray rounded-lg">
+                  <div className="w-16 h-16 bg-gov-navy rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Briefcase className="h-8 w-8 text-white" />
+                  </div>
+                  <h3 className="font-semibold text-gov-navy mb-2">For Employers</h3>
+                  <p className="text-sm text-gov-darkGray">Access fresh talent and contribute to nation-building</p>
+                </div>
+                <div className="text-center p-6 bg-gov-gray rounded-lg">
+                  <div className="w-16 h-16 bg-gov-navy rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Globe2 className="h-8 w-8 text-white" />
+                  </div>
+                  <h3 className="font-semibold text-gov-navy mb-2">For India</h3>
+                  <p className="text-sm text-gov-darkGray">Building a skilled workforce for economic growth</p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Key Statistics */}
+      <section className="py-16 bg-gov-navy text-white">
+        <div className="container mx-auto px-4 md:px-6">
+          <motion.div 
+            className="text-center mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-3xl font-bold mb-4">{strings.statsTitle}</h2>
+            <p className="text-xl text-gray-200">Making a difference across India</p>
+          </motion.div>
+          <motion.div 
+            className="grid grid-cols-2 md:grid-cols-4 gap-8"
+            initial="initial"
+            whileInView="animate"
+            viewport={{ once: true }}
+            variants={staggerContainer}
+          >
+            <motion.div className="text-center" variants={fadeInUp}>
+              <div className="text-4xl md:text-5xl font-bold text-gov-saffron mb-2">50,000+</div>
+              <p className="text-gray-200">{strings.statsInternships}</p>
+            </motion.div>
+            <motion.div className="text-center" variants={fadeInUp}>
+              <div className="text-4xl md:text-5xl font-bold text-gov-saffron mb-2">2,50,000+</div>
+              <p className="text-gray-200">{strings.statsStudents}</p>
+            </motion.div>
+            <motion.div className="text-center" variants={fadeInUp}>
+              <div className="text-4xl md:text-5xl font-bold text-gov-saffron mb-2">5,000+</div>
+              <p className="text-gray-200">{strings.statsEmployers}</p>
+            </motion.div>
+            <motion.div className="text-center" variants={fadeInUp}>
+              <div className="text-4xl md:text-5xl font-bold text-gov-saffron mb-2">36</div>
+              <p className="text-gray-200">{strings.statsStates}</p>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
       {/* Key Highlights */}
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4 md:px-6">
@@ -196,9 +586,9 @@ export default function HomePage() {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-3xl font-bold text-gov-text mb-4 relative group">
+            <h2 className="text-3xl font-bold text-gov-navy mb-4 relative group">
               {strings.highlightsTitle}
-              <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-gov-gold group-hover:w-1/2 transition-all duration-300"></span>
+              <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-gov-saffron group-hover:w-1/2 transition-all duration-300"></span>
             </h2>
             <p className="text-lg text-gray-600">
               {strings.highlightsSubtitle}
@@ -218,7 +608,7 @@ export default function HomePage() {
                     <div className="p-2 bg-gov-blue rounded-lg">
                       <School className="h-6 w-6 text-white" />
                     </div>
-                    <CardTitle className="text-gov-blue">{strings.internshipDuration}</CardTitle>
+                    <CardTitle className="text-gov-navy">{strings.internshipDuration}</CardTitle>
                   </div>
                 </CardHeader>
                 <CardContent>
@@ -270,9 +660,9 @@ export default function HomePage() {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-3xl font-bold text-gov-text mb-4 relative group">
+            <h2 className="text-3xl font-bold text-gov-navy mb-4 relative group">
               {strings.howItWorksTitle}
-              <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-gov-gold group-hover:w-1/2 transition-all duration-300"></span>
+              <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-gov-saffron group-hover:w-1/2 transition-all duration-300"></span>
             </h2>
             <p className="text-lg text-gray-600">
               {strings.howItWorksSubtitle}
@@ -286,28 +676,28 @@ export default function HomePage() {
             variants={staggerContainer}
           >
             <motion.div className="text-center" variants={fadeInUp}>
-              <div className="w-16 h-16 bg-gov-blue text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
+              <div className="w-16 h-16 bg-gov-navy text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
                 1
               </div>
               <h3 className="text-xl font-semibold text-gov-text mb-2">{strings.step1}</h3>
               <p className="text-gray-600">{strings.step1Desc}</p>
             </motion.div>
             <motion.div className="text-center" variants={fadeInUp}>
-              <div className="w-16 h-16 bg-gov-blue text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
+              <div className="w-16 h-16 bg-gov-navy text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
                 2
               </div>
               <h3 className="text-xl font-semibold text-gov-text mb-2">{strings.step2}</h3>
               <p className="text-gray-600">{strings.step2Desc}</p>
             </motion.div>
             <motion.div className="text-center" variants={fadeInUp}>
-              <div className="w-16 h-16 bg-gov-blue text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
+              <div className="w-16 h-16 bg-gov-navy text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
                 3
               </div>
               <h3 className="text-xl font-semibold text-gov-text mb-2">{strings.step3}</h3>
               <p className="text-gray-600">{strings.step3Desc}</p>
             </motion.div>
             <motion.div className="text-center" variants={fadeInUp}>
-              <div className="w-16 h-16 bg-gov-blue text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
+              <div className="w-16 h-16 bg-gov-navy text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
                 4
               </div>
               <h3 className="text-xl font-semibold text-gov-text mb-2">{strings.step4}</h3>
@@ -400,8 +790,151 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Announcements / Latest Updates */}
+      <section className="py-16 bg-gov-lightBlue">
+        <div className="container mx-auto px-4 md:px-6">
+          <motion.div 
+            className="text-center mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-3xl font-bold text-gov-navy mb-4 relative group">
+              {strings.announcementsTitle}
+              <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-gov-saffron group-hover:w-1/2 transition-all duration-300"></span>
+            </h2>
+          </motion.div>
+          <motion.div 
+            className="grid grid-cols-1 md:grid-cols-3 gap-6"
+            initial="initial"
+            whileInView="animate"
+            viewport={{ once: true }}
+            variants={staggerContainer}
+          >
+            <motion.div variants={fadeInUp}>
+              <Card className="h-full border-l-4 border-l-gov-saffron">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-gov-darkGray">15 Dec 2024</span>
+                    <span className="bg-gov-green text-white text-xs px-2 py-1 rounded">New</span>
+                  </div>
+                  <CardTitle className="text-gov-navy">Registration Opens for Winter Batch</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription>Applications now open for the Winter 2024 internship batch across 500+ organizations.</CardDescription>
+                </CardContent>
+              </Card>
+            </motion.div>
+            <motion.div variants={fadeInUp}>
+              <Card className="h-full border-l-4 border-l-gov-green">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-gov-darkGray">10 Dec 2024</span>
+                    <span className="bg-gov-navy text-white text-xs px-2 py-1 rounded">Update</span>
+                  </div>
+                  <CardTitle className="text-gov-navy">New Partner Organizations Added</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription>50+ new government departments and PSUs have joined the PM Internship Scheme.</CardDescription>
+                </CardContent>
+              </Card>
+            </motion.div>
+            <motion.div variants={fadeInUp}>
+              <Card className="h-full border-l-4 border-l-gov-navy">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-gov-darkGray">5 Dec 2024</span>
+                    <span className="bg-gov-saffron text-white text-xs px-2 py-1 rounded">Important</span>
+                  </div>
+                  <CardTitle className="text-gov-navy">Guidelines Updated</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription>Updated eligibility criteria and application process guidelines now available.</CardDescription>
+                </CardContent>
+              </Card>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="py-16 bg-white">
+        <div className="container mx-auto px-4 md:px-6">
+          <motion.div 
+            className="text-center mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-3xl font-bold text-gov-navy mb-4 relative group">
+              {strings.testimonialsTitle}
+              <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-gov-saffron group-hover:w-1/2 transition-all duration-300"></span>
+            </h2>
+            <p className="text-lg text-gov-darkGray">Hear from our successful interns and partner organizations</p>
+          </motion.div>
+          <motion.div 
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+            initial="initial"
+            whileInView="animate"
+            viewport={{ once: true }}
+            variants={staggerContainer}
+          >
+            <motion.div variants={fadeInUp}>
+              <Card className="h-full bg-gov-gray border-0">
+                <CardContent className="p-6">
+                  <div className="flex items-center space-x-4 mb-4">
+                    <div className="w-12 h-12 bg-gov-navy rounded-full flex items-center justify-center">
+                      <User className="h-6 w-6 text-white" />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-gov-navy">Priya Sharma</h4>
+                      <p className="text-sm text-gov-darkGray">Student, IIT Delhi</p>
+                    </div>
+                  </div>
+                  <p className="text-gov-text italic">"The PM Internship Scheme provided me with invaluable experience at ISRO. It bridged the gap between my academic knowledge and real-world applications."</p>
+                </CardContent>
+              </Card>
+            </motion.div>
+            <motion.div variants={fadeInUp}>
+              <Card className="h-full bg-gov-gray border-0">
+                <CardContent className="p-6">
+                  <div className="flex items-center space-x-4 mb-4">
+                    <div className="w-12 h-12 bg-gov-navy rounded-full flex items-center justify-center">
+                      <Building className="h-6 w-6 text-white" />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-gov-navy">Dr. Rajesh Kumar</h4>
+                      <p className="text-sm text-gov-darkGray">HR Director, BHEL</p>
+                    </div>
+                  </div>
+                  <p className="text-gov-text italic">"The interns from PMIS bring fresh perspectives and energy to our organization. It's a win-win for both students and employers."</p>
+                </CardContent>
+              </Card>
+            </motion.div>
+            <motion.div variants={fadeInUp}>
+              <Card className="h-full bg-gov-gray border-0">
+                <CardContent className="p-6">
+                  <div className="flex items-center space-x-4 mb-4">
+                    <div className="w-12 h-12 bg-gov-navy rounded-full flex items-center justify-center">
+                      <GraduationCap className="h-6 w-6 text-white" />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-gov-navy">Arjun Patel</h4>
+                      <p className="text-sm text-gov-darkGray">Student, NIT Surat</p>
+                    </div>
+                  </div>
+                  <p className="text-gov-text italic">"My internship at the Ministry of Electronics & IT gave me insights into digital governance. Highly recommend PMIS to all students."</p>
+                </CardContent>
+              </Card>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
       {/* Important Links */}
-      <section className="py-16 bg-gov-gray">
+      <section id="links" className="py-16 bg-gov-gray">
         <div className="container mx-auto px-4 md:px-6">
           <motion.div 
             className="text-center mb-12"

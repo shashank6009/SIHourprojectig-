@@ -1,0 +1,59 @@
+John Doe
+Software Developer
+john.doe@email.com
++91 9876543210
+123 Main Street, Bangalore, Karnataka, India
+
+OBJECTIVE
+Seeking opportunities to apply my technical skills in software development and contribute to innovative projects while gaining valuable industry experience.
+
+EDUCATION
+Indian Institute of Technology, Delhi
+Bachelor of Technology in Computer Science Engineering
+Graduation Year: 2024
+CGPA: 8.5/10
+Relevant Coursework: Data Structures, Algorithms, Database Management, Software Engineering, Machine Learning
+
+TECHNICAL SKILLS
+Programming Languages: Python, Java, JavaScript, C++
+Web Technologies: React, Node.js, HTML, CSS, MongoDB
+Tools & Technologies: Git, Docker, AWS, VS Code
+Databases: MySQL, PostgreSQL, MongoDB
+
+EXPERIENCE
+Software Development Intern at Infosys Limited
+Duration: May 2023 - August 2023
+- Developed web applications using React and Node.js
+- Collaborated with cross-functional teams to deliver high-quality software solutions
+- Participated in code reviews and followed best practices
+
+PROJECTS
+1. E-commerce Platform
+   - Full stack web application using MERN stack
+   - Implemented user authentication, product catalog, and payment integration
+   - Technologies: React, Node.js, MongoDB, Express.js
+
+2. Student Management System
+   - Desktop application using Java Swing
+   - Features include student registration, grade management, and reporting
+   - Technologies: Java, MySQL, Swing
+
+ACHIEVEMENTS
+- Winner of Inter-College Coding Competition 2023
+- Dean's List for Academic Excellence (2022-2023)
+- Led a team of 5 students in college tech fest
+
+CERTIFICATIONS
+- AWS Cloud Practitioner Certification
+- Google Analytics Certified
+- Microsoft Azure Fundamentals
+
+LANGUAGES
+English (Fluent)
+Hindi (Native)
+Spanish (Basic)
+
+EXTRACURRICULAR ACTIVITIES
+- President of Computer Science Society (2023-2024)
+- Volunteer at local NGO for digital literacy program
+- Member of college cricket team

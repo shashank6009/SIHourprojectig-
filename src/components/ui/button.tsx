@@ -7,11 +7,13 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-gov-blue text-white hover:bg-gov-blueDark",
-        secondary: "bg-gov-gray text-gov-text hover:bg-gray-200",
-        outline: "border border-gov-blue text-gov-blue hover:bg-gov-blue hover:text-white",
+        default: "bg-gov-navy text-white hover:bg-gov-blue shadow-sm hover:shadow-md transition-all duration-200",
+        secondary: "bg-gov-gray text-gov-text hover:bg-gray-200 shadow-sm",
+        outline: "border border-gov-navy text-gov-navy hover:bg-gov-navy hover:text-white shadow-sm hover:shadow-md transition-all duration-200",
         ghost: "hover:bg-gov-gray hover:text-gov-text",
-        link: "text-gov-blue underline-offset-4 hover:underline",
+        link: "text-gov-navy underline-offset-4 hover:underline",
+        saffron: "bg-gov-saffron text-white hover:bg-secondary-600 shadow-sm hover:shadow-md transition-all duration-200",
+        green: "bg-gov-green text-white hover:bg-success-600 shadow-sm hover:shadow-md transition-all duration-200",
       },
       size: {
         default: "h-10 px-4 py-2",
