@@ -71,8 +71,10 @@ export default function OfflinePage() {
 
   const loadStorageStats = async () => {
     try {
-      const stats = await offlineStorage.getStorageStats();
-      setStorageStats(stats);
+      if (offlineStorage) {
+        const stats = await offlineStorage.getStorageStats();
+        setStorageStats(stats);
+      }
     } catch (error) {
       console.error('Failed to load storage stats:', error);
     }
