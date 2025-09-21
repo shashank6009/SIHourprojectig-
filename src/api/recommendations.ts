@@ -62,10 +62,10 @@ const processRecommendations = (recommendations: Record<string, unknown>[]): Rec
     stipend: safeParseNumber(rec.stipend),
     rank: safeParseNumber(rec.rank),
     scores: {
-      success_probability: safeParseNumber(rec.scores?.success_probability),
-      skill_match: rec.scores?.skill_match ? safeParseNumber(rec.scores.skill_match) : undefined,
-      employability_boost: rec.scores?.employability_boost ? safeParseNumber(rec.scores.employability_boost) : undefined,
-      fairness_adjustment: rec.scores?.fairness_adjustment ? safeParseNumber(rec.scores.fairness_adjustment) : undefined,
+      success_probability: safeParseNumber((rec.scores as Record<string, unknown>)?.success_probability),
+      skill_match: (rec.scores as Record<string, unknown>)?.skill_match ? safeParseNumber((rec.scores as Record<string, unknown>).skill_match) : undefined,
+      employability_boost: (rec.scores as Record<string, unknown>)?.employability_boost ? safeParseNumber((rec.scores as Record<string, unknown>).employability_boost) : undefined,
+      fairness_adjustment: (rec.scores as Record<string, unknown>)?.fairness_adjustment ? safeParseNumber((rec.scores as Record<string, unknown>).fairness_adjustment) : undefined,
     },
   }));
 };
