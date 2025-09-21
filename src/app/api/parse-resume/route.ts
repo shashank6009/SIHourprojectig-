@@ -74,7 +74,7 @@ export async function POST(req: Request) {
           if (fs.existsSync(testDir)) {
             fs.rmSync(testDir, { recursive: true, force: true });
           }
-        } catch (e) {
+        } catch (error) {
           // Ignore cleanup errors
         }
         

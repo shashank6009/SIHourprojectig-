@@ -20,7 +20,7 @@ export interface ExtractedGoogleData {
 
 export class GoogleDataExtractor {
   // Extract data from Google session
-  static extractFromSession(session: any): ExtractedGoogleData {
+  static extractFromSession(session: Record<string, unknown>): ExtractedGoogleData {
     if (!session?.user) {
       return {};
     }
@@ -89,14 +89,14 @@ export class GoogleDataExtractor {
   }
 
   // Check if user signed in with Google
-  static isGoogleUser(session: any): boolean {
+  static isGoogleUser(session: Record<string, unknown>): boolean {
     return session?.user?.image?.includes('googleusercontent.com') || 
            session?.user?.email?.includes('@gmail.com') ||
            session?.user?.name?.includes('Google');
   }
 
   // Get user's Google profile picture
-  static getGoogleProfilePicture(session: any): string | null {
+  static getGoogleProfilePicture(session: Record<string, unknown>): string | null {
     if (session?.user?.image && session.user.image.includes('googleusercontent.com')) {
       return session.user.image;
     }
@@ -104,7 +104,7 @@ export class GoogleDataExtractor {
   }
 
   // Extract additional Google account info (if available in future)
-  static getAdditionalGoogleInfo(session: any): any {
+  static getAdditionalGoogleInfo(session: Record<string, unknown>): Record<string, unknown> {
     // This could be expanded to include more Google account data
     // when we have access to additional scopes
     return {

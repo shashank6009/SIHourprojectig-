@@ -3,7 +3,7 @@
 
 export interface OfflineData {
   id: string;
-  data: any;
+  data: Record<string, unknown>;
   timestamp: number;
   type: 'profile' | 'internship' | 'cache' | 'form-draft';
   syncStatus: 'pending' | 'synced' | 'failed';
@@ -42,7 +42,7 @@ export class OfflineStorageManager {
   // Store data offline
   async storeOfflineData(
     id: string,
-    data: any,
+    data: Record<string, unknown>,
     type: OfflineData['type']
   ): Promise<void> {
     try {
@@ -316,7 +316,7 @@ export class OfflineSyncManager {
   // Queue data for offline sync
   async queueForSync(
     id: string,
-    data: any,
+    data: Record<string, unknown>,
     type: OfflineData['type']
   ): Promise<void> {
     await this.storageManager.storeOfflineData(id, data, type);

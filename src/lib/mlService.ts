@@ -173,14 +173,14 @@ export class MLService {
       });
       
       // Assign ranks based on sorted order (highest success probability gets rank 1)
-      const recommendations = sortedRecommendations.map((rec: any, index: number) => ({
+      const recommendations = sortedRecommendations.map((rec: Record<string, unknown>, index: number) => ({
         ...rec,
         rank: index + 1, // Rank 1 for highest success probability
         scores: {
           success_probability: rec.success_prob || 0,
         },
         explain_reasons: rec.reasons || [],
-        course_suggestions: rec.courses?.map((course: any) => ({
+        course_suggestions: rec.courses?.map((course: Record<string, unknown>) => ({
           skill: rec.missing_skills?.[0] || 'General',
           platform: course.platform,
           course_name: course.name,
@@ -197,7 +197,7 @@ export class MLService {
         processing_time: 0,
         model_version: '1.0'
       };
-    } catch (error: any) {
+    } catch (error: Record<string, unknown>) {
       console.error('[MLService] Failed to get recommendations:', error);
       
       // Log the actual payload that was sent
@@ -390,7 +390,7 @@ export class MLService {
   }
 
   // Convert string numbers to actual numbers
-  private static convertToNumber(value: any): number {
+  private static convertToNumber(value: Record<string, unknown>): number {
     if (typeof value === 'number') return value;
     if (typeof value === 'string') {
       const parsed = parseFloat(value);
