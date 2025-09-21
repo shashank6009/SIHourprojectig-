@@ -18,7 +18,7 @@ export default function MLApiTestPage() {
     setError(null);
     try {
       const health = await MLService.healthCheck();
-      setHealthStatus(health as Record<string, unknown>);
+      setHealthStatus(health as unknown as Record<string, unknown>);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Health check failed');
     } finally {
