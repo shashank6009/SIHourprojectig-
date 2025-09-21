@@ -60,8 +60,10 @@ export default function OfflinePage() {
 
   const loadSyncStatus = async () => {
     try {
-      const status = await offlineSync.getSyncStatus();
-      setSyncStatus(status);
+      if (offlineSync) {
+        const status = await offlineSync.getSyncStatus();
+        setSyncStatus(status);
+      }
     } catch (error) {
       console.error('Failed to load sync status:', error);
     }
@@ -80,7 +82,7 @@ export default function OfflinePage() {
     setIsRefreshing(true);
     
     try {
-      if (isOnline) {
+      if (isOnline && offlineSync) {
         // Try to sync pending data
         await offlineSync.syncPendingData();
         await loadSyncStatus();

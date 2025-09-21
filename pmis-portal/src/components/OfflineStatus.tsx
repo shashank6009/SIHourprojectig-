@@ -22,9 +22,11 @@ export function OfflineStatus() {
       setIsSyncing(true);
       
       try {
-        await offlineSync.syncPendingData();
-        const status = await offlineSync.getSyncStatus();
-        setPendingSync(status.pendingCount);
+        if (offlineSync) {
+          await offlineSync.syncPendingData();
+          const status = await offlineSync.getSyncStatus();
+          setPendingSync(status.pendingCount);
+        }
       } catch (error) {
         console.error('Sync failed:', error);
       } finally {
@@ -42,10 +44,12 @@ export function OfflineStatus() {
     // Load initial sync status
     const loadSyncStatus = async () => {
       try {
-        const status = await offlineSync.getSyncStatus();
-        setPendingSync(status.pendingCount);
-        if (status.pendingCount > 0) {
-          setShowStatus(true);
+        if (offlineSync) {
+          const status = await offlineSync.getSyncStatus();
+          setPendingSync(status.pendingCount);
+          if (status.pendingCount > 0) {
+            setShowStatus(true);
+          }
         }
       } catch (error) {
         console.error('Failed to load sync status:', error);
@@ -67,9 +71,11 @@ export function OfflineStatus() {
     
     setIsSyncing(true);
     try {
-      await offlineSync.syncPendingData();
-      const status = await offlineSync.getSyncStatus();
-      setPendingSync(status.pendingCount);
+      if (offlineSync) {
+        await offlineSync.syncPendingData();
+        const status = await offlineSync.getSyncStatus();
+        setPendingSync(status.pendingCount);
+      }
     } catch (error) {
       console.error('Manual sync failed:', error);
     } finally {
