@@ -128,7 +128,7 @@ export default function OfflinePage() {
             <WifiOff className="w-12 h-12 text-gov-saffron" />
           </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            You're Currently Offline
+            {`You're Currently Offline`}
           </h1>
           <p className="text-gray-600 max-w-2xl mx-auto">
             Don&apos;t worry! The PM Internship Scheme Portal works offline. 

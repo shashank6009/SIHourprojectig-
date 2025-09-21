@@ -26,7 +26,7 @@ import { useSession } from "next-auth/react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ShortlistTracker, getDefaultChecklist, type ApplicationStatus } from "@/lib/tracker";
+import { ShortlistTracker } from "@/lib/tracker";
 
 // Helper functions for enhanced course information
 const getCourseLink = (platform: string, courseName: string): string => {
@@ -150,7 +150,7 @@ export default function RecommendationsPage() {
   const [studentProfile, setStudentProfile] = useState<StudentProfile | null>(null);
   const [filteredRecs, setFilteredRecs] = useState<InternshipRecommendation[]>([]);
   const [compareIds, setCompareIds] = useState<string[]>([]);
-  const [completedCourses, setCompletedCourses] = useState<Record<string, boolean>>({});
+  const [, setCompletedCourses] = useState<Record<string, boolean>>({});
   const [selectedRecommendation, setSelectedRecommendation] = useState<InternshipRecommendation | null>(null);
   const [mounted, setMounted] = useState(false);
   
