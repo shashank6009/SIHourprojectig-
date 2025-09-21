@@ -3,12 +3,16 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { CheckCircle2, ChevronRight, Rocket } from "lucide-react";
+import { useEffect, useState } from "react";
 import { getStepIndex, steps } from "@/lib/internship";
 
 export function ProgressHeader() {
   const pathname = usePathname();
   const currentIndex = getStepIndex(pathname);
   const percent = Math.round(((currentIndex + 1) / steps.length) * 100);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  const displayPercent = mounted ? percent : 0;
 
   return (
     <div className="space-y-4">
@@ -17,12 +21,15 @@ export function ProgressHeader() {
           <Rocket className="w-5 h-5 text-gov-blue" />
           <span className="font-semibold">Just a few quick questions to get you started 🚀</span>
         </div>
-        <div className="text-sm text-gray-700">{percent}%</div>
+        {/* Avoid hydration mismatch by rendering % only after mount */}
+        <div className="text-sm text-gray-700" suppressHydrationWarning>
+          {mounted ? `${percent}%` : ""}
+        </div>
       </div>
       <div className="w-full bg-gray-200 rounded-full h-2">
         <div
           className="bg-gov-blue h-2 rounded-full transition-all"
-          style={{ width: `${percent}%` }}
+          style={{ width: `${displayPercent}%` }}
         />
       </div>
       <nav className="hidden md:flex items-center gap-2 text-sm text-gray-600">

@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, FileText, Camera, ThumbsUp, Smartphone, Headphones, BookOpen } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -34,6 +34,15 @@ export function MainNav({ language }: MainNavProps) {
         {/* Navigation content overlay */}
         <div className="absolute inset-0 flex items-center justify-between px-3 md:px-4">
           
+          {/* Invisible Login Button - positioned over the Login button in the image */}
+          <div className="absolute top-1/2 right-40 transform -translate-y-1/2 w-16 h-8 z-10">
+            <Link 
+              href="/login" 
+              className="block w-full h-full"
+              aria-label="Login to PM Internship Portal"
+            />
+          </div>
+          
           {/* Navigation Links and Menu in the center empty space */}
           <div className="flex-1 flex items-center justify-center">
             <div className="flex items-center space-x-4 md:space-x-8">
@@ -55,6 +64,12 @@ export function MainNav({ language }: MainNavProps) {
               >
                 Recommendations
               </Link>
+              <Link 
+                href="/profile" 
+                className="text-black hover:text-gov-saffron font-semibold text-sm md:text-lg transition-colors duration-200"
+              >
+                Profile
+              </Link>
               
               {/* Menu button positioned after recommendations */}
               <DropdownMenu>
@@ -64,27 +79,38 @@ export function MainNav({ language }: MainNavProps) {
                     <ChevronDown className="ml-1 h-3 w-3" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuContent align="end" className="w-64">
                   <DropdownMenuItem asChild>
-                    <a href="https://pminternship.mca.gov.in/about" target="_blank" rel="noopener noreferrer" aria-label="About the Scheme (official)">{strings.aboutScheme}</a>
+                    <a href="https://pminternship.mca.gov.in/guidelines" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
+                      <FileText className="h-4 w-4" />
+                      GUIDELINES / DOCUMENTATIONS
+                    </a>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <a href="https://pminternship.mca.gov.in/students" target="_blank" rel="noopener noreferrer" aria-label="For Students (official)">{strings.forStudents}</a>
+                    <a href="https://pminternship.mca.gov.in/login/#gallery-block" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
+                      <Camera className="h-4 w-4" />
+                      GALLERY
+                    </a>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <a href="https://pminternship.mca.gov.in/employers" target="_blank" rel="noopener noreferrer" aria-label="For Employers (official)">{strings.forEmployers}</a>
+                    <button 
+                      onClick={() => {
+                        const element = document.querySelector('.companies-video-section');
+                        if (element) {
+                          element.scrollIntoView({ behavior: 'smooth' });
+                        }
+                      }}
+                      className="flex items-center gap-2 w-full text-left"
+                    >
+                      <ThumbsUp className="h-4 w-4" />
+                      ELIGIBILITY
+                    </button>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <a href="https://pminternship.mca.gov.in/guidelines" target="_blank" rel="noopener noreferrer" aria-label="Guidelines (official)">{strings.guidelines}</a>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <a href="https://pminternship.mca.gov.in/faqs" target="_blank" rel="noopener noreferrer" aria-label="FAQs (official)">{strings.faqs}</a>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <a href="https://pminternship.mca.gov.in/contact" target="_blank" rel="noopener noreferrer" aria-label="Contact Us (official)">{strings.contactUs}</a>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <a href="https://pminternship.mca.gov.in/login" target="_blank" rel="noopener noreferrer" aria-label="Apply / Register (official)">{strings.applyRegister}</a>
+                    <a href="https://pminternship.mca.gov.in/compendium/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
+                      <BookOpen className="h-4 w-4" />
+                      COMPENDIUM
+                    </a>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

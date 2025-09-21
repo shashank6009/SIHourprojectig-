@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,6 +9,11 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Upload, FileText, CheckCircle, User, GraduationCap, Briefcase, MapPin, Award, Target, Calendar, Building2, Mail, Phone } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { ProfileStorage, ProfileFormUtils } from "@/lib/profile";
+import { GoogleDataExtractor } from "@/lib/googleData";
+import { MLService } from "@/lib/mlService";
+import { useRouter } from "next/navigation";
 
 interface ResumeData {
   // Personal Information
@@ -49,11 +54,86 @@ interface ResumeData {
 }
 
 export default function InternshipPage() {
+  const { data: session } = useSession();
+  const router = useRouter();
   const [formData, setFormData] = useState<ResumeData>({});
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isProcessed, setIsProcessed] = useState(false);
   const [isDragActive, setIsDragActive] = useState(false);
+  const [profileLoaded, setProfileLoaded] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Load profile data and auto-fill form
+  useEffect(() => {
+    const loadProfileData = () => {
+      try {
+        const userId = session?.user?.email || 'demo@pmis.gov.in';
+        const savedProfile = ProfileStorage.getProfileForUser(userId);
+        
+        if (savedProfile) {
+          // Auto-fill form with profile data (only if fields have values)
+          const personalData = ProfileFormUtils.getPersonalData(savedProfile);
+          const educationData = ProfileFormUtils.getEducationData(savedProfile);
+          const professionalData = ProfileFormUtils.getProfessionalData(savedProfile);
+          const pmisData = ProfileFormUtils.getPMISData(savedProfile);
+          
+          const autoFillData: ResumeData = {};
+          
+          // Only auto-fill if data exists
+          if (personalData.firstName && personalData.lastName) {
+            autoFillData.name = `${personalData.firstName} ${personalData.lastName}`;
+          }
+          if (personalData.email) autoFillData.email = personalData.email;
+          if (personalData.phone) autoFillData.phone = personalData.phone;
+          if (personalData.address) autoFillData.address = personalData.address;
+          if (personalData.dateOfBirth) autoFillData.dateOfBirth = personalData.dateOfBirth;
+          if (personalData.nationality) autoFillData.nationality = personalData.nationality;
+          
+          if (educationData.university) autoFillData.university = educationData.university;
+          if (educationData.degree) autoFillData.degree = educationData.degree;
+          if (educationData.graduationYear) autoFillData.graduationYear = educationData.graduationYear;
+          if (educationData.cgpa) autoFillData.cgpa = educationData.cgpa;
+          
+          if (professionalData.workExperience) autoFillData.experience = professionalData.workExperience;
+          if (professionalData.skills.length > 0) autoFillData.technicalSkills = professionalData.skills.join(', ');
+          if (professionalData.languages.length > 0) autoFillData.languages = professionalData.languages.join(', ');
+          
+          if (pmisData.preferredLocation) autoFillData.preferredLocation = pmisData.preferredLocation;
+          if (pmisData.careerObjective) autoFillData.careerObjective = pmisData.careerObjective;
+          
+          setFormData(autoFillData);
+          console.log('Form auto-filled with profile data:', autoFillData);
+        } else {
+          // If no profile exists, try to use Google data
+          const googleData = GoogleDataExtractor.extractFromSession(session);
+          
+          if (googleData.email || googleData.firstName) {
+            const googleFillData: ResumeData = {};
+            
+            if (googleData.email) googleFillData.email = googleData.email;
+            if (googleData.firstName && googleData.lastName) {
+              googleFillData.name = `${googleData.firstName} ${googleData.lastName}`;
+            }
+            if (googleData.nationality) googleFillData.nationality = googleData.nationality;
+            
+            setFormData(googleFillData);
+            console.log('Form auto-filled with Google data:', googleFillData);
+          }
+        }
+      } catch (error) {
+        console.error('Error loading profile for auto-fill:', error);
+      } finally {
+        setProfileLoaded(true);
+      }
+    };
+
+    if (session) {
+      loadProfileData();
+    } else {
+      setProfileLoaded(true);
+    }
+  }, [session]);
 
   const extractResumeData = async (file: File): Promise<ResumeData> => {
     console.log('Starting resume extraction for:', file.name, file.type);
@@ -80,7 +160,14 @@ export default function InternshipPage() {
           text = data.text || '';
           console.log('Server parsing successful, text length:', text.length);
         } else {
-          throw new Error('Server parsing failed');
+          // Surface server error details
+          let serverMessage = '';
+          try {
+            const err = await response.json();
+            serverMessage = err?.error || '';
+          } catch {}
+          const msg = serverMessage || `Server parsing failed (HTTP ${response.status})`;
+          throw new Error(msg);
         }
       } else {
         throw new Error('Unsupported file type');
@@ -376,7 +463,19 @@ export default function InternshipPage() {
       }
     } catch (error) {
       console.error("Resume processing error:", error);
-      alert("Error processing resume: " + (error as Error).message + "\n\nPlease use the 'Paste Resume Text' option below or fill the form manually.");
+      const errorMessage = (error as Error).message;
+      let userMessage = "Error processing resume: " + errorMessage;
+      
+      // Provide more specific error messages
+      if (errorMessage.includes("Load failed")) {
+        userMessage = "Error processing resume: File upload failed. Please check your internet connection and try again, or use the 'Paste Resume Text' option below.";
+      } else if (errorMessage.includes("Unsupported file type")) {
+        userMessage = "Error processing resume: Unsupported file type. Please upload PDF, DOC, DOCX, or TXT files only.";
+      } else if (errorMessage.includes("File too large")) {
+        userMessage = "Error processing resume: File is too large. Please upload a file smaller than 5MB.";
+      }
+      
+      alert(userMessage + "\n\nPlease use the 'Paste Resume Text' option below or fill the form manually.");
       setIsProcessed(false);
     } finally {
       setIsProcessing(false);
@@ -406,14 +505,94 @@ export default function InternshipPage() {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    alert("Application submitted successfully!");
+    
+    if (!session?.user?.email) {
+      alert("Please log in to get recommendations");
+      return;
+    }
+
+    setIsSubmitting(true);
+    
+    try {
+      // Transform form data to ML API format
+      const studentProfile = MLService.transformInternFormToProfile(
+        formData,
+        session.user.email
+      );
+
+      // Validate required fields
+      if (!studentProfile.name || !studentProfile.email) {
+        alert("Please fill in your name and email to get recommendations");
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Store the student profile for recommendations page
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem('student_profile', JSON.stringify(studentProfile));
+        sessionStorage.setItem('intern_form_data', JSON.stringify(formData));
+      }
+
+      // Navigate to recommendations page
+      router.push('/internship/recommendations');
+      
+    } catch (error) {
+      console.error('Failed to process application:', error);
+      alert("Failed to process your application. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="container mx-auto px-4 md:px-6">
+        {/* Profile Auto-fill Notification */}
+        {profileLoaded && formData.name && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-6 bg-green-50 border border-green-200 rounded-lg p-4"
+          >
+            <div className="flex items-center">
+              <CheckCircle className="w-5 h-5 text-green-600 mr-2" />
+              <div>
+                <h3 className="text-sm font-medium text-green-800">Profile Data Auto-filled!</h3>
+                <p className="text-sm text-green-700">
+                  Your profile information has been automatically filled in the form below. 
+                  You can still modify any fields as needed.
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Google Data Auto-fill Notification */}
+        {profileLoaded && formData.email && !formData.name && session && GoogleDataExtractor.isGoogleUser(session) && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-4"
+          >
+            <div className="flex items-center">
+              <div className="w-5 h-5 bg-blue-100 rounded-full flex items-center justify-center mr-2">
+                <svg className="w-3 h-3 text-blue-600" viewBox="0 0 24 24">
+                  <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-sm font-medium text-blue-800">Google Account Data Auto-filled!</h3>
+                <p className="text-sm text-blue-700">
+                  Your Google account information has been automatically filled. 
+                  Complete your profile for more auto-fill options.
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        )}
+        
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -443,6 +622,15 @@ export default function InternshipPage() {
                 onDragOver={(e) => e.preventDefault()}
                 onDragEnter={() => setIsDragActive(true)}
                 onDragLeave={() => setIsDragActive(false)}
+                role="button"
+                tabIndex={0}
+                aria-label="Upload resume file by dragging and dropping or clicking to select"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    document.getElementById('file-input')?.click();
+                  }
+                }}
                 className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-all duration-300 ${
                   isDragActive
                     ? 'border-gov-saffron bg-gov-saffron/5'
@@ -666,7 +854,14 @@ Winner of Inter-College Coding Competition 2023`;
                         onChange={(e) => handleInputChange('name', e.target.value)}
                         placeholder="Enter your full name"
                         required
+                        aria-describedby="name-error"
+                        aria-invalid={!formData.name ? 'true' : 'false'}
                       />
+                      {!formData.name && (
+                        <p id="name-error" className="text-sm text-red-600" role="alert">
+                          Full name is required
+                        </p>
+                      )}
                     </div>
                     
                     <div className="space-y-2">
@@ -681,7 +876,14 @@ Winner of Inter-College Coding Competition 2023`;
                         onChange={(e) => handleInputChange('email', e.target.value)}
                         placeholder="Enter your email"
                         required
+                        aria-describedby="email-error"
+                        aria-invalid={!formData.email ? 'true' : 'false'}
                       />
+                      {!formData.email && (
+                        <p id="email-error" className="text-sm text-red-600" role="alert">
+                          Email address is required
+                        </p>
+                      )}
                     </div>
                     
                     <div className="space-y-2">
@@ -983,13 +1185,24 @@ Winner of Inter-College Coding Competition 2023`;
               <div className="mt-8 pt-6 border-t">
                 <Button 
                   onClick={handleSubmit}
+                  disabled={isSubmitting}
                   className="w-full bg-gov-saffron hover:bg-gov-saffron/80 text-white"
                   size="lg"
                 >
-                  Save Profile & Apply for Internships
+                  {isSubmitting ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      Getting AI Recommendations...
+                    </>
+                  ) : (
+                    "Get AI-Powered Internship Recommendations"
+                  )}
                 </Button>
                 <p className="text-center text-sm text-gray-600 mt-2">
-                  Your profile will be saved and you can apply for available internship positions
+                  {isSubmitting 
+                    ? "Processing your profile with AI to find the best internship matches..."
+                    : "Your profile will be analyzed by AI to recommend the best internship opportunities"
+                  }
                 </p>
               </div>
             </CardContent>

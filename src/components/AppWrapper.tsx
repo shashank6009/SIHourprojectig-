@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { GovHeaderTop } from "@/components/GovHeaderTop";
 import { MainNav } from "@/components/MainNav";
 import { GovFooter } from "@/components/GovFooter";
 import { Language } from "@/lib/i18n";
+import { initializePWA } from "@/lib/pwa";
 
 export function AppWrapper({ children }: { children: React.ReactNode }) {
   const [language, setLanguage] = useState<Language>("en");
@@ -20,6 +21,11 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
     setHighContrast(highContrast);
     document.documentElement.setAttribute("data-contrast", highContrast ? "high" : "normal");
   };
+
+  // Initialize PWA features
+  useEffect(() => {
+    initializePWA();
+  }, []);
 
   return (
     <>

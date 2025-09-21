@@ -41,7 +41,7 @@ export default function SkillsStep() {
 
   const removeSkill = (s: string) => setSkills((prev) => prev.filter((x) => x !== s));
 
-  const currentIndex = 2;
+  const currentIndex = 1;
 
   return (
     <div className="max-w-2xl mx-auto">

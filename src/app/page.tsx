@@ -59,7 +59,7 @@ export default function HomePage() {
       </section>
 
       {/* Companies Video Section - No Gap */}
-      <section className="py-2 bg-white">
+      <section className="py-2 bg-white companies-video-section">
         <div className="container mx-auto px-4 md:px-6">
           <video
             className="w-full h-16 md:h-20 lg:h-24 rounded-lg shadow-sm object-cover"

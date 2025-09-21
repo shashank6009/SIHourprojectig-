@@ -21,7 +21,7 @@ export default function PreferencesStep() {
     saveWizard({ location: location as any, duration: duration as any, workload: workload as any });
   }, [location, duration, workload]);
 
-  const currentIndex = 3;
+  const currentIndex = 2;
 
   return (
     <div className="max-w-2xl mx-auto">

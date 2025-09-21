@@ -21,7 +21,7 @@ export default function ConsentStep() {
     saveWizard({ notify: notify as any, consent });
   }, [notify, consent]);
 
-  const currentIndex = steps.length - 1;
+  const currentIndex = 4; // final step after removing Resume
 
   const activate = () => {
     if (!consent) return;

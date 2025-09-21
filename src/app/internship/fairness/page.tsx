@@ -19,7 +19,7 @@ export default function FairnessStep() {
     saveWizard({ background: background as any, language });
   }, [background, language]);
 
-  const currentIndex = 4;
+  const currentIndex = 3;
 
   return (
     <div className="max-w-2xl mx-auto">
