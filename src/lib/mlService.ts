@@ -147,6 +147,20 @@ export class MLService {
       }
       
       const response = await apiClient.post('/recommendations', apiPayload);
+      
+      // Debug: Log the raw API response
+      console.log('[MLService] Raw API Response:', JSON.stringify(response.data, null, 2));
+      
+      // Debug: Log success probabilities
+      if (response.data.recommendations) {
+        console.log('[MLService] Success Probabilities:', 
+          response.data.recommendations.map((rec, index) => ({
+            index: index + 1,
+            title: rec.title,
+            success_prob: rec.success_prob
+          }))
+        );
+      }
 
       // Process and clean the response
       const rawRecommendations = response.data.recommendations || [];
