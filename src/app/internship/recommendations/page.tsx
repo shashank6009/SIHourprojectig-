@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -622,9 +623,11 @@ export default function RecommendationsPage() {
                     <div className="flex items-center gap-4 flex-1">
                       {/* Company Logo */}
                       <div className="w-12 h-12 rounded-lg overflow-hidden border border-gray-200 shadow-sm bg-white flex-shrink-0">
-                        <img 
+                        <Image 
                           src={getCompanyLogo(rec.organization_name)} 
                           alt={`${rec.organization_name} logo`}
+                          width={48}
+                          height={48}
                           className="w-full h-full object-cover"
                           onError={(e) => {
                             (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(rec.organization_name)}&background=f8fafc&color=475569&size=48`;
@@ -705,9 +708,11 @@ export default function RecommendationsPage() {
               <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-gray-50">
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 rounded-lg overflow-hidden border border-gray-200 shadow-sm bg-white">
-                    <img 
+                    <Image 
                       src={getCompanyLogo(selectedRecommendation.organization_name)} 
                       alt={`${selectedRecommendation.organization_name} logo`}
+                      width={48}
+                      height={48}
                       className="w-full h-full object-cover"
                       onError={(e) => {
                         (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(selectedRecommendation.organization_name)}&background=f8fafc&color=475569&size=48`;
@@ -736,9 +741,11 @@ export default function RecommendationsPage() {
                   <div className="flex items-start gap-6 flex-1">
                     {/* Professional Company Logo */}
                     <div className="w-16 h-16 rounded-lg overflow-hidden border border-gray-200 shadow-sm bg-white">
-                      <img 
+                      <Image 
                         src={getCompanyLogo(selectedRecommendation.organization_name)} 
                         alt={`${selectedRecommendation.organization_name} logo`}
+                        width={64}
+                        height={64}
                         className="w-full h-full object-cover"
                         onError={(e) => {
                           (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(selectedRecommendation.organization_name)}&background=f8fafc&color=475569&size=64`;

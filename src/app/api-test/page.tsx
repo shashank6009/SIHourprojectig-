@@ -54,7 +54,7 @@ export default function MLApiTestPage() {
       };
 
       const recommendations = await MLService.getRecommendations(sampleProfile, 5);
-      setTestRecommendations(recommendations);
+      setTestRecommendations(recommendations as unknown as Record<string, unknown>);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Recommendations test failed');
     } finally {
