@@ -419,7 +419,7 @@ export class OfflineSyncManager {
   private async registerBackgroundSync(): Promise<void> {
     try {
       const registration = await navigator.serviceWorker.ready;
-      await registration.sync.register('background-sync');
+      await (registration as any).sync.register('background-sync');
       console.log('[OfflineSync] Background sync registered');
     } catch (error) {
       console.error('[OfflineSync] Background sync registration failed:', error);
