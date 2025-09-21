@@ -230,7 +230,7 @@ export function OfflineFormIndicator({ isVisible = true }: { isVisible?: boolean
         <div>
           <h4 className="text-sm font-medium text-orange-800">Working Offline</h4>
           <p className="text-xs text-orange-700">
-            Your changes are being saved locally and will sync when you're back online.
+            Your changes are being saved locally and will sync when you&apos;re back online.
           </p>
         </div>
       </div>

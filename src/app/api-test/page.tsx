@@ -8,8 +8,8 @@ import { MLService } from "@/lib/mlService";
 import { CheckCircle, AlertCircle, RefreshCw } from "lucide-react";
 
 export default function MLApiTestPage() {
-  const [healthStatus, setHealthStatus] = useState<any>(null);
-  const [testRecommendations, setTestRecommendations] = useState<any>(null);
+  const [healthStatus, setHealthStatus] = useState<Record<string, unknown> | null>(null);
+  const [testRecommendations, setTestRecommendations] = useState<Record<string, unknown> | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -140,7 +140,7 @@ export default function MLApiTestPage() {
                     Recommendations ({testRecommendations.total_recommendations})
                   </h3>
                   <div className="space-y-2">
-                    {testRecommendations.recommendations?.slice(0, 3).map((rec: any, idx: number) => (
+                    {testRecommendations.recommendations?.slice(0, 3).map((rec: Record<string, unknown>, idx: number) => (
                       <div key={idx} className="bg-white p-3 rounded border">
                         <div className="font-medium">{rec.title}</div>
                         <div className="text-sm text-gray-600">{rec.organization_name}</div>

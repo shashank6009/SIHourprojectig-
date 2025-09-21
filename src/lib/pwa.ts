@@ -121,7 +121,7 @@ export function isStandalone(): boolean {
   
   return (
     window.matchMedia('(display-mode: standalone)').matches ||
-    (window.navigator as any).standalone === true ||
+    (window.navigator as Record<string, unknown>).standalone === true ||
     document.referrer.includes('android-app://')
   );
 }
@@ -130,7 +130,7 @@ export function isPWAInstalled(): boolean {
   return isStandalone();
 }
 
-export async function getInstallPrompt(): Promise<any> {
+export async function getInstallPrompt(): Promise<unknown> {
   return new Promise((resolve) => {
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();

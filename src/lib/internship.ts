@@ -49,7 +49,7 @@ export function loadWizard(): WizardData {
     try {
       const sraw = window.sessionStorage.getItem("intern_form_data");
       if (sraw) {
-        const ext = JSON.parse(sraw) as any;
+        const ext = JSON.parse(sraw) as Record<string, unknown>;
         const merged: WizardData = { ...base };
         if (!merged.fullName && ext.name) merged.fullName = ext.name;
         if (!merged.college && ext.university) merged.college = ext.university;
@@ -90,7 +90,7 @@ export function saveWizard(data: Partial<WizardData>) {
       technicalSkills: (next.skills || []).join(", "),
       preferredDomain: next.preferredDomain || "",
       preferredLocation: next.location || "",
-    } as any;
+    } as Record<string, unknown>;
     window.sessionStorage.setItem("intern_form_data", JSON.stringify(internForm));
   } catch {}
 }

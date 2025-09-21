@@ -139,7 +139,7 @@ export class MLService {
       const missingFields = requiredFields.filter(field => 
         !apiPayload[field as keyof typeof apiPayload] || 
         (Array.isArray(apiPayload[field as keyof typeof apiPayload]) && 
-         (apiPayload[field as keyof typeof apiPayload] as any[]).length === 0)
+         (apiPayload[field as keyof typeof apiPayload] as unknown[]).length === 0)
       );
       
       if (missingFields.length > 0) {

@@ -18,7 +18,7 @@ export default function PreferencesStep() {
   }, []);
 
   useEffect(() => {
-    saveWizard({ location: location as any, duration: duration as any, workload: workload as any });
+    saveWizard({ location: location as string, duration: duration as string, workload: workload as string });
   }, [location, duration, workload]);
 
   const currentIndex = 2;

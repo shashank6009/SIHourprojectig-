@@ -20,7 +20,7 @@ export function PWAInstaller() {
     // Check if app is already installed
     const checkInstalled = () => {
       const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
-      const isInWebAppiOS = (window.navigator as any).standalone === true;
+      const isInWebAppiOS = (window.navigator as Record<string, unknown>).standalone === true;
       setIsInstalled(isStandalone || isInWebAppiOS);
     };
 
@@ -148,8 +148,8 @@ export function PWAInstaller() {
                   <p className="text-xs text-gray-600 font-medium">To install:</p>
                   <ol className="text-xs text-gray-600 space-y-1 ml-4">
                     <li>1. Tap the Share button</li>
-                    <li>2. Scroll down and tap "Add to Home Screen"</li>
-                    <li>3. Tap "Add" to confirm</li>
+                    <li>2. Scroll down and tap &ldquo;Add to Home Screen&rdquo;</li>
+                    <li>3. Tap &ldquo;Add&rdquo; to confirm</li>
                   </ol>
                   <Button
                     onClick={handleDismiss}

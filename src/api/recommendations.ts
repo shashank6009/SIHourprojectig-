@@ -41,7 +41,7 @@ export interface RecommendationsResponse {
 }
 
 // Utility function to safely convert string to number
-const safeParseNumber = (value: any): number => {
+const safeParseNumber = (value: unknown): number => {
   if (typeof value === 'number') return value;
   if (typeof value === 'string') {
     const parsed = parseFloat(value);
@@ -51,7 +51,7 @@ const safeParseNumber = (value: any): number => {
 };
 
 // Utility function to process recommendations and convert numeric strings
-const processRecommendations = (recommendations: any[]): Recommendation[] => {
+const processRecommendations = (recommendations: Record<string, unknown>[]): Recommendation[] => {
   return recommendations.map((rec) => ({
     ...rec,
     stipend: safeParseNumber(rec.stipend),

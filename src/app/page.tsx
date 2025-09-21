@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Briefcase, School, Globe2, ChevronRight, User, Building, GraduationCap, FileText } from "lucide-react";
@@ -9,8 +9,8 @@ import Image from "next/image";
 import { i18n, type Language } from "@/lib/i18n";
 
 export default function HomePage() {
-  const [language, setLanguage] = useState<Language>("en");
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [language] = useState<Language>("en");
+  const [currentImageIndex] = useState(0);
   const strings = i18n[language];
 
   const images = [
@@ -893,7 +893,7 @@ export default function HomePage() {
                       <p className="text-sm text-gov-darkGray">Student, IIT Delhi</p>
                     </div>
                   </div>
-                  <p className="text-gov-text italic">"The PM Internship Scheme provided me with invaluable experience at ISRO. It bridged the gap between my academic knowledge and real-world applications."</p>
+                  <p className="text-gov-text italic">&ldquo;The PM Internship Scheme provided me with invaluable experience at ISRO. It bridged the gap between my academic knowledge and real-world applications.&rdquo;</p>
                 </CardContent>
               </Card>
             </motion.div>
@@ -909,7 +909,7 @@ export default function HomePage() {
                       <p className="text-sm text-gov-darkGray">HR Director, BHEL</p>
                     </div>
                   </div>
-                  <p className="text-gov-text italic">"The interns from PMIS bring fresh perspectives and energy to our organization. It's a win-win for both students and employers."</p>
+                  <p className="text-gov-text italic">&ldquo;The interns from PMIS bring fresh perspectives and energy to our organization. It&apos;s a win-win for both students and employers.&rdquo;</p>
                 </CardContent>
               </Card>
             </motion.div>
@@ -925,7 +925,7 @@ export default function HomePage() {
                       <p className="text-sm text-gov-darkGray">Student, NIT Surat</p>
                     </div>
                   </div>
-                  <p className="text-gov-text italic">"My internship at the Ministry of Electronics & IT gave me insights into digital governance. Highly recommend PMIS to all students."</p>
+                  <p className="text-gov-text italic">&ldquo;My internship at the Ministry of Electronics & IT gave me insights into digital governance. Highly recommend PMIS to all students.&rdquo;</p>
                 </CardContent>
               </Card>
             </motion.div>

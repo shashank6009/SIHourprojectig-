@@ -284,7 +284,7 @@ export default function InternshipPage() {
     sections.forEach(section => {
       const extracted = extractSection(text, section.keywords);
       if (extracted) {
-        (data as any)[section.key] = extracted;
+        (data as Record<string, unknown>)[section.key] = extracted;
         console.log(`Found ${section.key}:`, extracted.substring(0, 50) + '...');
       }
     });
@@ -613,7 +613,7 @@ export default function InternshipPage() {
                 Smart Resume Upload
               </CardTitle>
               <CardDescription>
-                Upload your resume to automatically fill all sections below. We'll extract and organize your information across Personal Details, Education, Experience, Skills, and more.
+                Upload your resume to automatically fill all sections below. We&apos;ll extract and organize your information across Personal Details, Education, Experience, Skills, and more.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -764,7 +764,7 @@ export default function InternshipPage() {
                         if (textArea) {
                           textArea.value = testText;
                         }
-                      } catch (error) {
+                      } catch {
                         // Fallback test data
                         const testData = `John Doe
 Software Developer

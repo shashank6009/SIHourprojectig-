@@ -20,8 +20,8 @@ const RecommendationsDebug: React.FC = () => {
       const result = await healthCheck();
       setHealthResult(result);
       console.log('Health check result:', result);
-    } catch (err: any) {
-      const errorMessage = err.message || 'Health check failed';
+    } catch (err: unknown) {
+      const errorMessage = (err as Error).message || 'Health check failed';
       setError(errorMessage);
       console.error('Health check error:', err);
     } finally {
@@ -43,8 +43,8 @@ const RecommendationsDebug: React.FC = () => {
       const result = await getRecommendations(studentId.trim(), topN);
       setRecommendationsResult(result);
       console.log('Recommendations result:', result);
-    } catch (err: any) {
-      const errorMessage = err.message || 'Failed to fetch recommendations';
+    } catch (err: unknown) {
+      const errorMessage = (err as Error).message || 'Failed to fetch recommendations';
       setError(errorMessage);
       console.error('Recommendations error:', err);
     } finally {

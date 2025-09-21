@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown, FileText, Camera, ThumbsUp, Smartphone, Headphones, BookOpen } from "lucide-react";
+import { ChevronDown, FileText, Camera, ThumbsUp, BookOpen } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -17,7 +17,6 @@ interface MainNavProps {
 }
 
 export function MainNav({ language }: MainNavProps) {
-  const strings = i18n[language];
 
   return (
     <nav className="sticky top-0 z-50 shadow-sm">

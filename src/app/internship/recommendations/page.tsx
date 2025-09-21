@@ -3,35 +3,23 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
-  Star, 
   MapPin, 
   Calendar, 
   DollarSign, 
   Building2, 
-  Award,
-  TrendingUp,
-  BookOpen,
   ExternalLink,
-  Filter,
-  SortAsc,
-  Search,
   RefreshCw,
   AlertCircle,
   CheckCircle,
   Brain,
   Target,
-  Zap,
   ArrowLeft,
   Lightbulb,
-  TrendingDown,
   X
 } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { MLService, type MLRecommendationsResponse, type InternshipRecommendation, type StudentProfile } from "@/lib/mlService";
 import { useSession } from "next-auth/react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -160,18 +148,11 @@ export default function RecommendationsPage() {
   const [error, setError] = useState<string | null>(null);
   const [studentProfile, setStudentProfile] = useState<StudentProfile | null>(null);
   const [filteredRecs, setFilteredRecs] = useState<InternshipRecommendation[]>([]);
-  const [savedIds, setSavedIds] = useState<Record<string, boolean>>({});
   const [compareIds, setCompareIds] = useState<string[]>([]);
-  const [isCompareOpen, setIsCompareOpen] = useState(false);
   const [completedCourses, setCompletedCourses] = useState<Record<string, boolean>>({});
   const [selectedRecommendation, setSelectedRecommendation] = useState<InternshipRecommendation | null>(null);
   const [mounted, setMounted] = useState(false);
   
-  // Filter states
-  const [searchQuery, setSearchQuery] = useState("");
-  const [domainFilter, setDomainFilter] = useState("all");
-  const [locationFilter, setLocationFilter] = useState("all");
-  const [sortBy, setSortBy] = useState("rank");
 
   // Load data and fetch recommendations
   useEffect(() => {
@@ -349,7 +330,7 @@ export default function RecommendationsPage() {
       internshipId: rec.internship_id,
       title: rec.title || 'Unknown Position',
       organization: rec.organization_name || 'Unknown Company',
-      deadlineISO: (rec as any).deadline_iso || null,
+      deadlineISO: (rec as Record<string, unknown>).deadline_iso as string || null,
       status: 'interested',
       documents: getDefaultChecklist(),
       notes: ''

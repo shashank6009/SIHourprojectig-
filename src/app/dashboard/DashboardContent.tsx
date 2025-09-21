@@ -10,7 +10,6 @@ import {
   User, 
   Mail, 
   Calendar, 
-  GraduationCap, 
   Briefcase, 
   Award, 
   LogOut,
@@ -18,17 +17,15 @@ import {
   FileText,
   TrendingUp,
   Clock,
-  BookOpen,
   Target,
-  CheckCircle,
-  AlertCircle
+  CheckCircle
 } from 'lucide-react';
 import Image from 'next/image';
 
 export default function DashboardContent() {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const [profileData, setProfileData] = useState<any>(null);
+  const [profileData, setProfileData] = useState<Record<string, unknown> | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -167,7 +164,7 @@ export default function DashboardContent() {
               Welcome back, {session.user.name?.split(' ')[0] || 'User'}!
             </h1>
             <p className="text-gray-600 mt-2">
-              Here's what's happening with your internship applications
+              Here&apos;s what&apos;s happening with your internship applications
             </p>
           </div>
           <div className="flex space-x-3">

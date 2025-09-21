@@ -16,7 +16,7 @@ export default function FairnessStep() {
   }, []);
 
   useEffect(() => {
-    saveWizard({ background: background as any, language });
+    saveWizard({ background: background as string, language });
   }, [background, language]);
 
   const currentIndex = 3;

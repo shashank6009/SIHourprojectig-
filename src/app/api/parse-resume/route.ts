@@ -74,12 +74,12 @@ export async function POST(req: Request) {
           if (fs.existsSync(testDir)) {
             fs.rmSync(testDir, { recursive: true, force: true });
           }
-        } catch (error) {
+        } catch {
           // Ignore cleanup errors
         }
         
         console.log('Server: PDF parsed, text length:', text.length);
-      } catch (pdfError: any) {
+      } catch (pdfError: unknown) {
         console.error('Server: PDF parsing error:', pdfError);
         // Check if it's the test file error and provide a better message
         if (pdfError.message?.includes('ENOENT') && pdfError.message?.includes('05-versions-space.pdf')) {
@@ -124,7 +124,7 @@ export async function POST(req: Request) {
 
     console.log('Server: Returning text, first 200 chars:', text.substring(0, 200));
     return NextResponse.json({ text });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Server: Unexpected error:', error);
     console.error('Server: Error stack:', error?.stack);
     return NextResponse.json({ error: error?.message || "Server error while processing file" }, { status: 500 });

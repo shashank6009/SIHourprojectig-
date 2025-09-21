@@ -91,7 +91,7 @@ export default function RegisterForm() {
       } else {
         setError(result.error || 'Registration failed. Please try again.');
       }
-    } catch (err) {
+    } catch {
       setError('An unexpected error occurred. Please try again.');
     } finally {
       setIsLoading(false);
@@ -113,7 +113,7 @@ export default function RegisterForm() {
       } else if (result?.ok) {
         router.push('/dashboard');
       }
-    } catch (err) {
+    } catch {
       setError('Failed to sign in with Google. Please try again.');
     } finally {
       setIsLoading(false);

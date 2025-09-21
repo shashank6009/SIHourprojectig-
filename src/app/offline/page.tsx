@@ -131,8 +131,8 @@ export default function OfflinePage() {
             You're Currently Offline
           </h1>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Don't worry! The PM Internship Scheme Portal works offline. 
-            You can continue using the application and your data will sync when you're back online.
+            Don&apos;t worry! The PM Internship Scheme Portal works offline. 
+            You can continue using the application and your data will sync when you&apos;re back online.
           </p>
         </motion.div>
 

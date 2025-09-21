@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { clearWizard, loadWizard, saveWizard } from "@/lib/internship";
 import { Bell, ShieldCheck, Rocket } from "lucide-react";
-import { steps } from "@/lib/internship";
 import { useRouter } from "next/navigation";
 
 export default function ConsentStep() {
@@ -18,10 +17,9 @@ export default function ConsentStep() {
   }, []);
 
   useEffect(() => {
-    saveWizard({ notify: notify as any, consent });
+    saveWizard({ notify: notify as string, consent });
   }, [notify, consent]);
 
-  const currentIndex = 4; // final step after removing Resume
 
   const activate = () => {
     if (!consent) return;

@@ -2,7 +2,7 @@ import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
-import { users, findUserByEmail, createOrUpdateGoogleUser } from "@/lib/users";
+import { findUserByEmail, createOrUpdateGoogleUser } from "@/lib/users";
 
 // Demo users for testing
 const demoUsers = [
