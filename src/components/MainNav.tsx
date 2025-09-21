@@ -10,13 +10,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { i18n, type Language } from "@/lib/i18n";
+import { type Language } from "@/lib/i18n";
 
 interface MainNavProps {
   language: Language;
 }
 
-export function MainNav({ language }: MainNavProps) {
+export function MainNav({}: MainNavProps) {
 
   return (
     <nav className="sticky top-0 z-50 shadow-sm">

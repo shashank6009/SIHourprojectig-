@@ -25,7 +25,7 @@ import Image from 'next/image';
 export default function DashboardContent() {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const [profileData, setProfileData] = useState<Record<string, unknown> | null>(null);
+  const [, setProfileData] = useState<Record<string, unknown> | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

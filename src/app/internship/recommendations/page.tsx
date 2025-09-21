@@ -18,6 +18,7 @@ import {
   Target,
   ArrowLeft,
   Lightbulb,
+  BookOpen,
   X
 } from "lucide-react";
 import { MLService, type MLRecommendationsResponse, type InternshipRecommendation, type StudentProfile } from "@/lib/mlService";
@@ -171,7 +172,7 @@ export default function RecommendationsPage() {
         let profile: StudentProfile;
         try {
           profile = JSON.parse(profileData);
-        } catch (parseError) {
+        } catch {
           setError("Invalid profile data. Please fill the intern form again.");
           setIsLoading(false);
           return;
@@ -296,7 +297,7 @@ export default function RecommendationsPage() {
     });
 
     setFilteredRecs(filtered);
-  }, [recommendations, searchQuery, domainFilter, locationFilter, sortBy]);
+  }, [recommendations]);
 
   const handleRefresh = async () => {
     if (!studentProfile) return;
@@ -323,33 +324,8 @@ export default function RecommendationsPage() {
   const uniqueDomains = recommendations ? [...new Set(recommendations.recommendations.map(r => r.domain))] : [];
   const uniqueLocations = recommendations ? [...new Set(recommendations.recommendations.map(r => r.location))] : [];
 
-  const toggleSave = (rec: InternshipRecommendation) => {
-    if (!rec || !rec.internship_id || !tracker) return;
-    
-    const saved = tracker.toggleSave({
-      internshipId: rec.internship_id,
-      title: rec.title || 'Unknown Position',
-      organization: rec.organization_name || 'Unknown Company',
-      deadlineISO: (rec as Record<string, unknown>).deadline_iso as string || null,
-      status: 'interested',
-      documents: getDefaultChecklist(),
-      notes: ''
-    });
-    setSavedIds((prev) => ({ ...prev, [rec.internship_id]: Boolean(saved) }));
-  };
 
-  const updateStatus = (id: string, status: ApplicationStatus) => {
-    if (!tracker) return;
-    tracker.updateStatus(id, status);
-  };
 
-  const checklistToggle = (id: string, key: keyof ReturnType<typeof getDefaultChecklist>) => {
-    if (!tracker) return;
-    const current = tracker.get(id);
-    if (!current) return;
-    const next = { ...current.documents, [key]: !current.documents[key] };
-    tracker.updateDocuments(id, next);
-  };
 
   const createICS = (title: string, deadlineISO?: string | null) => {
     // Only run on client-side
@@ -401,8 +377,6 @@ export default function RecommendationsPage() {
     });
   };
 
-  const getRecById = (id: string) =>
-    (recommendations?.recommendations || []).find((r) => r.internship_id === id);
 
   // Completed courses storage
   const completedKey = `pmis-completed-courses:${userId}`;
@@ -426,64 +400,8 @@ export default function RecommendationsPage() {
       });
       setSavedIds(savedMap);
     }
-  }, [completedKey, userId]);
+  }, [completedKey, userId, tracker]);
 
-  const markCourseCompleted = async (skill: string, label: string) => {
-    if (!skill || !label || !studentProfile) return;
-    
-    const id = `${skill}:${label}`;
-    const next = { ...completedCourses, [id]: true };
-    setCompletedCourses(next);
-    
-    // Save to localStorage with error handling
-    try { 
-      if (typeof window !== 'undefined') {
-        localStorage.setItem(completedKey, JSON.stringify(next)); 
-      }
-    } catch (e) {
-      console.warn('Failed to save completed courses to localStorage:', e);
-    }
-
-    // If skill not present, add to profile and refresh recommendations
-    const hasSkill = studentProfile.skills.some(s => 
-      s.toLowerCase() === skill.toLowerCase()
-    );
-    
-    if (!hasSkill) {
-      const updated: StudentProfile = {
-        ...studentProfile,
-        skills: [...studentProfile.skills, skill]
-      };
-      
-      setStudentProfile(updated);
-      
-      if (typeof window !== 'undefined') {
-        try {
-          sessionStorage.setItem('student_profile', JSON.stringify(updated));
-        } catch (e) {
-          console.warn('Failed to save updated profile:', e);
-        }
-      }
-      
-      try {
-        MLService.clearCachedRecommendations(updated.student_id);
-        setIsLoading(true);
-        setError(null);
-        
-        const fresh = await MLService.getRecommendations(updated, 15);
-        if (fresh && fresh.recommendations) {
-          await MLService.storeRecommendations(updated.student_id, fresh);
-          setRecommendations(fresh);
-          setFilteredRecs(fresh.recommendations);
-        }
-      } catch (e) {
-        console.error('Failed to refresh after course completion:', e);
-        setError('Failed to refresh recommendations. Please try again.');
-      } finally {
-        setIsLoading(false);
-      }
-    }
-  };
 
   if (isLoading || status === "loading") {
     return (
