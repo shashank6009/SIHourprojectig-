@@ -53,7 +53,12 @@ const safeParseNumber = (value: unknown): number => {
 // Utility function to process recommendations and convert numeric strings
 const processRecommendations = (recommendations: Record<string, unknown>[]): Recommendation[] => {
   return recommendations.map((rec) => ({
-    ...rec,
+    internship_id: rec.internship_id as string,
+    title: rec.title as string,
+    organization_name: rec.organization_name as string,
+    domain: rec.domain as string,
+    location: rec.location as string,
+    duration: rec.duration as string,
     stipend: safeParseNumber(rec.stipend),
     rank: safeParseNumber(rec.rank),
     scores: {
