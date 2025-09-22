@@ -303,7 +303,7 @@ export default function RecommendationsPage() {
     });
 
     setFilteredRecs(filtered);
-  }, [recommendations]);
+  }, [recommendations, searchQuery, domainFilter, locationFilter, sortBy]);
 
   const handleRefresh = async () => {
     if (!studentProfile) return;
