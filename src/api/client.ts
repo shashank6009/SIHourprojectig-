@@ -17,6 +17,13 @@ const apiClient: AxiosInstance = axios.create({
 // Request interceptor
 apiClient.interceptors.request.use(
   (config) => {
+    // Short-circuit requests when offline to avoid long timeouts
+    if (typeof window !== 'undefined' && typeof navigator !== 'undefined' && navigator && !navigator.onLine) {
+      const offlineError: any = new Error('Offline');
+      offlineError.code = 'OFFLINE';
+      offlineError.config = config;
+      return Promise.reject(offlineError);
+    }
     console.log(`🚀 API Request: ${config.method?.toUpperCase()} ${config.url}`);
     return config;
   },
@@ -41,6 +48,16 @@ apiClient.interceptors.response.use(
       requestData: error.config?.data,
       responseData: error.response?.data,
     });
+
+    // Normalize offline errors
+    // @ts-expect-error code may be attached dynamically
+    if (error.code === 'OFFLINE' || (typeof window !== 'undefined' && navigator && !navigator.onLine)) {
+      return Promise.reject({
+        code: 'OFFLINE',
+        message: 'Offline',
+        url: error.config?.url,
+      });
+    }
 
     // Never throw non-JSON errors, return a structured error instead
     if (error.response?.data && typeof error.response.data === 'object') {

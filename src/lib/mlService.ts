@@ -110,6 +110,21 @@ export class MLService {
     studentProfile: StudentProfile,
     topN: number = 10
   ): Promise<MLRecommendationsResponse> {
+    // Offline-first: if offline, return cached or empty deterministic response
+    if (typeof window !== 'undefined' && typeof navigator !== 'undefined' && navigator && !navigator.onLine) {
+      const cached = this.getCachedRecommendations(studentProfile.student_id);
+      if (cached) {
+        return cached;
+      }
+      return {
+        student_id: studentProfile.student_id,
+        total_recommendations: 0,
+        requested_count: 0,
+        recommendations: [],
+        processing_time: 0,
+        model_version: 'offline'
+      };
+    }
     // Validate input parameters
     if (!studentProfile || !studentProfile.student_id) {
       throw new Error('Invalid student profile: missing student ID');
@@ -292,7 +307,19 @@ export class MLService {
       console.error('[MLService] Payload that caused error:', JSON.stringify(apiPayload, null, 2));
       
       // Provide specific error messages based on the error type
-      if (error?.response?.status === 422) {
+      // @ts-expect-error code may be attached dynamically
+      if (error?.code === 'OFFLINE') {
+        const cached = this.getCachedRecommendations(studentProfile.student_id);
+        if (cached) return cached;
+        return {
+          student_id: studentProfile.student_id,
+          total_recommendations: 0,
+          requested_count: 0,
+          recommendations: [],
+          processing_time: 0,
+          model_version: 'offline'
+        };
+      } else if (error?.response?.status === 422) {
         const errorMessage = error?.response?.data?.error || 'Invalid data provided to ML service';
         throw new Error(`Data validation failed: ${errorMessage}`);
       } else if (error?.response?.status === 500) {
