@@ -1004,31 +1004,28 @@ export default function RecommendationsPage() {
 
                     {/* Professional Action Buttons */}
                     <div className="space-y-3">
-                      <Button 
-                        className="w-full bg-gov-saffron hover:bg-gov-saffron/90 text-white h-12 text-base font-semibold"
+                      <button 
+                        className="w-full bg-gov-saffron hover:bg-gov-saffron/90 text-white h-12 text-base font-semibold inline-flex items-center justify-center rounded-md transition-all"
                         onClick={() => {
                           if (typeof window !== 'undefined') {
                             window.open(getApplicationLink(selectedRecommendation.internship_id, selectedRecommendation.organization_name), '_blank');
                           }
                         }}
+                        aria-label="Apply Now"
                       >
-                        Apply Now
-                        <ExternalLink className="w-4 h-4 ml-2" />
-                      </Button>
+                        <span className="inline-flex items-center gap-2">Apply Now<ExternalLink className="w-4 h-4" /></span>
+                      </button>
                       
                       <div className="flex gap-2">
-                        <Button 
-                          variant="outline" 
-                          size="sm"
-                          className="flex-1 text-xs font-medium text-gov-navy px-3 py-2"
+                        <button 
+                          className="flex-1 text-xs font-medium text-gov-navy px-3 py-2 border border-gov-navy rounded-md hover:bg-gov-navy hover:text-white transition-colors"
                           onClick={() => toggleCompare(selectedRecommendation.internship_id)}
+                          aria-label={compareIds.includes(selectedRecommendation.internship_id) ? 'Remove' : 'Compare'}
                         >
-                          {compareIds.includes(selectedRecommendation.internship_id) ? 'Remove' : 'Compare'}
-                        </Button>
-                        <Button 
-                          variant="outline" 
-                          size="sm"
-                          className="flex-1 text-xs font-medium text-gov-navy px-3 py-2"
+                          <span>{compareIds.includes(selectedRecommendation.internship_id) ? 'Remove' : 'Compare'}</span>
+                        </button>
+                        <button 
+                          className="flex-1 text-xs font-medium text-gov-navy px-3 py-2 border border-gov-navy rounded-md hover:bg-gov-navy hover:text-white transition-colors"
                           onClick={async () => {
                             if (typeof window !== 'undefined') {
                               try {
@@ -1059,8 +1056,8 @@ export default function RecommendationsPage() {
                             }
                           }}
                         >
-                          Share
-                        </Button>
+                          <span>Share</span>
+                        </button>
                       </div>
                     </div>
 
