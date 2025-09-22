@@ -137,15 +137,15 @@ export default function MLApiTestPage() {
               {testRecommendations && (
                 <div className="bg-blue-50 p-4 rounded-lg max-h-96 overflow-y-auto">
                   <h3 className="font-semibold text-blue-800 mb-2">
-                    Recommendations ({testRecommendations.total_recommendations})
+                    Recommendations ({(testRecommendations.total_recommendations as number) || 0})
                   </h3>
                   <div className="space-y-2">
                     {testRecommendations.recommendations?.slice(0, 3).map((rec: Record<string, unknown>, idx: number) => (
                       <div key={idx} className="bg-white p-3 rounded border">
-                        <div className="font-medium">{rec.title}</div>
-                        <div className="text-sm text-gray-600">{rec.organization_name}</div>
+                        <div className="font-medium">{rec.title as string}</div>
+                        <div className="text-sm text-gray-600">{rec.organization_name as string}</div>
                         <div className="text-sm text-blue-600">
-                          Success: {Math.round(rec.scores?.success_probability * 100)}%
+                          Success: {Math.round(((rec.scores as Record<string, unknown>)?.success_probability as number) * 100)}%
                         </div>
                       </div>
                     ))}
