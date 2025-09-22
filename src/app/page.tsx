@@ -947,7 +947,11 @@ export default function HomePage() {
               <Button 
                 variant="outline" 
                 className="group hover:shadow-md transition-all duration-200"
-                onClick={() => window.open('https://pminternship.mca.gov.in/guidelines', '_blank')}
+                onClick={() => {
+                  if (typeof window !== 'undefined') {
+                    window.open('https://pminternship.mca.gov.in/guidelines', '_blank');
+                  }
+                }}
                 aria-label="Download English Guidelines"
               >
                 <FileText className="mr-2 h-4 w-4" />
@@ -959,7 +963,11 @@ export default function HomePage() {
               <Button 
                 variant="outline" 
                 className="group hover:shadow-md transition-all duration-200"
-                onClick={() => window.open('https://pminternship.mca.gov.in/guidelines-hi', '_blank')}
+                onClick={() => {
+                  if (typeof window !== 'undefined') {
+                    window.open('https://pminternship.mca.gov.in/guidelines-hi', '_blank');
+                  }
+                }}
                 aria-label="Download Hindi Guidelines"
               >
                 <FileText className="mr-2 h-4 w-4" />
@@ -971,7 +979,11 @@ export default function HomePage() {
               <Button 
                 variant="outline" 
                 className="group hover:shadow-md transition-all duration-200"
-                onClick={() => window.open('https://pminternship.mca.gov.in/faqs', '_blank')}
+                onClick={() => {
+                  if (typeof window !== 'undefined') {
+                    window.open('https://pminternship.mca.gov.in/faqs', '_blank');
+                  }
+                }}
                 aria-label="View Frequently Asked Questions"
               >
                 <FileText className="mr-2 h-4 w-4" />
@@ -983,7 +995,11 @@ export default function HomePage() {
               <Button 
                 variant="outline" 
                 className="group hover:shadow-md transition-all duration-200"
-                onClick={() => window.location.href = 'mailto:pmi.helpdesk@mca.gov.in'}
+                onClick={() => {
+                  if (typeof window !== 'undefined') {
+                    window.location.href = 'mailto:pmi.helpdesk@mca.gov.in';
+                  }
+                }}
                 aria-label="Contact Helpdesk via Email"
               >
                 <FileText className="mr-2 h-4 w-4" />
