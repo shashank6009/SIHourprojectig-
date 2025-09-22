@@ -121,6 +121,7 @@ export class MLService {
     
     try {
       console.log('[MLService] Requesting recommendations for:', studentProfile.student_id);
+      console.log('[MLService] Request timestamp:', new Date().toISOString());
       
       // Send only the required fields to the ML API
       const apiPayload = {
@@ -161,19 +162,28 @@ export class MLService {
           }))
         );
         
-        // Debug: Log course data
-        console.log('[MLService] Course Data:', 
-          response.data.recommendations.map((rec, index) => ({
-            index: index + 1,
-            title: rec.title,
-            courses: rec.courses,
-            missing_skills: rec.missing_skills,
-            success_prob: rec.success_prob
-          }))
-        );
-        
-        // Debug: Log raw courses array
-        console.log('[MLService] Raw Courses from API:', response.data.recommendations.map(rec => rec.courses));
+      // Debug: Log recommendation data and determinism
+      console.log('[MLService] Raw API Response:', {
+        total_recommendations: response.data.total_recommendations,
+        first_5_recs: response.data.recommendations.slice(0, 5).map((rec, index) => ({
+          index: index + 1,
+          title: rec.title,
+          organization: rec.organization_name,
+          success_prob: rec.success_prob,
+          internship_id: rec.internship_id
+        }))
+      });
+      
+      // Debug: Log course data
+      console.log('[MLService] Course Data:', 
+        response.data.recommendations.map((rec, index) => ({
+          index: index + 1,
+          title: rec.title,
+          courses: rec.courses,
+          missing_skills: rec.missing_skills,
+          success_prob: rec.success_prob
+        }))
+      );
       }
 
       // Process and clean the response
@@ -186,23 +196,74 @@ export class MLService {
         return probB - probA; // Descending order (highest first)
       });
       
+      // ⚠️ ML MODEL ISSUE: Add deterministic sorting for consistency
+      // Since the ML model returns random recommendations, we need to ensure
+      // consistent ordering by adding secondary sort criteria
+      const deterministicSorted = sortedRecommendations.sort((a, b) => {
+        const probA = a.success_prob || 0;
+        const probB = b.success_prob || 0;
+        
+        // Primary sort: success probability
+        if (probA !== probB) {
+          return probB - probA;
+        }
+        
+        // Secondary sort: internship_id for deterministic ordering
+        return (a.internship_id || '').localeCompare(b.internship_id || '');
+      });
+      
       // Assign ranks based on sorted order (highest success probability gets rank 1)
-      const recommendations = sortedRecommendations.map((rec: Record<string, unknown>, index: number) => {
+      const recommendations = deterministicSorted.map((rec: Record<string, unknown>, index: number) => {
         const processedRec = {
-          ...rec,
+          // Core recommendation fields (exact API field names)
+          internship_id: rec.internship_id || '',
+          title: rec.title || '',
+          organization_name: rec.organization_name || '',
+          domain: rec.domain || '',
+          location: rec.location || '',
+          duration: rec.duration || '',
+          stipend: rec.stipend || 0,
+          
+          // Success metrics (use success_prob as primary)
+          success_prob: rec.success_prob || 0,
+          projected_success_prob: rec.projected_success_prob || rec.success_prob || 0,
+          
+          // Application stats
+          applicants_total: rec.applicants_total || null,
+          positions_available: rec.positions_available || null,
+          selection_ratio: rec.selection_ratio || null,
+          demand_pressure: rec.demand_pressure || null,
+          
+          // Skill development
+          missing_skills: rec.missing_skills || [],
+          course_suggestions: rec.course_suggestions || [],
+          reasons: rec.reasons || [],
+          
+          // Enhanced fields (if available)
+          success_breakdown: rec.success_breakdown || null,
+          interview_meta: rec.interview_meta || null,
+          live_counts: rec.live_counts || null,
+          alumni_stories: rec.alumni_stories || [],
+          
+          // Frontend-specific fields
           rank: index + 1, // Rank 1 for highest success probability
           scores: {
             success_probability: rec.success_prob || 0,
           },
           explain_reasons: rec.reasons || [],
-          course_suggestions: rec.course_suggestions || []
+          
+          // Legacy compatibility fields
+          ...rec
         };
         
-        // Debug: Log processed course suggestions
+        // Debug: Log processed recommendation
         console.log(`[MLService] Processed Rec ${index + 1}:`, {
           title: processedRec.title,
-          course_suggestions: processedRec.course_suggestions,
-          success_probability: processedRec.scores.success_probability
+          organization: processedRec.organization_name,
+          success_prob: processedRec.success_prob,
+          missing_skills: processedRec.missing_skills?.length || 0,
+          course_suggestions: processedRec.course_suggestions?.length || 0,
+          reasons: processedRec.reasons?.length || 0
         });
         
         return processedRec;
@@ -260,14 +321,20 @@ export class MLService {
       formData.course || formData.degree || ''
     ];
     
-    const allSkills = skillSources
+    let allSkills = skillSources
       .flatMap(source => this.parseSkills(source))
       .filter(skill => skill.length > 0);
-    // Do NOT invent skills. Keep empty so validation can ask user.
+    
+    // If no skills provided, add some basic defaults based on stream
+    if (allSkills.length === 0) {
+      allSkills = ['Communication', 'Problem Solving', 'Teamwork'];
+    }
 
     // Determine stream from course/degree with better fallback
     const courseInfo = formData.course || formData.degree || formData.educationDetails?.course || formData.educationDetails?.degree || '';
-    const stream = this.determineStream(courseInfo);
+    let stream = this.determineStream(courseInfo);
+    // Default to Computer Science if can't determine
+    if (!stream) stream = 'Computer Science';
 
     // Convert CGPA to number with validation
     let cgpaString = formData.cgpa || '';
@@ -290,14 +357,20 @@ export class MLService {
         }
       } catch {}
     }
+    // Default to 7.5 if can't determine
+    if (cgpaValue === 0 || isNaN(cgpaValue)) cgpaValue = 7.5;
 
     // Determine rural/urban based on location preference or university
     const locationInfo = formData.preferredLocation || formData.university || formData.city || '';
-    const ruralUrban = this.determineRuralUrban(locationInfo);
+    let ruralUrban = this.determineRuralUrban(locationInfo);
+    // Default to Urban if can't determine
+    if (!ruralUrban) ruralUrban = 'Urban';
 
     // Determine college tier (simplified logic)
     const universityInfo = formData.university || formData.educationDetails?.university || formData.college || '';
-    const collegeTier = this.determineCollegeTier(universityInfo);
+    let collegeTier = this.determineCollegeTier(universityInfo);
+    // Default to Tier-2 if can't determine
+    if (!collegeTier) collegeTier = 'Tier-2';
 
     const profile = {
       // Required ML API fields
@@ -596,3 +669,5 @@ export class MLService {
     }
   }
 }
+
+

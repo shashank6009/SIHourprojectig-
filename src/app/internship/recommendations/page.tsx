@@ -20,7 +20,8 @@ import {
   ArrowLeft,
   Lightbulb,
   BookOpen,
-  X
+  X,
+  Search
 } from "lucide-react";
 import { MLService, type MLRecommendationsResponse, type InternshipRecommendation, type StudentProfile } from "@/lib/mlService";
 import { useSession } from "next-auth/react";
@@ -232,6 +233,12 @@ export default function RecommendationsPage() {
         console.log('Fetching AI recommendations for:', profile.student_id);
         const mlResponse = await MLService.getRecommendations(profile, 15);
         
+        // Log determinism warning
+        console.warn('[Recommendations] ⚠️ ML MODEL ISSUES DETECTED:');
+        console.warn('  - Model returns random recommendations instead of ranking by success probability');
+        console.warn('  - Success probabilities are pre-calculated buckets, not student-specific');
+        console.warn('  - Recommendations will vary on each refresh due to random selection');
+        
         if (!mlResponse || !mlResponse.recommendations) {
           throw new Error('Invalid response from ML service');
         }
@@ -290,7 +297,7 @@ export default function RecommendationsPage() {
         case "rank":
           return a.rank - b.rank;
         case "success_probability":
-          return b.scores.success_probability - a.scores.success_probability;
+          return (b.success_prob || b.scores.success_probability || 0) - (a.success_prob || a.scores.success_probability || 0);
         case "stipend":
           const stipendA = typeof a.stipend === 'number' ? a.stipend : parseFloat(a.stipend as string) || 0;
           const stipendB = typeof b.stipend === 'number' ? b.stipend : parseFloat(b.stipend as string) || 0;
@@ -520,7 +527,8 @@ export default function RecommendationsPage() {
                 <Card className="border-green-200 shadow-md">
                   <CardContent className="p-4 text-center">
                     <div className="text-3xl font-bold text-green-600 mb-1">
-                      {Math.round(Math.max(...recommendations.recommendations.map(r => r.scores.success_probability)) * 100)}%
+                      {recommendations.recommendations.length > 0 ? 
+                        Math.round(Math.max(...recommendations.recommendations.map(r => r.success_prob || r.scores.success_probability || 0)) * 100) : 0}%
                     </div>
                     <div className="text-sm text-gray-600">Highest Success Rate</div>
                     <div className="text-xs text-gray-500 mt-1">Best match probability</div>
@@ -554,8 +562,8 @@ export default function RecommendationsPage() {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className="text-center">
                       <div className="text-2xl font-bold text-indigo-600 mb-1">
-                        {recommendations.recommendations[0]?.scores.success_probability ? 
-                          Math.round(recommendations.recommendations[0].scores.success_probability * 100) : 85}%
+                        {recommendations.recommendations.length > 0 && (recommendations.recommendations[0]?.success_prob || recommendations.recommendations[0]?.scores.success_probability) ? 
+                          Math.round((recommendations.recommendations[0].success_prob || recommendations.recommendations[0].scores.success_probability || 0) * 100) : 0}%
                       </div>
                       <div className="text-sm text-indigo-700 font-medium">Top Match Success Rate</div>
                       <div className="text-xs text-indigo-600 mt-1">
@@ -606,7 +614,8 @@ export default function RecommendationsPage() {
           transition={{ delay: 0.2 }}
           className="space-y-4"
         >
-          {filteredRecs.filter(rec => rec && rec.internship_id).map((rec, index) => (
+          {filteredRecs.filter(rec => rec && rec.internship_id).length > 0 ? (
+            filteredRecs.filter(rec => rec && rec.internship_id).map((rec, index) => (
             <motion.div
               key={`${rec.internship_id}-${index}`}
               initial={{ opacity: 0, y: 20 }}
@@ -673,7 +682,7 @@ export default function RecommendationsPage() {
                     <div className="flex items-center gap-4">
                       <div className="text-right">
                         <div className="text-2xl font-bold text-green-600">
-                          {Math.round(rec.scores.success_probability * 100)}%
+                          {Math.round((rec.success_prob || rec.scores.success_probability || 0) * 100)}%
                         </div>
                         <div className="text-xs text-gray-500">Success Rate</div>
                       </div>
@@ -688,7 +697,46 @@ export default function RecommendationsPage() {
           </Card>
 
             </motion.div>
-        ))}
+            ))
+          ) : (
+            // Empty State
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-center py-12"
+            >
+              <div className="max-w-md mx-auto">
+                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Search className="w-8 h-8 text-gray-400" />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">No Recommendations Found</h3>
+                <p className="text-gray-600 mb-4">
+                  The ML model couldn't find any matching internships for your profile. This might be due to:
+                </p>
+                <ul className="text-sm text-gray-500 text-left space-y-1 mb-6">
+                  <li>• Limited internship data in the system</li>
+                  <li>• Very specific profile requirements</li>
+                  <li>• Temporary model issues</li>
+                </ul>
+                <div className="space-y-3">
+                  <Button 
+                    onClick={() => window.location.reload()} 
+                    className="w-full"
+                  >
+                    <RefreshCw className="w-4 h-4 mr-2" />
+                    Refresh Recommendations
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    onClick={() => window.history.back()}
+                    className="w-full"
+                  >
+                    ← Back to Form
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          )}
         </motion.div>
       </div>
 
@@ -803,19 +851,19 @@ export default function RecommendationsPage() {
                   {/* Professional Success Probability Display */}
                   <div className="text-right">
                     <div className="text-3xl font-bold text-green-600 mb-1">
-                      {Math.round(selectedRecommendation.scores.success_probability * 100)}%
+                      {Math.round((selectedRecommendation.success_prob || selectedRecommendation.scores.success_probability || 0) * 100)}%
                     </div>
                     <div className="text-sm text-gray-600 mb-2">Success Rate</div>
                     <div className="w-20 bg-gray-200 rounded-full h-2">
                       <div 
                         className="bg-green-500 h-2 rounded-full transition-all duration-1000"
-                        style={{ width: `${selectedRecommendation.scores.success_probability * 100}%` }}
+                        style={{ width: `${(selectedRecommendation.success_prob || selectedRecommendation.scores.success_probability || 0) * 100}%` }}
                       ></div>
                     </div>
                     <div className="text-xs text-gray-500 mt-1">
-                      {selectedRecommendation.scores.success_probability > 0.8 ? 'Excellent Match' : 
-                       selectedRecommendation.scores.success_probability > 0.6 ? 'Good Match' : 
-                       selectedRecommendation.scores.success_probability > 0.4 ? 'Fair Match' : 'Needs Improvement'}
+                      {(selectedRecommendation.success_prob || selectedRecommendation.scores.success_probability || 0) > 0.8 ? 'Excellent Match' : 
+                       (selectedRecommendation.success_prob || selectedRecommendation.scores.success_probability || 0) > 0.6 ? 'Good Match' : 
+                       (selectedRecommendation.success_prob || selectedRecommendation.scores.success_probability || 0) > 0.4 ? 'Fair Match' : 'Needs Improvement'}
                     </div>
                   </div>
                 </div>
@@ -873,12 +921,19 @@ export default function RecommendationsPage() {
                     )}
 
                     {/* Professional Course Recommendations */}
-                    {selectedRecommendation.course_suggestions && selectedRecommendation.course_suggestions.length > 0 && (
-                      <div className="bg-blue-50 rounded-lg p-6 border border-blue-200">
-                        <h4 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                          <BookOpen className="w-5 h-5 text-blue-600" />
-                          Recommended Courses
-                        </h4>
+                    {console.log('[RecommendationsPage] Course suggestions debug:', {
+                      hasCourseSuggestions: !!selectedRecommendation.course_suggestions,
+                      courseSuggestionsLength: selectedRecommendation.course_suggestions?.length || 0,
+                      courseSuggestions: selectedRecommendation.course_suggestions
+                    })}
+                    {/* Course Recommendations Section - Always Show */}
+                    <div className="bg-blue-50 rounded-lg p-6 border border-blue-200">
+                      <h4 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                        <BookOpen className="w-5 h-5 text-blue-600" />
+                        Recommended Courses
+                      </h4>
+                      
+                      {selectedRecommendation.course_suggestions && selectedRecommendation.course_suggestions.length > 0 ? (
                         <div className="space-y-3">
                           {selectedRecommendation.course_suggestions.slice(0, 2).map((course, idx) => (
                             <div key={idx} className="bg-white p-4 rounded-lg border border-blue-100 hover:border-blue-200 transition-colors">
@@ -914,21 +969,29 @@ export default function RecommendationsPage() {
                             </div>
                           ))}
                         </div>
-                      </div>
-                    )}
+                      ) : (
+                        <div className="text-center py-8">
+                          <BookOpen className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+                          <p className="text-gray-500 mb-2">No course recommendations available</p>
+                          <p className="text-sm text-gray-400">
+                            The ML model didn't provide course suggestions for this internship.
+                          </p>
+                        </div>
+                      )}
+                    </div>
                   </div>
 
                   {/* Professional Right Column - Actions & Details */}
                   <div className="space-y-6">
                     {/* Why This Matches */}
-                    {selectedRecommendation.explain_reasons && selectedRecommendation.explain_reasons.length > 0 && (
+                    {(selectedRecommendation.reasons || selectedRecommendation.explain_reasons) && (selectedRecommendation.reasons || selectedRecommendation.explain_reasons).length > 0 && (
                       <div className="bg-green-50 rounded-lg p-6 border border-green-200">
                         <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
                           <Lightbulb className="w-5 h-5 text-green-600" />
                           Why This Matches You
                         </h4>
                         <ul className="space-y-2 text-sm text-gray-700">
-                          {selectedRecommendation.explain_reasons.slice(0, 3).map((reason, idx) => (
+                          {(selectedRecommendation.reasons || selectedRecommendation.explain_reasons).slice(0, 3).map((reason, idx) => (
                             <li key={idx} className="flex items-start gap-2">
                               <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
                               <span>{reason}</span>
@@ -1035,3 +1098,5 @@ export default function RecommendationsPage() {
     </div>
   );
 }
+
+

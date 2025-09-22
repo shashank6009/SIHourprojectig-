@@ -39,7 +39,8 @@ export function MainNav({}: MainNavProps) {
               href="/login" 
               className="block w-full h-full"
               aria-label="Login to PM Internship Portal"
-            />
+            >
+            </Link>
           </div>
           
           {/* Navigation Links and Menu in the center empty space */}
@@ -120,3 +121,5 @@ export function MainNav({}: MainNavProps) {
     </nav>
   );
 }
+
+
