@@ -65,7 +65,7 @@ export default function HomePage() {
     }
   };
 
-
+  // Only render the main content after component is mounted
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Video Section */}
