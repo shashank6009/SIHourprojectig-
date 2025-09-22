@@ -653,31 +653,28 @@ export default function InternshipPage() {
               <p className="text-gov-navy font-medium text-lg">Analyzing your resume...</p>
               <p className="text-sm text-gray-600 mt-2">Extracting personal details, education, experience, skills, and more</p>
               <p className="text-xs text-gray-500 mt-2">This may take up to 15 seconds</p>
-              <Button 
+              <button 
                 onClick={() => {
                   setIsProcessing(false);
                   setIsProcessed(false);
                   alert('Processing cancelled. You can fill the form manually.');
                 }}
-                variant="outline"
-                size="sm"
-                className="mt-4"
+                className="mt-4 h-9 rounded-md px-3 border border-gov-navy text-gov-navy hover:bg-gov-navy hover:text-white shadow-sm hover:shadow-md transition-all duration-200 inline-flex items-center justify-center whitespace-nowrap text-sm font-medium"
               >
-                Cancel & Fill Manually
-              </Button>
+                <span>Cancel & Fill Manually</span>
+              </button>
             </div>
                 ) : isProcessed ? (
                   <div className="flex flex-col items-center">
                     <CheckCircle className="h-16 w-16 text-green-500 mb-4" />
                     <p className="text-green-700 font-medium text-lg">Resume processed successfully!</p>
                     <p className="text-sm text-gray-600 mt-2">All sections below have been auto-filled with your information</p>
-                    <Button 
+                    <button 
                       onClick={() => {setIsProcessed(false); setUploadedFile(null); setFormData({});}}
-                      variant="outline"
-                      className="mt-4"
+                      className="mt-4 border border-gov-navy text-gov-navy hover:bg-gov-navy hover:text-white shadow-sm hover:shadow-md transition-all duration-200 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium h-10 px-4 py-2"
                     >
-                      Upload Different Resume
-                    </Button>
+                      <span>Upload Different Resume</span>
+                    </button>
                   </div>
                 ) : (
                   <label htmlFor="resume-upload" className="flex flex-col items-center cursor-pointer">
@@ -724,7 +721,7 @@ export default function InternshipPage() {
                   id="resume-text-input"
                 />
                 <div className="flex gap-2">
-                  <Button
+                  <button
                     onClick={() => {
                       const textArea = document.getElementById('resume-text-input') as HTMLTextAreaElement;
                       if (textArea && textArea.value.trim()) {
@@ -749,12 +746,11 @@ export default function InternshipPage() {
                         alert('Please paste some resume text first.');
                       }
                     }}
-                    variant="outline"
-                    className="flex-1"
+                    className="flex-1 border border-gov-navy text-gov-navy hover:bg-gov-navy hover:text-white shadow-sm hover:shadow-md transition-all duration-200 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium h-10 px-4 py-2"
                   >
-                    Process Text & Auto-Fill
-                  </Button>
-                  <Button
+                    <span>Process Text & Auto-Fill</span>
+                  </button>
+                  <button
                     onClick={async () => {
                       // Load test resume for demonstration
                       try {
@@ -802,11 +798,10 @@ Winner of Inter-College Coding Competition 2023`;
                         }
                       }
                     }}
-                    variant="outline"
-                    size="sm"
+                    className="h-9 rounded-md px-3 border border-gov-navy text-gov-navy hover:bg-gov-navy hover:text-white shadow-sm hover:shadow-md transition-all duration-200 inline-flex items-center justify-center whitespace-nowrap text-sm font-medium"
                   >
-                    Load Sample
-                  </Button>
+                    <span>Load Sample</span>
+                  </button>
                 </div>
               </div>
             </CardContent>
@@ -1183,21 +1178,22 @@ Winner of Inter-College Coding Competition 2023`;
               </Tabs>
 
               <div className="mt-8 pt-6 border-t">
-                <Button 
+                <button 
                   onClick={handleSubmit}
                   disabled={isSubmitting}
-                  className="w-full bg-gov-saffron hover:bg-gov-saffron/80 text-white"
-                  size="lg"
+                  className="w-full bg-gov-saffron hover:bg-gov-saffron/80 text-white h-11 rounded-md px-8 inline-flex items-center justify-center text-sm font-medium disabled:opacity-50"
                 >
-                  {isSubmitting ? (
-                    <>
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                      Getting AI Recommendations...
-                    </>
-                  ) : (
-                    "Get AI-Powered Internship Recommendations"
-                  )}
-                </Button>
+                  <span className="inline-flex items-center gap-2">
+                    {isSubmitting ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                        Getting AI Recommendations...
+                      </>
+                    ) : (
+                      "Get AI-Powered Internship Recommendations"
+                    )}
+                  </span>
+                </button>
                 <p className="text-center text-sm text-gray-600 mt-2">
                   {isSubmitting 
                     ? "Processing your profile with AI to find the best internship matches..."

@@ -411,42 +411,40 @@ export default function HomePage() {
                 className="flex flex-col sm:flex-row gap-4 justify-center"
                 variants={fadeInUp}
               >
-                <Button 
-                  size="lg" 
-                  className="bg-gov-navy text-white hover:bg-gov-blue hover:shadow-md transition-all duration-200 hover:-translate-y-1"
+                <button 
+                  className="h-11 px-8 bg-gov-navy text-white hover:bg-gov-blue hover:shadow-md transition-all duration-200 hover:-translate-y-1 rounded-md inline-flex items-center justify-center text-sm font-medium"
                   aria-label="Student Login and Registration"
                 >
                   <User className="mr-2 h-5 w-5" />
-                  {strings.studentLogin}
-                </Button>
-                <Button 
-                  size="lg" 
-                  variant="outline" 
-                  className="border-gov-navy text-gov-navy hover:bg-gov-navy hover:text-white hover:shadow-md transition-all duration-200 hover:-translate-y-1"
+                  <span>{strings.studentLogin}</span>
+                </button>
+                <button 
+                  className="h-11 px-8 border border-gov-navy text-gov-navy hover:bg-gov-navy hover:text-white hover:shadow-md transition-all duration-200 hover:-translate-y-1 rounded-md inline-flex items-center justify-center text-sm font-medium"
                   aria-label="Employer Login and Registration"
                 >
                   <Building className="mr-2 h-5 w-5" />
-                  {strings.employerLogin}
-                </Button>
+                  <span>{strings.employerLogin}</span>
+                </button>
               </motion.div>
               <motion.div className="pt-4 space-y-4" variants={fadeInUp}>
-                <Button 
-                  variant="saffron"
-                  size="lg"
-                  className="w-full sm:w-auto text-lg font-semibold"
+                <button 
+                  className="w-full sm:w-auto text-lg font-semibold h-11 px-8 bg-gov-saffron text-white hover:bg-secondary-600 shadow-sm hover:shadow-md transition-all duration-200 rounded-md inline-flex items-center justify-center"
                   aria-label="Apply Now for PM Internship Scheme"
-                  onClick={() => window.location.href = '/internship'}
+                  onClick={() => {
+                    if (typeof window !== 'undefined') {
+                      window.location.href = '/internship';
+                    }
+                  }}
                 >
-                  {strings.applyNow}
-                </Button>
+                  <span>{strings.applyNow}</span>
+                </button>
                 <div>
-                  <Button 
-                    variant="link" 
+                  <button 
                     className="text-gov-navy underline hover:text-gov-blue transition-colors"
                     aria-label="Government Dashboard Access"
                   >
-                    {strings.governmentDashboard}
-                  </Button>
+                    <span>{strings.governmentDashboard}</span>
+                  </button>
                 </div>
               </motion.div>
             </motion.div>
@@ -944,9 +942,8 @@ export default function HomePage() {
             variants={staggerContainer}
           >
             <motion.div variants={fadeInUp}>
-              <Button 
-                variant="outline" 
-                className="group hover:shadow-md transition-all duration-200"
+              <button 
+                className="group hover:shadow-md transition-all duration-200 border border-gov-navy text-gov-navy hover:bg-gov-navy hover:text-white shadow-sm hover:shadow-md transition-all duration-200 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium h-10 px-4 py-2"
                 onClick={() => {
                   if (typeof window !== 'undefined') {
                     window.open('https://pminternship.mca.gov.in/guidelines', '_blank');
@@ -955,14 +952,13 @@ export default function HomePage() {
                 aria-label="Download English Guidelines"
               >
                 <FileText className="mr-2 h-4 w-4" />
-                {strings.guidelinesEn}
+                <span>{strings.guidelinesEn}</span>
                 <ChevronRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-              </Button>
+              </button>
             </motion.div>
             <motion.div variants={fadeInUp}>
-              <Button 
-                variant="outline" 
-                className="group hover:shadow-md transition-all duration-200"
+              <button 
+                className="group hover:shadow-md transition-all duration-200 border border-gov-navy text-gov-navy hover:bg-gov-navy hover:text-white shadow-sm hover:shadow-md transition-all duration-200 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium h-10 px-4 py-2"
                 onClick={() => {
                   if (typeof window !== 'undefined') {
                     window.open('https://pminternship.mca.gov.in/guidelines-hi', '_blank');
@@ -971,14 +967,13 @@ export default function HomePage() {
                 aria-label="Download Hindi Guidelines"
               >
                 <FileText className="mr-2 h-4 w-4" />
-                {strings.guidelinesHi}
+                <span>{strings.guidelinesHi}</span>
                 <ChevronRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-              </Button>
+              </button>
             </motion.div>
             <motion.div variants={fadeInUp}>
-              <Button 
-                variant="outline" 
-                className="group hover:shadow-md transition-all duration-200"
+              <button 
+                className="group hover:shadow-md transition-all duration-200 border border-gov-navy text-gov-navy hover:bg-gov-navy hover:text-white shadow-sm hover:shadow-md transition-all duration-200 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium h-10 px-4 py-2"
                 onClick={() => {
                   if (typeof window !== 'undefined') {
                     window.open('https://pminternship.mca.gov.in/faqs', '_blank');
@@ -987,14 +982,13 @@ export default function HomePage() {
                 aria-label="View Frequently Asked Questions"
               >
                 <FileText className="mr-2 h-4 w-4" />
-                {strings.faqs}
+                <span>{strings.faqs}</span>
                 <ChevronRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-              </Button>
+              </button>
             </motion.div>
             <motion.div variants={fadeInUp}>
-              <Button 
-                variant="outline" 
-                className="group hover:shadow-md transition-all duration-200"
+              <button 
+                className="group hover:shadow-md transition-all duration-200 border border-gov-navy text-gov-navy hover:bg-gov-navy hover:text-white shadow-sm hover:shadow-md transition-all duration-200 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium h-10 px-4 py-2"
                 onClick={() => {
                   if (typeof window !== 'undefined') {
                     window.location.href = 'mailto:pmi.helpdesk@mca.gov.in';
@@ -1003,9 +997,9 @@ export default function HomePage() {
                 aria-label="Contact Helpdesk via Email"
               >
                 <FileText className="mr-2 h-4 w-4" />
-                {strings.helpdesk}
+                <span>{strings.helpdesk}</span>
                 <ChevronRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-              </Button>
+              </button>
             </motion.div>
           </motion.div>
         </div>
