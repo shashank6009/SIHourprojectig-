@@ -18,6 +18,23 @@ export default function HomePage() {
     setMounted(true);
   }, []);
 
+  const images = [
+    { src: "/Modi1.png", alt: "Prime Minister Narendra Modi" },
+    { src: "/Modi2.png", alt: "Prime Minister Narendra Modi" },
+    { src: "/Modi3.png", alt: "Prime Minister Narendra Modi" },
+  ];
+
+  // Auto-rotate images every 4 seconds
+  useEffect(() => {
+    if (!mounted) return;
+    
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % images.length);
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [images.length, mounted]);
+
   // Always render the same structure to prevent hydration mismatch
   if (!mounted) {
     return (
@@ -33,21 +50,6 @@ export default function HomePage() {
       </div>
     );
   }
-
-  const images = [
-    { src: "/Modi1.png", alt: "Prime Minister Narendra Modi" },
-    { src: "/Modi2.png", alt: "Prime Minister Narendra Modi" },
-    { src: "/Modi3.png", alt: "Prime Minister Narendra Modi" },
-  ];
-
-  // Auto-rotate images every 4 seconds
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentImageIndex((prev) => (prev + 1) % images.length);
-    }, 4000);
-
-    return () => clearInterval(interval);
-  }, [images.length]);
 
   const fadeInUp = {
     initial: { opacity: 0, y: 20 },
