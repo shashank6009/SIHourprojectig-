@@ -398,7 +398,7 @@ export default function RecommendationsPage() {
     } catch {}
     
     // Initialize saved IDs from tracker
-    if (tracker) {
+    if (tracker && setSavedIds) {
       const saved = tracker.list();
       const savedMap: Record<string, boolean> = {};
       saved.forEach(item => {

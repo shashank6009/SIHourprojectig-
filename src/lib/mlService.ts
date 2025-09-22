@@ -129,7 +129,7 @@ export class MLService {
         stream: studentProfile.stream || '',
         cgpa: typeof studentProfile.cgpa === 'number' ? studentProfile.cgpa : 0,
         rural_urban: studentProfile.rural_urban || '',
-        college_tier: studentProfile.college_tier || ''
+        college_tier: studentProfile.college_tier?.replace(' ', '-') || ''
       };
       
       console.log('[MLService] API Payload:', JSON.stringify(apiPayload, null, 2));
@@ -167,9 +167,13 @@ export class MLService {
             index: index + 1,
             title: rec.title,
             courses: rec.courses,
-            missing_skills: rec.missing_skills
+            missing_skills: rec.missing_skills,
+            success_prob: rec.success_prob
           }))
         );
+        
+        // Debug: Log raw courses array
+        console.log('[MLService] Raw Courses from API:', response.data.recommendations.map(rec => rec.courses));
       }
 
       // Process and clean the response
@@ -183,21 +187,26 @@ export class MLService {
       });
       
       // Assign ranks based on sorted order (highest success probability gets rank 1)
-      const recommendations = sortedRecommendations.map((rec: Record<string, unknown>, index: number) => ({
-        ...rec,
-        rank: index + 1, // Rank 1 for highest success probability
-        scores: {
-          success_probability: rec.success_prob || 0,
-        },
-        explain_reasons: rec.reasons || [],
-        course_suggestions: rec.courses?.map((course: Record<string, unknown>) => ({
-          skill: rec.missing_skills?.[0] || 'General',
-          platform: course.platform,
-          course_name: course.name,
-          link: course.url,
-          priority: 'high'
-        })) || []
-      }));
+      const recommendations = sortedRecommendations.map((rec: Record<string, unknown>, index: number) => {
+        const processedRec = {
+          ...rec,
+          rank: index + 1, // Rank 1 for highest success probability
+          scores: {
+            success_probability: rec.success_prob || 0,
+          },
+          explain_reasons: rec.reasons || [],
+          course_suggestions: rec.course_suggestions || []
+        };
+        
+        // Debug: Log processed course suggestions
+        console.log(`[MLService] Processed Rec ${index + 1}:`, {
+          title: processedRec.title,
+          course_suggestions: processedRec.course_suggestions,
+          success_probability: processedRec.scores.success_probability
+        });
+        
+        return processedRec;
+      });
 
       return {
         student_id: response.data.student_id,
