@@ -9,8 +9,8 @@ import { initializePWA } from "@/lib/pwa";
 
 export function AppWrapper({ children }: { children: React.ReactNode }) {
   const [language, setLanguage] = useState<Language>("en");
-  const [textSize, setTextSize] = useState<"small" | "normal" | "large">("normal");
-  const [highContrast, setHighContrast] = useState(false);
+  const [textSize, _setTextSize] = useState<"small" | "normal" | "large">("normal");
+  const [highContrast, _setHighContrast] = useState(false);
 
   const handleTextSizeChange = (size: "small" | "normal" | "large") => {
     setTextSize(size);

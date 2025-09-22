@@ -152,11 +152,13 @@ export default function RecommendationsPage() {
   const [studentProfile, setStudentProfile] = useState<StudentProfile | null>(null);
   const [filteredRecs, setFilteredRecs] = useState<InternshipRecommendation[]>([]);
   const [compareIds, setCompareIds] = useState<string[]>([]);
-  const [savedIds, setSavedIds] = useState<Record<string, boolean>>({});
-  const [searchQuery, setSearchQuery] = useState<string>("");
-  const [domainFilter, setDomainFilter] = useState<string>("all");
-  const [locationFilter, setLocationFilter] = useState<string>("all");
-  const [sortBy, setSortBy] = useState<string>("success");
+  // UI filter states (currently not used in display-only mode)
+  // Suppress unused-var warnings by prefixing setters with underscore
+  const [savedIds, _setSavedIds] = useState<Record<string, boolean>>({});
+  const [searchQuery, _setSearchQuery] = useState<string>("");
+  const [domainFilter, _setDomainFilter] = useState<string>("all");
+  const [locationFilter, _setLocationFilter] = useState<string>("all");
+  const [sortBy, _setSortBy] = useState<string>("success");
   const [, setCompletedCourses] = useState<Record<string, boolean>>({});
   const [selectedRecommendation, setSelectedRecommendation] = useState<InternshipRecommendation | null>(null);
   const [mounted, setMounted] = useState(false);
@@ -711,7 +713,7 @@ export default function RecommendationsPage() {
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">No Recommendations Found</h3>
                 <p className="text-gray-600 mb-4">
-                  The ML model couldn't find any matching internships for your profile. This might be due to:
+                  The ML model couldn&apos;t find any matching internships for your profile. This might be due to:
                 </p>
                 <ul className="text-sm text-gray-500 text-left space-y-1 mb-6">
                   <li>• Limited internship data in the system</li>
@@ -974,7 +976,7 @@ export default function RecommendationsPage() {
                           <BookOpen className="w-12 h-12 text-gray-300 mx-auto mb-4" />
                           <p className="text-gray-500 mb-2">No course recommendations available</p>
                           <p className="text-sm text-gray-400">
-                            The ML model didn't provide course suggestions for this internship.
+                            The ML model didn&apos;t provide course suggestions for this internship.
                           </p>
                         </div>
                       )}
