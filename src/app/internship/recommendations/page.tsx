@@ -1020,7 +1020,7 @@ export default function RecommendationsPage() {
                         <Button 
                           variant="outline" 
                           size="sm"
-                          className="flex-1 text-xs"
+                          className="flex-1 text-xs font-medium text-gov-navy px-3 py-2"
                           onClick={() => toggleCompare(selectedRecommendation.internship_id)}
                         >
                           {compareIds.includes(selectedRecommendation.internship_id) ? 'Remove' : 'Compare'}
@@ -1028,7 +1028,7 @@ export default function RecommendationsPage() {
                         <Button 
                           variant="outline" 
                           size="sm"
-                          className="flex-1 text-xs"
+                          className="flex-1 text-xs font-medium text-gov-navy px-3 py-2"
                           onClick={async () => {
                             if (typeof window !== 'undefined') {
                               try {
