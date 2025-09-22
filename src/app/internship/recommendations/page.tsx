@@ -151,6 +151,7 @@ export default function RecommendationsPage() {
   const [studentProfile, setStudentProfile] = useState<StudentProfile | null>(null);
   const [filteredRecs, setFilteredRecs] = useState<InternshipRecommendation[]>([]);
   const [compareIds, setCompareIds] = useState<string[]>([]);
+  const [savedIds, setSavedIds] = useState<Record<string, boolean>>({});
   const [, setCompletedCourses] = useState<Record<string, boolean>>({});
   const [selectedRecommendation, setSelectedRecommendation] = useState<InternshipRecommendation | null>(null);
   const [mounted, setMounted] = useState(false);
