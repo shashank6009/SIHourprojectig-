@@ -16,7 +16,7 @@ export default function FairnessStep() {
   }, []);
 
   useEffect(() => {
-    saveWizard({ background: background as string, language });
+    saveWizard({ background: background as "Urban" | "Rural" | "Tier-1" | "Tier-2" | "Tier-3" | undefined, language });
   }, [background, language]);
 
   const currentIndex = 3;
