@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,19 +10,9 @@ import { i18n, type Language } from "@/lib/i18n";
 
 export default function HomePage() {
   const [language] = useState<Language>("en");
-  const [currentImageIndex] = useState(0);
   const strings = i18n[language];
 
   // No mounted gating: render identical markup on server and client
-
-  const images = [
-    { src: "/Modi1.png", alt: "Prime Minister Narendra Modi" },
-    { src: "/Modi2.png", alt: "Prime Minister Narendra Modi" },
-    { src: "/Modi3.png", alt: "Prime Minister Narendra Modi" },
-  ];
-
-  // Auto-rotate images every 4 seconds
-  // Removed auto-rotate during SSR to avoid unused var warning and ensure deterministic markup
 
   // Render same markup on server and client (no gating)
 

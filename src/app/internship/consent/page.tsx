@@ -17,7 +17,7 @@ export default function ConsentStep() {
   }, []);
 
   useEffect(() => {
-    saveWizard({ notify: notify as string, consent });
+    saveWizard({ notify: notify as "Email" | "WhatsApp" | "SMS" | undefined, consent });
   }, [notify, consent]);
 
 

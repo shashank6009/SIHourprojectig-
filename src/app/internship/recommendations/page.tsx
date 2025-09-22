@@ -152,13 +152,11 @@ export default function RecommendationsPage() {
   const [studentProfile, setStudentProfile] = useState<StudentProfile | null>(null);
   const [filteredRecs, setFilteredRecs] = useState<InternshipRecommendation[]>([]);
   const [compareIds, setCompareIds] = useState<string[]>([]);
-  // UI filter states (currently not used in display-only mode)
-  // Suppress unused-var warnings by prefixing setters with underscore
-  const [savedIds, _setSavedIds] = useState<Record<string, boolean>>({});
-  const [searchQuery, _setSearchQuery] = useState<string>("");
-  const [domainFilter, _setDomainFilter] = useState<string>("all");
-  const [locationFilter, _setLocationFilter] = useState<string>("all");
-  const [sortBy, _setSortBy] = useState<string>("success");
+  // UI filter states (removed as page is display-only)
+  const searchQuery = "";
+  const domainFilter = "all";
+  const locationFilter = "all";
+  const sortBy = "success";
   const [, setCompletedCourses] = useState<Record<string, boolean>>({});
   const [selectedRecommendation, setSelectedRecommendation] = useState<InternshipRecommendation | null>(null);
   const [mounted, setMounted] = useState(false);

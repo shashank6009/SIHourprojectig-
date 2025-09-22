@@ -9,16 +9,12 @@ import { initializePWA } from "@/lib/pwa";
 
 export function AppWrapper({ children }: { children: React.ReactNode }) {
   const [language, setLanguage] = useState<Language>("en");
-  const [textSize, _setTextSize] = useState<"small" | "normal" | "large">("normal");
-  const [highContrast, _setHighContrast] = useState(false);
 
   const handleTextSizeChange = (size: "small" | "normal" | "large") => {
-    setTextSize(size);
     document.documentElement.setAttribute("data-text-size", size);
   };
 
   const handleContrastChange = (highContrast: boolean) => {
-    setHighContrast(highContrast);
     document.documentElement.setAttribute("data-contrast", highContrast ? "high" : "normal");
   };
 
