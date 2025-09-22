@@ -219,14 +219,14 @@ export default function RecommendationsPage() {
 
         setStudentProfile(profile);
 
-        // Check for cached recommendations first
-        const cached = MLService.getCachedRecommendations(profile.student_id);
-        if (cached && cached.recommendations && cached.recommendations.length > 0) {
-          setRecommendations(cached);
-          setFilteredRecs(cached.recommendations);
-          setIsLoading(false);
-          return;
-        }
+        // Skip caching to ensure fresh recommendations every time
+        // const cached = MLService.getCachedRecommendations(profile.student_id);
+        // if (cached && cached.recommendations && cached.recommendations.length > 0) {
+        //   setRecommendations(cached);
+        //   setFilteredRecs(cached.recommendations);
+        //   setIsLoading(false);
+        //   return;
+        // }
 
         // Fetch fresh recommendations from ML API
         console.log('Fetching AI recommendations for:', profile.student_id);
@@ -634,6 +634,7 @@ export default function RecommendationsPage() {
                           width={48}
                           height={48}
                           className="w-full h-full object-cover"
+                          unoptimized={true}
                           onError={(e) => {
                             (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(rec.organization_name)}&background=f8fafc&color=475569&size=48`;
                           }}
@@ -719,6 +720,7 @@ export default function RecommendationsPage() {
                       width={48}
                       height={48}
                       className="w-full h-full object-cover"
+                      unoptimized={true}
                       onError={(e) => {
                         (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(selectedRecommendation.organization_name)}&background=f8fafc&color=475569&size=48`;
                       }}
@@ -752,6 +754,7 @@ export default function RecommendationsPage() {
                         width={64}
                         height={64}
                         className="w-full h-full object-cover"
+                        unoptimized={true}
                         onError={(e) => {
                           (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(selectedRecommendation.organization_name)}&background=f8fafc&color=475569&size=64`;
                         }}

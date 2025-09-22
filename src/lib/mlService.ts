@@ -160,6 +160,16 @@ export class MLService {
             success_prob: rec.success_prob
           }))
         );
+        
+        // Debug: Log course data
+        console.log('[MLService] Course Data:', 
+          response.data.recommendations.map((rec, index) => ({
+            index: index + 1,
+            title: rec.title,
+            courses: rec.courses,
+            missing_skills: rec.missing_skills
+          }))
+        );
       }
 
       // Process and clean the response
