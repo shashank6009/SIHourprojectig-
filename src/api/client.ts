@@ -18,8 +18,8 @@ const apiClient: AxiosInstance = axios.create({
 apiClient.interceptors.request.use(
   (config) => {
     // Short-circuit requests when offline to avoid long timeouts
-    if (typeof window !== 'undefined' && typeof navigator !== 'undefined' && navigator && !navigator.onLine) {
-      const offlineError: any = new Error('Offline');
+    if (typeof window !== 'undefined' && typeof navigator !== 'undefined' && !navigator.onLine) {
+      const offlineError = new Error('Offline') as Error & { code: 'OFFLINE'; config: typeof config };
       offlineError.code = 'OFFLINE';
       offlineError.config = config;
       return Promise.reject(offlineError);
