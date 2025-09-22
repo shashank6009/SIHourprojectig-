@@ -140,7 +140,7 @@ export default function MLApiTestPage() {
                     Recommendations ({(testRecommendations.total_recommendations as number) || 0})
                   </h3>
                   <div className="space-y-2">
-                    {testRecommendations.recommendations?.slice(0, 3).map((rec: Record<string, unknown>, idx: number) => (
+                    {(testRecommendations.recommendations as Record<string, unknown>[])?.slice(0, 3).map((rec: Record<string, unknown>, idx: number) => (
                       <div key={idx} className="bg-white p-3 rounded border">
                         <div className="font-medium">{rec.title as string}</div>
                         <div className="text-sm text-gray-600">{rec.organization_name as string}</div>
