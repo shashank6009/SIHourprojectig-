@@ -34,6 +34,7 @@ export async function POST(request: NextRequest) {
       name,
       email,
       password: hashedPassword,
+      provider: 'credentials',
     });
 
     // Return success (don't return password)
