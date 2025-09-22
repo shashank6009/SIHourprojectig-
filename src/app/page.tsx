@@ -9,14 +9,11 @@ import Image from "next/image";
 import { i18n, type Language } from "@/lib/i18n";
 
 export default function HomePage() {
-  const [mounted, setMounted] = useState(false);
   const [language] = useState<Language>("en");
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const strings = i18n[language];
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  // No mounted gating: render identical markup on server and client
 
   const images = [
     { src: "/Modi1.png", alt: "Prime Minister Narendra Modi" },
@@ -26,30 +23,14 @@ export default function HomePage() {
 
   // Auto-rotate images every 4 seconds
   useEffect(() => {
-    if (!mounted) return;
-    
     const interval = setInterval(() => {
       setCurrentImageIndex((prev) => (prev + 1) % images.length);
     }, 4000);
 
     return () => clearInterval(interval);
-  }, [images.length, mounted]);
+  }, [images.length]);
 
-  // Always render the same structure to prevent hydration mismatch
-  if (!mounted) {
-    return (
-      <div className="min-h-screen bg-white">
-        <section className="relative overflow-hidden">
-          <div className="flex items-center justify-center h-screen">
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gov-saffron mx-auto mb-4"></div>
-              <p className="text-gov-navy text-lg">Loading...</p>
-            </div>
-          </div>
-        </section>
-      </div>
-    );
-  }
+  // Render same markup on server and client (no gating)
 
   const fadeInUp = {
     initial: { opacity: 0, y: 20 },
@@ -65,7 +46,6 @@ export default function HomePage() {
     }
   };
 
-  // Only render the main content after component is mounted
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Video Section */}
