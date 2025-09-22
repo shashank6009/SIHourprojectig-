@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Briefcase, School, Globe2, ChevronRight, User, Building, GraduationCap, FileText } from "lucide-react";
@@ -10,6 +11,7 @@ import { i18n, type Language } from "@/lib/i18n";
 export default function HomePage() {
   const [language] = useState<Language>("en");
   const strings = i18n[language];
+  const router = useRouter();
 
   // No mounted gating: render identical markup on server and client
 
@@ -429,18 +431,18 @@ export default function HomePage() {
                 <button 
                   className="w-full sm:w-auto text-lg font-semibold h-11 px-8 bg-gov-saffron text-white hover:bg-secondary-600 shadow-sm hover:shadow-md transition-all duration-200 rounded-md inline-flex items-center justify-center"
                   aria-label="Apply Now for PM Internship Scheme"
-                  onClick={() => {
-                    if (typeof window !== 'undefined') {
-                      window.location.href = '/internship';
-                    }
-                  }}
+                  onClick={() => router.push('/internship')}
                 >
                   <span>{strings.applyNow}</span>
                 </button>
                 <div>
                   <button 
-                    className="text-gov-navy underline hover:text-gov-blue transition-colors"
+                    className="text-gov-navy underline hover:text-gov-blue transition-colors font-medium"
                     aria-label="Government Dashboard Access"
+                    onClick={() => {
+                      console.log('Government Dashboard clicked - navigating to /admin');
+                      router.push('/admin');
+                    }}
                   >
                     <span>{strings.governmentDashboard}</span>
                   </button>

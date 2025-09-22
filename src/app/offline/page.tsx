@@ -305,7 +305,7 @@ export default function OfflinePage() {
             </Card>
           </Link>
           
-          <Link href="/profile">
+          <Link href="/dashboard">
             <Card className="hover:shadow-md transition-shadow cursor-pointer">
               <CardContent className="p-4 text-center">
                 <Database className="w-6 h-6 mx-auto mb-2 text-gov-saffron" />

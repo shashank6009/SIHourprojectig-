@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { ChevronDown, FileText, Camera, ThumbsUp, BookOpen } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -17,6 +18,23 @@ interface MainNavProps {
 }
 
 export function MainNav({}: MainNavProps) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <nav className="sticky top-0 z-50 shadow-sm">
+        <div className="relative w-full h-16 md:h-18 bg-gray-100">
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="animate-pulse h-6 w-32 bg-gray-300 rounded"></div>
+          </div>
+        </div>
+      </nav>
+    );
+  }
 
   return (
     <nav className="sticky top-0 z-50 shadow-sm">
@@ -65,10 +83,11 @@ export function MainNav({}: MainNavProps) {
                 Recommendations
               </Link>
               <Link 
-                href="/profile" 
+                href="/dashboard" 
                 className="text-black hover:text-gov-saffron font-semibold text-sm md:text-lg transition-colors duration-200"
+                key="dashboard-nav"
               >
-                Profile
+                Dashboard
               </Link>
               
               {/* Menu button positioned after recommendations */}

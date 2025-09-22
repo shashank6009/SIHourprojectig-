@@ -168,7 +168,7 @@ export default function DashboardContent() {
             </p>
           </div>
           <div className="flex space-x-3">
-            <Button variant="outline" onClick={() => router.push('/profile')}>
+            <Button variant="outline" onClick={() => router.push('/dashboard')}>
               <Settings className="w-4 h-4 mr-2" />
               Profile
             </Button>
@@ -384,7 +384,7 @@ export default function DashboardContent() {
               <Button 
                 variant="outline" 
                 className="h-20 flex flex-col items-center justify-center space-y-2"
-                onClick={() => router.push('/profile')}
+                onClick={() => router.push('/dashboard')}
               >
                 <User className="w-6 h-6" />
                 <span>Update Profile</span>

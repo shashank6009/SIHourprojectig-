@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import DashboardContent from './DashboardContent';
+import UserDashboardContent from './UserDashboardContent';
 
 export default function DashboardPage() {
   const [mounted, setMounted] = useState(false);
@@ -21,5 +21,5 @@ export default function DashboardPage() {
     );
   }
 
-  return <DashboardContent />;
+  return <UserDashboardContent />;
 }
