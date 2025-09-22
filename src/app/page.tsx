@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Briefcase, School, Globe2, ChevronRight, User, Building, GraduationCap, FileText } from "lucide-react";
+import { Briefcase, School, Globe2, ChevronRight, User, Building, GraduationCap, FileText, ShieldCheck, Award, Handshake, CircleDollarSign } from "lucide-react";
 import Image from "next/image";
 import { i18n, type Language } from "@/lib/i18n";
 
@@ -60,6 +60,64 @@ export default function HomePage() {
           preload="metadata"
           aria-label="PMIS hero video"
         />
+        {/* Hero Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent" />
+        <div className="absolute inset-0 flex items-end md:items-center">
+          <div className="container mx-auto px-4 md:px-6 pb-6 md:pb-0">
+            <div className="max-w-3xl bg-white/80 backdrop-blur-sm rounded-lg shadow-md p-5 md:p-6">
+              <p className="text-[11px] md:text-xs uppercase tracking-wide text-gov-navy/80">Government of India • Ministry of Corporate Affairs</p>
+              <h1 className="mt-1 md:mt-2 text-2xl md:text-4xl font-bold text-gov-navy">{strings.heroTitle}</h1>
+              <p className="mt-2 text-sm md:text-base text-gov-text">{strings.heroSubtext}</p>
+              <div className="mt-4 flex flex-col sm:flex-row gap-3">
+                <Button 
+                  size="lg"
+                  className="bg-gov-saffron text-white hover:bg-gov-saffron/90"
+                  aria-label="Apply Now for PM Internship Scheme"
+                  onClick={() => window.location.href = '/internship'}
+                >
+                  Apply Now
+                </Button>
+                <Button 
+                  size="lg" 
+                  variant="outline" 
+                  className="border-gov-navy text-gov-navy hover:bg-gov-navy hover:text-white"
+                  aria-label="Employer Login and Registration"
+                  onClick={() => window.location.href = '/login'}
+                >
+                  Employer Login
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Stats Strip */}
+      <section className="bg-gov-navy text-white border-y border-gov-blue/30">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 py-4 md:py-5 text-center">
+            <div>
+              <div className="text-xl md:text-2xl font-bold">118K+</div>
+              <div className="text-[11px] md:text-xs text-white/80">Internship Opportunities</div>
+            </div>
+            <div>
+              <div className="text-xl md:text-2xl font-bold">25</div>
+              <div className="text-[11px] md:text-xs text-white/80">Sectors</div>
+            </div>
+            <div>
+              <div className="text-xl md:text-2xl font-bold">36</div>
+              <div className="text-[11px] md:text-xs text-white/80">States / UTs</div>
+            </div>
+            <div>
+              <div className="text-xl md:text-2xl font-bold">734</div>
+              <div className="text-[11px] md:text-xs text-white/80">Districts</div>
+            </div>
+            <div className="hidden md:block">
+              <div className="text-xl md:text-2xl font-bold">5</div>
+              <div className="text-[11px] md:text-xs text-white/80">Qualifications</div>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* Companies Video Section - No Gap */}
@@ -467,6 +525,42 @@ export default function HomePage() {
               </motion.div>
             </motion.div>
           </motion.div>
+        </div>
+      </section>
+
+      {/* Benefits Grid */}
+      <section className="bg-gradient-to-b from-white to-blue-50 py-10 md:py-14">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6">
+            <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-5">
+              <div className="flex items-center gap-3 mb-2">
+                <ShieldCheck className="w-5 h-5 text-gov-navy" />
+                <h3 className="font-semibold text-gov-navy">Government Verified</h3>
+              </div>
+              <p className="text-sm text-gov-text">All internships aligned with national skilling and employment objectives.</p>
+            </div>
+            <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-5">
+              <div className="flex items-center gap-3 mb-2">
+                <Award className="w-5 h-5 text-gov-navy" />
+                <h3 className="font-semibold text-gov-navy">Merit & Inclusion</h3>
+              </div>
+              <p className="text-sm text-gov-text">Fair, transparent selections with focus on opportunity for all regions.</p>
+            </div>
+            <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-5">
+              <div className="flex items-center gap-3 mb-2">
+                <Handshake className="w-5 h-5 text-gov-navy" />
+                <h3 className="font-semibold text-gov-navy">Industry Partners</h3>
+              </div>
+              <p className="text-sm text-gov-text">Work with leading organizations across 25 sectors and 36 States/UTs.</p>
+            </div>
+            <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-5">
+              <div className="flex items-center gap-3 mb-2">
+                <CircleDollarSign className="w-5 h-5 text-gov-navy" />
+                <h3 className="font-semibold text-gov-navy">Monthly Support</h3>
+              </div>
+              <p className="text-sm text-gov-text">₹4500 by Government + ₹500 by Industry; ₹6000 one-time grant.</p>
+            </div>
+          </div>
         </div>
       </section>
 
