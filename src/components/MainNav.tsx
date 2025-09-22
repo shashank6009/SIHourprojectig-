@@ -9,7 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
+// Replace shared Button with native button to avoid hydration mismatches
 import { type Language } from "@/lib/i18n";
 
 interface MainNavProps {
@@ -74,10 +74,9 @@ export function MainNav({}: MainNavProps) {
               {/* Menu button positioned after recommendations */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button className="bg-gov-saffron hover:bg-gov-saffron/80 text-white font-medium text-xs md:text-sm px-3 py-1.5 shadow-lg ml-2">
-                    Menu
-                    <ChevronDown className="ml-1 h-3 w-3" />
-                  </Button>
+                  <button className="bg-gov-saffron hover:bg-gov-saffron/80 text-white font-medium text-xs md:text-sm px-3 py-1.5 shadow-lg ml-2 rounded-md inline-flex items-center">
+                    <span className="inline-flex items-center gap-1">Menu<ChevronDown className="ml-1 h-3 w-3" /></span>
+                  </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-64">
                   <DropdownMenuItem asChild>

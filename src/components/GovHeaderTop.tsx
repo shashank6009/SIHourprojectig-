@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { ChevronDown, Minus, Plus, Monitor } from "lucide-react";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
+// Replaced shared Button with native buttons to avoid hydration issues
 import { i18n, type Language } from "@/lib/i18n";
 
 interface GovHeaderTopProps {
@@ -57,49 +57,43 @@ export function GovHeaderTop({
           {/* Right side - Accessibility controls */}
           <div className="flex items-center space-x-6">
             {/* Language selector - simplified to avoid hydration issues */}
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="text-white hover:bg-gray-600 text-base"
+            <button 
+              className="text-white hover:bg-gray-600 text-base h-9 rounded-md px-3 inline-flex items-center justify-center whitespace-nowrap"
               onClick={() => onLanguageChange(language === "en" ? "hi" : "en")}
+              aria-label="Change language"
             >
-              {strings.language}
-              <ChevronDown className="ml-1 h-4 w-4" />
-            </Button>
+              <span className="inline-flex items-center gap-1">{strings.language}<ChevronDown className="ml-1 h-4 w-4" /></span>
+            </button>
 
             {/* Text size controls */}
             <div className="flex items-center space-x-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="text-white hover:bg-gray-600 p-2"
+              <button
+                className="text-white hover:bg-gray-600 p-2 h-8 w-8 rounded-md inline-flex items-center justify-center disabled:opacity-50"
                 onClick={() => handleTextSizeChange("small")}
                 disabled={textSize === "small"}
+                aria-label="Decrease text size"
               >
                 <Minus className="h-4 w-4" />
-              </Button>
+              </button>
               <span className="text-base px-2">A</span>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="text-white hover:bg-gray-600 p-2"
+              <button
+                className="text-white hover:bg-gray-600 p-2 h-8 w-8 rounded-md inline-flex items-center justify-center disabled:opacity-50"
                 onClick={() => handleTextSizeChange("large")}
                 disabled={textSize === "large"}
+                aria-label="Increase text size"
               >
                 <Plus className="h-4 w-4" />
-              </Button>
+              </button>
             </div>
 
             {/* Contrast toggle */}
-            <Button
-              variant="ghost"
-              size="sm"
-              className="text-white hover:bg-gray-600 text-base"
+            <button
+              className="text-white hover:bg-gray-600 text-base h-9 rounded-md px-3 inline-flex items-center justify-center whitespace-nowrap"
               onClick={handleContrastChange}
+              aria-label="Toggle contrast"
             >
-              <Monitor className="h-5 w-5 mr-2" />
-              {strings.contrast}
-            </Button>
+              <span className="inline-flex items-center gap-2"><Monitor className="h-5 w-5" /> {strings.contrast}</span>
+            </button>
           </div>
         </div>
       </div>
