@@ -35,15 +35,52 @@ export interface ButtonProps
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, ...props }, ref) => {
-    // Completely strip asChild and any other non-DOM props
-    const cleanProps = { ...props };
-    delete (cleanProps as any).asChild;
+    // Create completely clean props object - only allow known HTML button attributes
+    const {
+      onClick,
+      onMouseEnter,
+      onMouseLeave,
+      onFocus,
+      onBlur,
+      disabled,
+      type,
+      tabIndex,
+      'aria-label': ariaLabel,
+      'aria-describedby': ariaDescribedby,
+      'aria-expanded': ariaExpanded,
+      'data-testid': dataTestId,
+      id,
+      style,
+      onKeyDown,
+      onKeyUp,
+      ...rest
+    } = props;
+
+    // Only pass through known safe props
+    const safeProps = {
+      ...(onClick && { onClick }),
+      ...(onMouseEnter && { onMouseEnter }),
+      ...(onMouseLeave && { onMouseLeave }),
+      ...(onFocus && { onFocus }),
+      ...(onBlur && { onBlur }),
+      ...(disabled !== undefined && { disabled }),
+      ...(type && { type }),
+      ...(tabIndex !== undefined && { tabIndex }),
+      ...(ariaLabel && { 'aria-label': ariaLabel }),
+      ...(ariaDescribedby && { 'aria-describedby': ariaDescribedby }),
+      ...(ariaExpanded !== undefined && { 'aria-expanded': ariaExpanded }),
+      ...(dataTestId && { 'data-testid': dataTestId }),
+      ...(id && { id }),
+      ...(style && { style }),
+      ...(onKeyDown && { onKeyDown }),
+      ...(onKeyUp && { onKeyUp }),
+    };
     
     return (
       <button
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
-        {...cleanProps}
+        {...safeProps}
       />
     );
   }

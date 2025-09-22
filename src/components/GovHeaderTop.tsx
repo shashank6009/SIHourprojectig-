@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ChevronDown, Minus, Plus, Monitor } from "lucide-react";
 import Image from "next/image";
 import {
@@ -27,7 +27,12 @@ export function GovHeaderTop({
 }: GovHeaderTopProps) {
   const [textSize, setTextSize] = useState<"small" | "normal" | "large">("normal");
   const [highContrast, setHighContrast] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const strings = i18n[language];
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleTextSizeChange = (size: "small" | "normal" | "large") => {
     setTextSize(size);
@@ -63,25 +68,32 @@ export function GovHeaderTop({
           {/* Right side - Accessibility controls */}
           <div className="flex items-center space-x-6">
             {/* Language dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="text-white hover:bg-gray-600 text-base">
-                  {strings.language}
-                  <ChevronDown className="ml-1 h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuItem onClick={() => onLanguageChange("en")}>
-                  English
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => onLanguageChange("hi")}>
-                  हिंदी
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => onLanguageChange("ta")}>
-                  தமிழ்
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            {mounted ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="sm" className="text-white hover:bg-gray-600 text-base">
+                    {strings.language}
+                    <ChevronDown className="ml-1 h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem onClick={() => onLanguageChange("en")}>
+                    English
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => onLanguageChange("hi")}>
+                    हिंदी
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => onLanguageChange("ta")}>
+                    தமிழ்
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Button variant="ghost" size="sm" className="text-white hover:bg-gray-600 text-base">
+                {strings.language}
+                <ChevronDown className="ml-1 h-4 w-4" />
+              </Button>
+            )}
 
             {/* Text size controls */}
             <div className="flex items-center space-x-2">

@@ -157,6 +157,7 @@ export default function RecommendationsPage() {
   const domainFilter = "all";
   const locationFilter = "all";
   const sortBy = "success";
+  const [savedIds, setSavedIds] = useState<Record<string, boolean>>({});
   const [, setCompletedCourses] = useState<Record<string, boolean>>({});
   const [selectedRecommendation, setSelectedRecommendation] = useState<InternshipRecommendation | null>(null);
   const [mounted, setMounted] = useState(false);

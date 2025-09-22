@@ -16,17 +16,19 @@ const demoUsers = [
 
 export const authOptions: NextAuthOptions = {
   providers: [
-    // Google OAuth Provider - Always enabled for demo
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID || "demo-google-client-id",
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "demo-google-client-secret",
-      authorization: {
-        params: {
-          scope: 'openid email profile',
-          prompt: 'select_account',
+    // Google OAuth Provider - Conditionally enabled
+    ...(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET ? [
+      GoogleProvider({
+        clientId: process.env.GOOGLE_CLIENT_ID,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+        authorization: {
+          params: {
+            scope: 'openid email profile',
+            prompt: 'select_account',
+          },
         },
-      },
-    }),
+      })
+    ] : []),
     CredentialsProvider({
       name: "credentials",
       credentials: {
@@ -70,6 +72,7 @@ export const authOptions: NextAuthOptions = {
       }
     })
   ],
+  secret: process.env.NEXTAUTH_SECRET || "fallback-secret-for-development",
   session: {
     strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60, // 30 days
