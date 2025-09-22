@@ -126,8 +126,8 @@ export async function POST(req: Request) {
     return NextResponse.json({ text });
   } catch (error: unknown) {
     console.error('Server: Unexpected error:', error);
-    console.error('Server: Error stack:', error?.stack);
-    return NextResponse.json({ error: error?.message || "Server error while processing file" }, { status: 500 });
+    console.error('Server: Error stack:', error instanceof Error ? error.stack : 'No stack trace');
+    return NextResponse.json({ error: error instanceof Error ? error.message : "Server error while processing file" }, { status: 500 });
   }
 }
 
