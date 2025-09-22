@@ -34,7 +34,7 @@ export interface ButtonProps
     VariantProps<typeof buttonVariants> {}
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, ...props }, ref) => {
+  ({ className, variant, size, children, ...props }, ref) => {
     // Create completely clean props object - only allow known HTML button attributes
     const {
       onClick,
@@ -80,7 +80,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
         {...safeProps}
-      />
+      >
+        {children}
+      </button>
     );
   }
 );
