@@ -32,7 +32,7 @@ export default function DashboardContent() {
     const loadProfileData = () => {
       try {
         if (session?.user) {
-          const userId = session.user.email || session.user.id;
+          const userId = session.user.email || (session.user as Record<string, unknown>)['id'] || 'anonymous';
           const savedProfile = localStorage.getItem(`profile_${userId}`);
           
           if (savedProfile) {
