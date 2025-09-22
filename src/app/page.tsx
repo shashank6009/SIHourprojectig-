@@ -447,9 +447,9 @@ export default function HomePage() {
                   size="lg"
                   className="w-full sm:w-auto text-lg font-semibold"
                   aria-label="Apply Now for PM Internship Scheme"
-                  asChild
+                  onClick={() => window.location.href = '/internship'}
                 >
-                  <a href="/internship">{strings.applyNow}</a>
+                  {strings.applyNow}
                 </Button>
                 <div>
                   <Button 
@@ -893,7 +893,7 @@ export default function HomePage() {
                       <p className="text-sm text-gov-darkGray">Student, IIT Delhi</p>
                     </div>
                   </div>
-                  <p className="text-gov-text italic">&ldquo;The PM Internship Scheme provided me with invaluable experience at ISRO. It bridged the gap between my academic knowledge and real-world applications.&rdquo;</p>
+                  <p className="text-gov-text italic">{"\"The PM Internship Scheme provided me with invaluable experience at ISRO. It bridged the gap between my academic knowledge and real-world applications.\""}</p>
                 </CardContent>
               </Card>
             </motion.div>
@@ -909,7 +909,7 @@ export default function HomePage() {
                       <p className="text-sm text-gov-darkGray">HR Director, BHEL</p>
                     </div>
                   </div>
-                  <p className="text-gov-text italic">&ldquo;The interns from PMIS bring fresh perspectives and energy to our organization. It&apos;s a win-win for both students and employers.&rdquo;</p>
+                  <p className="text-gov-text italic">{"\"The interns from PMIS bring fresh perspectives and energy to our organization. It's a win-win for both students and employers.\""}</p>
                 </CardContent>
               </Card>
             </motion.div>
@@ -925,7 +925,7 @@ export default function HomePage() {
                       <p className="text-sm text-gov-darkGray">Student, NIT Surat</p>
                     </div>
                   </div>
-                  <p className="text-gov-text italic">&ldquo;My internship at the Ministry of Electronics & IT gave me insights into digital governance. Highly recommend PMIS to all students.&rdquo;</p>
+                  <p className="text-gov-text italic">{"\"My internship at the Ministry of Electronics & IT gave me insights into digital governance. Highly recommend PMIS to all students.\""}</p>
                 </CardContent>
               </Card>
             </motion.div>
