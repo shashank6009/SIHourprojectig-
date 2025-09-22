@@ -82,7 +82,7 @@ export async function POST(req: Request) {
       } catch (pdfError: unknown) {
         console.error('Server: PDF parsing error:', pdfError);
         // Check if it's the test file error and provide a better message
-        if (pdfError.message?.includes('ENOENT') && pdfError.message?.includes('05-versions-space.pdf')) {
+        if (pdfError instanceof Error && pdfError.message?.includes('ENOENT') && pdfError.message?.includes('05-versions-space.pdf')) {
           return NextResponse.json({ 
             error: "PDF processing is temporarily unavailable. Please use the 'Paste Resume Text' option instead." 
           }, { status: 422 });
