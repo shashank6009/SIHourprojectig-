@@ -944,39 +944,51 @@ export default function HomePage() {
             variants={staggerContainer}
           >
             <motion.div variants={fadeInUp}>
-              <Button variant="outline" className="group hover:shadow-md transition-all duration-200">
-                <a href="https://pminternship.mca.gov.in/guidelines" target="_blank" rel="noopener noreferrer" aria-label="Download English Guidelines">
-                  <FileText className="mr-2 h-4 w-4" />
-                  {strings.guidelinesEn}
-                  <ChevronRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                </a>
+              <Button 
+                variant="outline" 
+                className="group hover:shadow-md transition-all duration-200"
+                onClick={() => window.open('https://pminternship.mca.gov.in/guidelines', '_blank')}
+                aria-label="Download English Guidelines"
+              >
+                <FileText className="mr-2 h-4 w-4" />
+                {strings.guidelinesEn}
+                <ChevronRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Button>
             </motion.div>
             <motion.div variants={fadeInUp}>
-              <Button variant="outline" className="group hover:shadow-md transition-all duration-200">
-                <a href="https://pminternship.mca.gov.in/guidelines-hi" target="_blank" rel="noopener noreferrer" aria-label="Download Hindi Guidelines">
-                  <FileText className="mr-2 h-4 w-4" />
-                  {strings.guidelinesHi}
-                  <ChevronRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                </a>
+              <Button 
+                variant="outline" 
+                className="group hover:shadow-md transition-all duration-200"
+                onClick={() => window.open('https://pminternship.mca.gov.in/guidelines-hi', '_blank')}
+                aria-label="Download Hindi Guidelines"
+              >
+                <FileText className="mr-2 h-4 w-4" />
+                {strings.guidelinesHi}
+                <ChevronRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Button>
             </motion.div>
             <motion.div variants={fadeInUp}>
-              <Button variant="outline" className="group hover:shadow-md transition-all duration-200">
-                <a href="https://pminternship.mca.gov.in/faqs" target="_blank" rel="noopener noreferrer" aria-label="View Frequently Asked Questions">
-                  <FileText className="mr-2 h-4 w-4" />
-                  {strings.faqs}
-                  <ChevronRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                </a>
+              <Button 
+                variant="outline" 
+                className="group hover:shadow-md transition-all duration-200"
+                onClick={() => window.open('https://pminternship.mca.gov.in/faqs', '_blank')}
+                aria-label="View Frequently Asked Questions"
+              >
+                <FileText className="mr-2 h-4 w-4" />
+                {strings.faqs}
+                <ChevronRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Button>
             </motion.div>
             <motion.div variants={fadeInUp}>
-              <Button variant="outline" className="group hover:shadow-md transition-all duration-200">
-                <a href="mailto:pmi.helpdesk@mca.gov.in" aria-label="Contact Helpdesk via Email">
-                  <FileText className="mr-2 h-4 w-4" />
-                  {strings.helpdesk}
-                  <ChevronRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                </a>
+              <Button 
+                variant="outline" 
+                className="group hover:shadow-md transition-all duration-200"
+                onClick={() => window.location.href = 'mailto:pmi.helpdesk@mca.gov.in'}
+                aria-label="Contact Helpdesk via Email"
+              >
+                <FileText className="mr-2 h-4 w-4" />
+                {strings.helpdesk}
+                <ChevronRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Button>
             </motion.div>
           </motion.div>
