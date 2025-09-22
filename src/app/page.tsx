@@ -10,6 +10,7 @@ import { i18n, type Language } from "@/lib/i18n";
 
 export default function HomePage() {
   const [language] = useState<Language>("en");
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const strings = i18n[language];
 
   const images = [
