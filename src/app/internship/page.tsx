@@ -106,7 +106,7 @@ export default function InternshipPage() {
           console.log('Form auto-filled with profile data:', autoFillData);
         } else {
           // If no profile exists, try to use Google data
-          const googleData = GoogleDataExtractor.extractFromSession(session as any);
+          const googleData = GoogleDataExtractor.extractFromSession(session as Record<string, unknown>);
           
           if (googleData.email || googleData.firstName) {
             const googleFillData: ResumeData = {};

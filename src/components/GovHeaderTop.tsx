@@ -1,14 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { ChevronDown, Minus, Plus, Monitor } from "lucide-react";
 import Image from "next/image";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { i18n, type Language } from "@/lib/i18n";
 
@@ -27,12 +21,7 @@ export function GovHeaderTop({
 }: GovHeaderTopProps) {
   const [textSize, setTextSize] = useState<"small" | "normal" | "large">("normal");
   const [highContrast, setHighContrast] = useState(false);
-  const [mounted, setMounted] = useState(false);
   const strings = i18n[language];
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const handleTextSizeChange = (size: "small" | "normal" | "large") => {
     setTextSize(size);
