@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { 
@@ -452,13 +451,13 @@ export default function RecommendationsPage() {
             </AlertDescription>
           </Alert>
           <div className="text-center">
-            <Button 
+            <button 
               onClick={() => router.push('/login')}
-              className="bg-gov-saffron hover:bg-gov-saffron/90 text-white"
+              className="bg-gov-saffron hover:bg-gov-saffron/90 text-white inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium h-10 px-4 py-2"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Go to Login
-            </Button>
+              <span>Go to Login</span>
+            </button>
           </div>
         </div>
       </div>
@@ -496,19 +495,18 @@ export default function RecommendationsPage() {
               </p>
             </div>
             <div className="flex gap-2">
-              <Button
+              <button
                 onClick={handleRefresh}
-                variant="outline"
-                className="border-gov-navy text-gov-navy hover:bg-gov-navy hover:text-white"
+                className="border border-gov-navy text-gov-navy hover:bg-gov-navy hover:text-white shadow-sm hover:shadow-md transition-all duration-200 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium h-10 px-4 py-2"
               >
                 <RefreshCw className="w-4 h-4 mr-2" />
-                Refresh
-              </Button>
+                <span>Refresh</span>
+              </button>
               <Link href="/internship">
-                <Button variant="outline">
+                <button className="border border-gov-navy text-gov-navy hover:bg-gov-navy hover:text-white shadow-sm hover:shadow-md transition-all duration-200 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium h-10 px-4 py-2">
                   <ArrowLeft className="w-4 h-4 mr-2" />
-                  Back to Form
-                </Button>
+                  <span>Back to Form</span>
+                </button>
               </Link>
             </div>
           </div>
@@ -720,20 +718,19 @@ export default function RecommendationsPage() {
                   <li>• Temporary model issues</li>
                 </ul>
                 <div className="space-y-3">
-                  <Button 
+                  <button 
                     onClick={() => window.location.reload()} 
-                    className="w-full"
+                    className="w-full bg-gov-navy text-white hover:bg-gov-blue shadow-sm hover:shadow-md transition-all duration-200 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium h-10 px-4 py-2"
                   >
                     <RefreshCw className="w-4 h-4 mr-2" />
-                    Refresh Recommendations
-                  </Button>
-                  <Button 
-                    variant="outline" 
+                    <span>Refresh Recommendations</span>
+                  </button>
+                  <button 
                     onClick={() => window.history.back()}
-                    className="w-full"
+                    className="w-full border border-gov-navy text-gov-navy hover:bg-gov-navy hover:text-white shadow-sm hover:shadow-md transition-all duration-200 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium h-10 px-4 py-2"
                   >
-                    ← Back to Form
-                  </Button>
+                    <span>← Back to Form</span>
+                  </button>
                 </div>
               </div>
             </motion.div>
@@ -780,14 +777,12 @@ export default function RecommendationsPage() {
                     <p className="text-gray-600">{selectedRecommendation.organization_name}</p>
                   </div>
                 </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
+                <button
                   onClick={() => setSelectedRecommendation(null)}
-                  className="text-gray-500 hover:text-gray-700"
+                  className="text-gray-500 hover:text-gray-700 hover:bg-gray-100 h-9 rounded-md px-3 inline-flex items-center justify-center whitespace-nowrap text-sm font-medium"
                 >
                   <X className="w-5 h-5" />
-                </Button>
+                </button>
               </div>
 
               {/* Modal Content */}
@@ -953,19 +948,19 @@ export default function RecommendationsPage() {
                                   </div>
                                   <p className="text-sm text-gray-600">{getCourseDescription(course.skill)}</p>
                                 </div>
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  className="ml-4 text-xs"
+                                <button
+                                  className="ml-4 text-xs h-9 rounded-md px-3 border border-gov-navy text-gov-navy hover:bg-gov-navy hover:text-white shadow-sm hover:shadow-md transition-all duration-200 inline-flex items-center justify-center whitespace-nowrap font-medium"
                                   onClick={() => {
                                     if (typeof window !== 'undefined') {
                                       window.open(getCourseLink(course.platform, course.course_name), '_blank');
                                     }
                                   }}
                                 >
-                                  Enroll
-                                  <ExternalLink className="w-3 h-3 ml-1" />
-                                </Button>
+                                  <span className="inline-flex items-center gap-1">
+                                    Enroll
+                                    <ExternalLink className="w-3 h-3" />
+                                  </span>
+                                </button>
                               </div>
                             </div>
                           ))}
@@ -1073,18 +1068,16 @@ export default function RecommendationsPage() {
                           'TBD'
                         }
                       </div>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="text-xs text-red-600 hover:text-red-700 hover:bg-red-100"
+                      <button
+                        className="text-xs text-red-600 hover:text-red-700 hover:bg-red-100 h-9 rounded-md px-3 inline-flex items-center justify-center whitespace-nowrap font-medium"
                         onClick={() => {
                           const deadline = selectedRecommendation.application_deadline || 
                             new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
                           createICS(`${selectedRecommendation.title} – ${selectedRecommendation.organization_name}`, deadline);
                         }}
                       >
-                        Add to Calendar
-                      </Button>
+                        <span>Add to Calendar</span>
+                      </button>
                     </div>
                   </div>
                 </div>

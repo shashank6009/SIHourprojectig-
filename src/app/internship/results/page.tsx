@@ -2,7 +2,6 @@
 
 import { useMemo, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { CheckCircle2, Sparkles, ShieldCheck } from "lucide-react";
 
 type Internship = {
@@ -309,10 +308,12 @@ export default function ResultsPage() {
                   </ul>
 
                   <div className="mt-4 flex items-center gap-3">
-                    <Button className="bg-gov-blue hover:bg-gov-blueDark">Apply Now</Button>
-                    <Button variant="outline" className="border-gov-blue text-gov-blue hover:bg-blue-50">
-                      Save for Later
-                    </Button>
+                    <button className="bg-gov-blue hover:bg-gov-blueDark text-white inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium h-10 px-4 py-2">
+                      <span>Apply Now</span>
+                    </button>
+                    <button className="border border-gov-blue text-gov-blue hover:bg-blue-50 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium h-10 px-4 py-2">
+                      <span>Save for Later</span>
+                    </button>
                   </div>
                 </CardContent>
               </Card>
