@@ -1013,14 +1013,14 @@ export default function RecommendationsPage() {
                       
                       <div className="flex gap-2">
                         <button 
-                          className="flex-1 text-xs font-medium text-gov-navy px-3 py-2 border border-gov-navy rounded-md hover:bg-gov-navy hover:text-white transition-colors"
+                          className="flex-1 text-xs font-medium px-3 py-2 border border-gov-navy rounded-md hover:bg-gov-navy hover:text-white transition-colors"
                           onClick={() => toggleCompare(selectedRecommendation.internship_id)}
                           aria-label={compareIds.includes(selectedRecommendation.internship_id) ? 'Remove' : 'Compare'}
                         >
-                          <span>{compareIds.includes(selectedRecommendation.internship_id) ? 'Remove' : 'Compare'}</span>
+                          <span className="text-gray-900">{compareIds.includes(selectedRecommendation.internship_id) ? 'Remove' : 'Compare'}</span>
                         </button>
                         <button 
-                          className="flex-1 text-xs font-medium text-gov-navy px-3 py-2 border border-gov-navy rounded-md hover:bg-gov-navy hover:text-white transition-colors"
+                          className="flex-1 text-xs font-medium px-3 py-2 border border-gov-navy rounded-md hover:bg-gov-navy hover:text-white transition-colors"
                           onClick={async () => {
                             if (typeof window !== 'undefined') {
                               try {
@@ -1051,7 +1051,7 @@ export default function RecommendationsPage() {
                             }
                           }}
                         >
-                          <span>Share</span>
+                          <span className="text-gray-900">Share</span>
                         </button>
                       </div>
                     </div>
