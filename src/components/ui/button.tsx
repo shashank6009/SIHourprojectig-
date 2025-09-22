@@ -53,7 +53,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       style,
       onKeyDown,
       onKeyUp,
-      ...rest
     } = props;
 
     // Only pass through known safe props

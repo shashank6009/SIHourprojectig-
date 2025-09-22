@@ -67,33 +67,16 @@ export function GovHeaderTop({
 
           {/* Right side - Accessibility controls */}
           <div className="flex items-center space-x-6">
-            {/* Language dropdown */}
-            {mounted ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" className="text-white hover:bg-gray-600 text-base">
-                    {strings.language}
-                    <ChevronDown className="ml-1 h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuItem onClick={() => onLanguageChange("en")}>
-                    English
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => onLanguageChange("hi")}>
-                    हिंदी
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => onLanguageChange("ta")}>
-                    தமிழ்
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            ) : (
-              <Button variant="ghost" size="sm" className="text-white hover:bg-gray-600 text-base">
-                {strings.language}
-                <ChevronDown className="ml-1 h-4 w-4" />
-              </Button>
-            )}
+            {/* Language selector - simplified to avoid hydration issues */}
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="text-white hover:bg-gray-600 text-base"
+              onClick={() => onLanguageChange(language === "en" ? "hi" : "en")}
+            >
+              {strings.language}
+              <ChevronDown className="ml-1 h-4 w-4" />
+            </Button>
 
             {/* Text size controls */}
             <div className="flex items-center space-x-2">
