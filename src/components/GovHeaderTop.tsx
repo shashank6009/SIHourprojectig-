@@ -36,10 +36,10 @@ export function GovHeaderTop({
 
   return (
     <div className="bg-black text-white">
-      <div className="container mx-auto px-4 md:px-6">
+      <div className="container mx-auto px-6 md:px-8 lg:px-12">
         <div className="flex items-center justify-between py-4 text-sm">
           {/* Left side - Government branding */}
-          <div className="flex items-center space-x-6">
+          <div className="flex items-center space-x-8">
             <div className="flex items-center space-x-4">
               <Image
                 src="/flag.jpeg"

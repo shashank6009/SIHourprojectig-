@@ -278,7 +278,8 @@ export class MLService {
           success_prob: processedRec.success_prob,
           missing_skills: processedRec.missing_skills?.length || 0,
           course_suggestions: processedRec.course_suggestions?.length || 0,
-          reasons: processedRec.reasons?.length || 0
+          reasons: processedRec.reasons?.length || 0,
+          course_suggestions_details: processedRec.course_suggestions
         });
         
         return processedRec;
@@ -335,6 +336,7 @@ export class MLService {
       }
     }
   }
+
 
   // Transform intern form data to ML API format
   static transformInternFormToProfile(formData: Record<string, unknown>, userId: string): StudentProfile {

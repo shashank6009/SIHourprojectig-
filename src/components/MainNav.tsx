@@ -48,90 +48,96 @@ export function MainNav({}: MainNavProps) {
           priority
         />
         
-        {/* Navigation content overlay */}
-        <div className="absolute inset-0 flex items-center justify-between px-3 md:px-4">
+        {/* Navigation content overlay with improved spacing */}
+        <div className="absolute inset-0 flex items-center justify-between px-6 md:px-8 lg:px-12">
           
-          {/* Invisible Login Button - positioned over the Login button in the image */}
-          <div className="absolute top-1/2 right-40 transform -translate-y-1/2 w-16 h-8 z-10">
+          {/* Left side - Logo/Branding area with more space */}
+          <div className="flex-1 flex items-center">
+            {/* Space for logos - they're part of the background image */}
+          </div>
+          
+          {/* Center - Navigation Links with generous spacing */}
+          <div className="flex items-center space-x-8 md:space-x-12 lg:space-x-16">
             <Link 
-              href="/login" 
-              className="block w-full h-full"
-              aria-label="Login to PM Internship Portal"
+              href="/" 
+              className="text-black hover:text-gov-saffron font-semibold text-sm md:text-base lg:text-lg transition-all duration-300 px-3 py-2 rounded-md hover:bg-white/20"
             >
+              Home
+            </Link>
+            <Link 
+              href="/internship" 
+              className="text-black hover:text-gov-saffron font-semibold text-sm md:text-base lg:text-lg transition-all duration-300 px-3 py-2 rounded-md hover:bg-white/20"
+            >
+              Intern
+            </Link>
+            <Link 
+              href="/internship/recommendations" 
+              className="text-black hover:text-gov-saffron font-semibold text-sm md:text-base lg:text-lg transition-all duration-300 px-3 py-2 rounded-md hover:bg-white/20"
+            >
+              Recommendations
+            </Link>
+            <Link 
+              href="/dashboard" 
+              className="text-black hover:text-gov-saffron font-semibold text-sm md:text-base lg:text-lg transition-all duration-300 px-3 py-2 rounded-md hover:bg-white/20"
+              key="dashboard-nav"
+            >
+              Dashboard
             </Link>
           </div>
           
-          {/* Navigation Links and Menu in the center empty space */}
-          <div className="flex-1 flex items-center justify-center">
-            <div className="flex items-center space-x-4 md:space-x-8">
-              <Link 
-                href="/" 
-                className="text-black hover:text-gov-saffron font-semibold text-sm md:text-lg transition-colors duration-200"
-              >
-                Home
-              </Link>
-              <Link 
-                href="/internship" 
-                className="text-black hover:text-gov-saffron font-semibold text-sm md:text-lg transition-colors duration-200"
-              >
-                Intern
-              </Link>
-              <Link 
-                href="/internship/recommendations" 
-                className="text-black hover:text-gov-saffron font-semibold text-sm md:text-lg transition-colors duration-200"
-              >
-                Recommendations
-              </Link>
-              <Link 
-                href="/dashboard" 
-                className="text-black hover:text-gov-saffron font-semibold text-sm md:text-lg transition-colors duration-200"
-                key="dashboard-nav"
-              >
-                Dashboard
-              </Link>
-              
-              {/* Menu button positioned after recommendations */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button className="bg-gov-saffron hover:bg-gov-saffron/80 text-white font-medium text-xs md:text-sm px-3 py-1.5 shadow-lg ml-2 rounded-md inline-flex items-center">
-                    <span className="inline-flex items-center gap-1">Menu<ChevronDown className="ml-1 h-3 w-3" /></span>
+          {/* Right side - Action buttons with better spacing */}
+          <div className="flex-1 flex items-center justify-end space-x-4 md:space-x-6">
+            {/* Menu button with improved styling */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="bg-gov-saffron hover:bg-gov-saffron/90 text-white font-medium text-xs md:text-sm px-4 py-2.5 shadow-lg rounded-lg inline-flex items-center transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5">
+                  <span className="inline-flex items-center gap-2">Menu<ChevronDown className="h-3 w-3" /></span>
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-64 shadow-xl">
+                <DropdownMenuItem asChild>
+                  <a href="https://pminternship.mca.gov.in/guidelines" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
+                    <FileText className="h-4 w-4" />
+                    GUIDELINES / DOCUMENTATIONS
+                  </a>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <a href="https://pminternship.mca.gov.in/login/#gallery-block" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
+                    <Camera className="h-4 w-4" />
+                    GALLERY
+                  </a>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <button 
+                    onClick={() => {
+                      const element = document.querySelector('.companies-video-section');
+                      if (element) {
+                        element.scrollIntoView({ behavior: 'smooth' });
+                      }
+                    }}
+                    className="flex items-center gap-2 w-full text-left"
+                  >
+                    <ThumbsUp className="h-4 w-4" />
+                    ELIGIBILITY
                   </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-64">
-                  <DropdownMenuItem asChild>
-                    <a href="https://pminternship.mca.gov.in/guidelines" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
-                      <FileText className="h-4 w-4" />
-                      GUIDELINES / DOCUMENTATIONS
-                    </a>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <a href="https://pminternship.mca.gov.in/login/#gallery-block" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
-                      <Camera className="h-4 w-4" />
-                      GALLERY
-                    </a>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <button 
-                      onClick={() => {
-                        const element = document.querySelector('.companies-video-section');
-                        if (element) {
-                          element.scrollIntoView({ behavior: 'smooth' });
-                        }
-                      }}
-                      className="flex items-center gap-2 w-full text-left"
-                    >
-                      <ThumbsUp className="h-4 w-4" />
-                      ELIGIBILITY
-                    </button>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <a href="https://pminternship.mca.gov.in/compendium/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
-                      <BookOpen className="h-4 w-4" />
-                      COMPENDIUM
-                    </a>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <a href="https://pminternship.mca.gov.in/compendium/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
+                    <BookOpen className="h-4 w-4" />
+                    COMPENDIUM
+                  </a>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            
+            {/* Login Button - positioned over the Login button in the image */}
+            <div className="w-20 h-10">
+              <Link 
+                href="/login" 
+                className="block w-full h-full"
+                aria-label="Login to PM Internship Portal"
+              >
+              </Link>
             </div>
           </div>
         </div>

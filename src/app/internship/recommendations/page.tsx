@@ -917,12 +917,17 @@ export default function RecommendationsPage() {
                     )}
 
                     {/* Professional Course Recommendations */}
-                    {console.log('[RecommendationsPage] Course suggestions debug:', {
+                    {/* Debug logging for course suggestions from ML model */}
+                    {console.log('[RecommendationsPage] ML Model Course Data:', {
+                      internshipTitle: selectedRecommendation.title,
+                      organization: selectedRecommendation.organization_name,
                       hasCourseSuggestions: !!selectedRecommendation.course_suggestions,
                       courseSuggestionsLength: selectedRecommendation.course_suggestions?.length || 0,
-                      courseSuggestions: selectedRecommendation.course_suggestions
+                      rawCourseSuggestions: selectedRecommendation.course_suggestions,
+                      missingSkills: selectedRecommendation.missing_skills,
+                      allRecommendationData: selectedRecommendation
                     })}
-                    {/* Course Recommendations Section - Always Show */}
+                    {/* Course Recommendations Section - Only show what ML model provides */}
                     <div className="bg-blue-50 rounded-lg p-6 border border-blue-200">
                       <h4 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
                         <BookOpen className="w-5 h-5 text-blue-600" />
@@ -970,7 +975,10 @@ export default function RecommendationsPage() {
                           <BookOpen className="w-12 h-12 text-gray-300 mx-auto mb-4" />
                           <p className="text-gray-500 mb-2">No course recommendations available</p>
                           <p className="text-sm text-gray-400">
-                            The ML model didn&apos;t provide course suggestions for this internship.
+                            The ML model did not provide course suggestions for this internship.
+                          </p>
+                          <p className="text-xs text-gray-400 mt-2">
+                            Check browser console for ML model data details.
                           </p>
                         </div>
                       )}
