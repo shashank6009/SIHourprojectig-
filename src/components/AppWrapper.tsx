@@ -9,19 +9,38 @@ import { initializePWA } from "@/lib/pwa";
 
 export function AppWrapper({ children }: { children: React.ReactNode }) {
   const [language, setLanguage] = useState<Language>("en");
+  const [mounted, setMounted] = useState(false);
 
   const handleTextSizeChange = (size: "small" | "normal" | "large") => {
-    document.documentElement.setAttribute("data-text-size", size);
+    if (typeof document !== 'undefined') {
+      document.documentElement.setAttribute("data-text-size", size);
+    }
   };
 
   const handleContrastChange = (highContrast: boolean) => {
-    document.documentElement.setAttribute("data-contrast", highContrast ? "high" : "normal");
+    if (typeof document !== 'undefined') {
+      document.documentElement.setAttribute("data-contrast", highContrast ? "high" : "normal");
+    }
   };
 
-  // Initialize PWA features
+  // Initialize PWA features and set mounted state
   useEffect(() => {
+    setMounted(true);
     initializePWA();
   }, []);
+
+  if (!mounted) {
+    return (
+      <div className="min-h-screen bg-white">
+        <div className="container mx-auto px-4 md:px-6 py-8">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gov-saffron mx-auto mb-4"></div>
+            <p className="text-lg text-gray-600">Loading...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>

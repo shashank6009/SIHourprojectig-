@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,12 +10,27 @@ import { i18n, type Language } from "@/lib/i18n";
 
 export default function HomePage() {
   const [language] = useState<Language>("en");
+  const [mounted, setMounted] = useState(false);
   const strings = i18n[language];
   const router = useRouter();
 
-  // No mounted gating: render identical markup on server and client
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
-  // Render same markup on server and client (no gating)
+  // Prevent hydration mismatch by not rendering interactive elements until mounted
+  if (!mounted) {
+    return (
+      <div className="min-h-screen bg-white">
+        <div className="container mx-auto px-4 md:px-6 py-8">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gov-saffron mx-auto mb-4"></div>
+            <p className="text-lg text-gray-600">Loading...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const fadeInUp = {
     initial: { opacity: 0, y: 20 },
@@ -408,25 +423,6 @@ export default function HomePage() {
               >
                 {strings.heroSubtext}
               </motion.p>
-              <motion.div 
-                className="flex flex-col sm:flex-row gap-4 justify-center"
-                variants={fadeInUp}
-              >
-                <button 
-                  className="h-11 px-8 bg-gov-navy text-white hover:bg-gov-blue hover:shadow-md transition-all duration-200 hover:-translate-y-1 rounded-md inline-flex items-center justify-center text-sm font-medium"
-                  aria-label="Student Login and Registration"
-                >
-                  <User className="mr-2 h-5 w-5" />
-                  <span>{strings.studentLogin}</span>
-                </button>
-                <button 
-                  className="h-11 px-8 border border-gov-navy text-gov-navy hover:bg-gov-navy hover:text-white hover:shadow-md transition-all duration-200 hover:-translate-y-1 rounded-md inline-flex items-center justify-center text-sm font-medium"
-                  aria-label="Employer Login and Registration"
-                >
-                  <Building className="mr-2 h-5 w-5" />
-                  <span>{strings.employerLogin}</span>
-                </button>
-              </motion.div>
               <motion.div className="pt-4 space-y-4" variants={fadeInUp}>
                 <button 
                   className="w-full sm:w-auto text-lg font-semibold h-11 px-8 bg-gov-saffron text-white hover:bg-secondary-600 shadow-sm hover:shadow-md transition-all duration-200 rounded-md inline-flex items-center justify-center"
@@ -435,18 +431,6 @@ export default function HomePage() {
                 >
                   <span>{strings.applyNow}</span>
                 </button>
-                <div>
-                  <button 
-                    className="text-gov-navy underline hover:text-gov-blue transition-colors font-medium"
-                    aria-label="Government Dashboard Access"
-                    onClick={() => {
-                      console.log('Government Dashboard clicked - navigating to /admin');
-                      router.push('/admin');
-                    }}
-                  >
-                    <span>{strings.governmentDashboard}</span>
-                  </button>
-                </div>
               </motion.div>
             </motion.div>
           </motion.div>

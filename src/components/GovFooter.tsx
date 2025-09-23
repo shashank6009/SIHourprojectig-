@@ -1,3 +1,6 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import { i18n, type Language } from "@/lib/i18n";
 
 interface GovFooterProps {
@@ -5,7 +8,25 @@ interface GovFooterProps {
 }
 
 export function GovFooter({ language }: GovFooterProps) {
+  const [mounted, setMounted] = useState(false);
   const strings = i18n[language];
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <footer id="footer" className="bg-gov-navy text-white">
+        <div className="container mx-auto px-4 md:px-6 py-12">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gov-saffron mx-auto mb-4"></div>
+            <p className="text-sm text-gray-300">Loading footer...</p>
+          </div>
+        </div>
+      </footer>
+    );
+  }
 
   return (
     <footer id="footer" className="bg-gov-navy text-white">
@@ -39,11 +60,12 @@ export function GovFooter({ language }: GovFooterProps) {
           <div className="space-y-4">
             <h4 className="font-semibold text-white mb-4">Quick Links</h4>
             <div className="space-y-2 text-sm">
+              <a href="/admin" className="block text-gov-saffron hover:text-white transition-colors text-base font-semibold border-b border-gov-saffron/30 pb-1">Government Dashboard</a>
               <a href="/internship" className="block text-gray-300 hover:text-gov-saffron transition-colors">Apply for Internship</a>
-              <a href="#" className="block text-gray-300 hover:text-gov-saffron transition-colors">Employer Registration</a>
-              <a href="#" className="block text-gray-300 hover:text-gov-saffron transition-colors">Download Guidelines</a>
-              <a href="#" className="block text-gray-300 hover:text-gov-saffron transition-colors">Track Application</a>
-              <a href="#" className="block text-gray-300 hover:text-gov-saffron transition-colors">Accessibility Statement</a>
+              <a href="/register" className="block text-gray-300 hover:text-gov-saffron transition-colors">Employer Registration</a>
+              <a href="#links" className="block text-gray-300 hover:text-gov-saffron transition-colors">Download Guidelines</a>
+              <a href="/dashboard" className="block text-gray-300 hover:text-gov-saffron transition-colors">Track Application</a>
+              <a href="#footer" className="block text-gray-300 hover:text-gov-saffron transition-colors">Accessibility Statement</a>
             </div>
           </div>
 
