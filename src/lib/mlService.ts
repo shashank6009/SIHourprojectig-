@@ -275,7 +275,8 @@ export class MLService {
           
           // Skill development
           missing_skills: rec.missing_skills || [],
-          course_suggestions: rec.course_suggestions || [],
+          course_suggestions: rec.course_suggestions || rec.courses || [],
+          courses: rec.courses || rec.course_suggestions || [], // Keep both for compatibility
           reasons: rec.reasons || [],
           
           // Application timeline - assign random December 2025 deadline
@@ -309,8 +310,14 @@ export class MLService {
           success_prob: processedRec.success_prob,
           missing_skills: processedRec.missing_skills?.length || 0,
           course_suggestions: processedRec.course_suggestions?.length || 0,
+          courses: processedRec.courses?.length || 0,
           reasons: processedRec.reasons?.length || 0,
-          course_suggestions_details: processedRec.course_suggestions
+          course_suggestions_details: processedRec.course_suggestions,
+          courses_details: processedRec.courses,
+          raw_course_data: {
+            from_api_course_suggestions: rec.course_suggestions,
+            from_api_courses: rec.courses
+          }
         });
         
         return processedRec;

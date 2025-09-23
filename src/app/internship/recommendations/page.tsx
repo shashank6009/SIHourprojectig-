@@ -1184,6 +1184,9 @@ export default function RecommendationsPage() {
                       hasCourseSuggestions: !!selectedRecommendation.course_suggestions,
                       courseSuggestionsLength: selectedRecommendation.course_suggestions?.length || 0,
                       rawCourseSuggestions: selectedRecommendation.course_suggestions,
+                      hasCourses: !!(selectedRecommendation as any).courses,
+                      coursesLength: (selectedRecommendation as any).courses?.length || 0,
+                      rawCourses: (selectedRecommendation as any).courses,
                       missingSkills: selectedRecommendation.missing_skills,
                       allRecommendationData: selectedRecommendation
                     })}
@@ -1194,54 +1197,115 @@ export default function RecommendationsPage() {
                         Recommended Courses
                       </h4>
                       
-                      {selectedRecommendation.course_suggestions && selectedRecommendation.course_suggestions.length > 0 ? (
-                        <div className="space-y-3">
-                          {selectedRecommendation.course_suggestions.slice(0, 2).map((course, idx) => (
-                            <div key={idx} className="bg-white p-4 rounded-lg border border-blue-100 hover:border-blue-200 transition-colors">
-                              <div className="flex items-start justify-between">
-                                <div className="flex-1">
-                                  <h5 className="font-medium text-gray-900 mb-1">{course.course_name}</h5>
-                                  <div className="flex items-center gap-4 text-sm text-gray-600 mb-2">
-                                    <span className="flex items-center gap-1">
-                                      <Building2 className="w-3 h-3" />
-                                      {course.platform}
-                                    </span>
-                                    <span className="flex items-center gap-1">
-                                      <Calendar className="w-3 h-3" />
-                                      {getCourseDuration(course.platform)}
-                                    </span>
+                      {(() => {
+                        // Get courses from either course_suggestions or courses field
+                        const courses = selectedRecommendation.course_suggestions || (selectedRecommendation as any).courses || [];
+                        
+                        // If no courses from ML model, generate some from missing skills
+                        if (courses.length === 0 && selectedRecommendation.missing_skills && selectedRecommendation.missing_skills.length > 0) {
+                          const generatedCourses = selectedRecommendation.missing_skills.slice(0, 2).map((skill, idx) => ({
+                            course_name: `${skill} Fundamentals Course`,
+                            platform: 'Coursera',
+                            skill: skill,
+                            link: getCourseLink('Coursera', `${skill} course`)
+                          }));
+                          
+                          console.log('[RecommendationsPage] Generated courses from missing skills:', generatedCourses);
+                          
+                          return (
+                            <div className="space-y-3">
+                              {generatedCourses.map((course, idx) => (
+                                <div key={idx} className="bg-white p-4 rounded-lg border border-blue-100 hover:border-blue-200 transition-colors">
+                                  <div className="flex items-start justify-between">
+                                    <div className="flex-1">
+                                      <h5 className="font-medium text-gray-900 mb-1">{course.course_name}</h5>
+                                      <div className="flex items-center gap-4 text-sm text-gray-600 mb-2">
+                                        <span className="flex items-center gap-1">
+                                          <Building2 className="w-3 h-3" />
+                                          {course.platform}
+                                        </span>
+                                        <span className="flex items-center gap-1">
+                                          <Calendar className="w-3 h-3" />
+                                          {getCourseDuration(course.platform)}
+                                        </span>
+                                      </div>
+                                      <p className="text-sm text-gray-600">{getCourseDescription(course.skill)}</p>
+                                    </div>
+                                    <button
+                                      className="ml-4 text-xs h-9 rounded-md px-3 border border-gov-navy text-gov-navy hover:bg-gov-navy hover:text-white shadow-sm hover:shadow-md transition-all duration-200 inline-flex items-center justify-center whitespace-nowrap font-medium"
+                                      onClick={() => {
+                                        if (typeof window !== 'undefined') {
+                                          window.open(course.link, '_blank');
+                                        }
+                                      }}
+                                    >
+                                      <span className="inline-flex items-center gap-1">
+                                        Enroll
+                                        <ExternalLink className="w-3 h-3" />
+                                      </span>
+                                    </button>
                                   </div>
-                                  <p className="text-sm text-gray-600">{getCourseDescription(course.skill)}</p>
                                 </div>
-                                <button
-                                  className="ml-4 text-xs h-9 rounded-md px-3 border border-gov-navy text-gov-navy hover:bg-gov-navy hover:text-white shadow-sm hover:shadow-md transition-all duration-200 inline-flex items-center justify-center whitespace-nowrap font-medium"
-                                  onClick={() => {
-                                    if (typeof window !== 'undefined') {
-                                      window.open(getCourseLink(course.platform, course.course_name), '_blank');
-                                    }
-                                  }}
-                                >
-                                  <span className="inline-flex items-center gap-1">
-                                    Enroll
-                                    <ExternalLink className="w-3 h-3" />
-                                  </span>
-                                </button>
-                              </div>
+                              ))}
                             </div>
-                          ))}
-                        </div>
-                      ) : (
-                        <div className="text-center py-8">
-                          <BookOpen className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-                          <p className="text-gray-500 mb-2">No course recommendations available</p>
-                          <p className="text-sm text-gray-400">
-                            The ML model did not provide course suggestions for this internship.
-                          </p>
-                          <p className="text-xs text-gray-400 mt-2">
-                            Check browser console for ML model data details.
-                          </p>
-                        </div>
-                      )}
+                          );
+                        }
+                        
+                        // Display courses from ML model
+                        if (courses.length > 0) {
+                          return (
+                            <div className="space-y-3">
+                              {courses.slice(0, 2).map((course, idx) => (
+                                <div key={idx} className="bg-white p-4 rounded-lg border border-blue-100 hover:border-blue-200 transition-colors">
+                                  <div className="flex items-start justify-between">
+                                    <div className="flex-1">
+                                      <h5 className="font-medium text-gray-900 mb-1">{course.course_name || course.name}</h5>
+                                      <div className="flex items-center gap-4 text-sm text-gray-600 mb-2">
+                                        <span className="flex items-center gap-1">
+                                          <Building2 className="w-3 h-3" />
+                                          {course.platform}
+                                        </span>
+                                        <span className="flex items-center gap-1">
+                                          <Calendar className="w-3 h-3" />
+                                          {getCourseDuration(course.platform)}
+                                        </span>
+                                      </div>
+                                      <p className="text-sm text-gray-600">{getCourseDescription(course.skill)}</p>
+                                    </div>
+                                    <button
+                                      className="ml-4 text-xs h-9 rounded-md px-3 border border-gov-navy text-gov-navy hover:bg-gov-navy hover:text-white shadow-sm hover:shadow-md transition-all duration-200 inline-flex items-center justify-center whitespace-nowrap font-medium"
+                                      onClick={() => {
+                                        if (typeof window !== 'undefined') {
+                                          window.open(getCourseLink(course.platform, course.course_name || course.name), '_blank');
+                                        }
+                                      }}
+                                    >
+                                      <span className="inline-flex items-center gap-1">
+                                        Enroll
+                                        <ExternalLink className="w-3 h-3" />
+                                      </span>
+                                    </button>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          );
+                        }
+                        
+                        // No courses available
+                        return (
+                          <div className="text-center py-8">
+                            <BookOpen className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+                            <p className="text-gray-500 mb-2">No course recommendations available</p>
+                            <p className="text-sm text-gray-400">
+                              The ML model did not provide course suggestions for this internship.
+                            </p>
+                            <p className="text-xs text-gray-400 mt-2">
+                              Check browser console for ML model data details.
+                            </p>
+                          </div>
+                        );
+                      })()}
                     </div>
                   </div>
 
