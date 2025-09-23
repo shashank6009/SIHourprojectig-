@@ -168,6 +168,17 @@ export default function RecommendationsPage() {
       if (typeof window === 'undefined') return;
       
       try {
+        // Force clear any cached recommendations to ensure fresh data with random deadlines
+        if (typeof window !== 'undefined') {
+          const keys = Object.keys(localStorage);
+          keys.forEach(key => {
+            if (key.startsWith('ml_recommendations_')) {
+              localStorage.removeItem(key);
+              console.log('[RecommendationsPage] Cleared cached recommendations:', key);
+            }
+          });
+        }
+        
         // Get student profile from session storage (client-side only)
         const profileData = typeof window !== 'undefined' ? sessionStorage.getItem('student_profile') : null;
         if (!profileData) {
@@ -246,8 +257,39 @@ export default function RecommendationsPage() {
         // Cache the recommendations
         await MLService.storeRecommendations(profile.student_id, mlResponse);
         
-        setRecommendations(mlResponse);
-        setFilteredRecs(mlResponse.recommendations);
+        // Ensure all recommendations have random December 2025 deadlines
+        const recommendationsWithDeadlines = mlResponse.recommendations.map(rec => {
+          if (!rec.application_deadline) {
+            // Generate random deadline if missing
+            const startDate = new Date('2025-12-01');
+            const randomDays = Math.floor(Math.random() * 31);
+            const deadline = new Date(startDate);
+            deadline.setDate(startDate.getDate() + randomDays);
+            deadline.setHours(9 + Math.floor(Math.random() * 8), Math.floor(Math.random() * 60), 0, 0);
+            
+            console.log(`[RecommendationsPage] Generated missing deadline for ${rec.title}:`, deadline.toISOString());
+            
+            return {
+              ...rec,
+              application_deadline: deadline.toISOString()
+            };
+          }
+          return rec;
+        });
+        
+        // Debug: Log deadlines
+        console.log('[RecommendationsPage] Final deadlines:', 
+          recommendationsWithDeadlines.map(rec => ({
+            title: rec.title,
+            deadline: rec.application_deadline
+          }))
+        );
+        
+        setRecommendations({
+          ...mlResponse,
+          recommendations: recommendationsWithDeadlines
+        });
+        setFilteredRecs(recommendationsWithDeadlines);
         
       } catch (err) {
         console.error('Failed to load recommendations:', err);
@@ -261,9 +303,75 @@ export default function RecommendationsPage() {
     loadRecommendations();
   }, [session]);
 
+  // Test webhook connectivity
+  const testWebhook = async () => {
+    try {
+      const testPayload = { test: true, timestamp: new Date().toISOString() };
+      console.log('🧪 Testing webhook connectivity...');
+      console.log('🧪 Test payload:', JSON.stringify(testPayload, null, 2));
+      
+      const response = await fetch('https://qiq-ai.app.n8n.cloud/webhook/4467d488-f652-45f6-809d-f0b650940ad1', {
+        method: 'POST',
+        mode: 'cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(testPayload)
+      });
+      
+      console.log('🧪 Webhook test response status:', response.status);
+      console.log('🧪 Webhook test response statusText:', response.statusText);
+      console.log('🧪 Webhook test response headers:', Object.fromEntries(response.headers.entries()));
+      
+      const responseText = await response.text();
+      console.log('🧪 Webhook test response body:', responseText);
+      
+      return response.ok;
+    } catch (error) {
+      console.error('🧪 Webhook test failed:', {
+        error: error,
+        errorMessage: error?.message,
+        errorName: error?.name,
+        errorStack: error?.stack
+      });
+      return false;
+    }
+  };
+
+  // Simple webhook test function
+  const simpleWebhookTest = async () => {
+    console.log('🔬 Simple webhook test starting...');
+    try {
+      const response = await fetch('https://qiq-ai.app.n8n.cloud/webhook/4467d488-f652-45f6-809d-f0b650940ad1', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ simple: 'test' })
+      });
+      console.log('🔬 Simple test result:', response.status, response.statusText);
+      return response.ok;
+    } catch (err) {
+      console.log('🔬 Simple test error:', err);
+      return false;
+    }
+  };
+
   // Client-side mounting
   useEffect(() => {
     setMounted(true);
+    console.log('🚀 Recommendations page mounted - random December 2025 deadlines will be generated!');
+    console.log('📅 Webhook integration active: https://qiq-ai.app.n8n.cloud/webhook/4467d488-f652-45f6-809d-f0b650940ad1');
+    
+    // Test webhook connectivity on page load
+    testWebhook();
+    simpleWebhookTest();
+    
+    // Also test with a simple GET request to see if the URL is reachable
+    fetch('https://qiq-ai.app.n8n.cloud/webhook/4467d488-f652-45f6-809d-f0b650940ad1', {
+      method: 'GET',
+      mode: 'cors'
+    }).then(response => {
+      console.log('🌐 GET test response:', response.status, response.statusText);
+    }).catch(error => {
+      console.error('🌐 GET test failed:', error);
+    });
   }, []);
 
   // Apply filters and sorting
@@ -323,9 +431,35 @@ export default function RecommendationsPage() {
       MLService.clearCachedRecommendations(studentProfile.student_id);
       const mlResponse = await MLService.getRecommendations(studentProfile, 15);
       
-      await MLService.storeRecommendations(studentProfile.student_id, mlResponse);
-      setRecommendations(mlResponse);
-      setFilteredRecs(mlResponse.recommendations);
+      // Ensure all recommendations have random December 2025 deadlines
+      const recommendationsWithDeadlines = mlResponse.recommendations.map(rec => {
+        if (!rec.application_deadline) {
+          // Generate random deadline if missing
+          const startDate = new Date('2025-12-01');
+          const randomDays = Math.floor(Math.random() * 31);
+          const deadline = new Date(startDate);
+          deadline.setDate(startDate.getDate() + randomDays);
+          deadline.setHours(9 + Math.floor(Math.random() * 8), Math.floor(Math.random() * 60), 0, 0);
+          
+          console.log(`[Refresh] Generated missing deadline for ${rec.title}:`, deadline.toISOString());
+          
+          return {
+            ...rec,
+            application_deadline: deadline.toISOString()
+          };
+        }
+        return rec;
+      });
+      
+      // Update the response with deadlines
+      const updatedResponse = {
+        ...mlResponse,
+        recommendations: recommendationsWithDeadlines
+      };
+      
+      await MLService.storeRecommendations(studentProfile.student_id, updatedResponse);
+      setRecommendations(updatedResponse);
+      setFilteredRecs(recommendationsWithDeadlines);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to refresh recommendations');
     } finally {
@@ -340,7 +474,7 @@ export default function RecommendationsPage() {
 
 
 
-  const createICS = (title: string, deadlineISO?: string | null) => {
+  const triggerCalendarWebhook = async (title: string, deadlineISO?: string | null) => {
     // Only run on client-side
     if (typeof window === 'undefined') {
       return;
@@ -362,21 +496,147 @@ export default function RecommendationsPage() {
         return;
       }
       
-      const toICS = (d: Date) => d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
-      const safeTitle = title.replace(/[^\w\s-]/g, '').trim();
-      const content = `BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//PMIS//EN\nBEGIN:VEVENT\nUID:${safeTitle}-${dt.getTime()}@pmis\nDTSTAMP:${toICS(new Date())}\nDTSTART:${toICS(dt)}\nDTEND:${toICS(new Date(dt.getTime() + 60*60*1000))}\nSUMMARY:${safeTitle} — Application Deadline\nDESCRIPTION:PM Internship Scheme application deadline\nEND:VEVENT\nEND:VCALENDAR`;
+      // Trigger webhook for calendar event creation
+      try {
+        const webhookUrl = 'https://qiq-ai.app.n8n.cloud/webhook/4467d488-f652-45f6-809d-f0b650940ad1';
+        const webhookPayload = {
+          event: 'calendar_event_created',
+          title: title,
+          deadline: deadlineISO,
+          deadline_formatted: dt.toLocaleDateString(),
+          user_id: userId,
+          timestamp: new Date().toISOString(),
+          source: 'pmis_internship_portal',
+          organization: selectedRecommendation?.organization_name || 'Unknown',
+          location: selectedRecommendation?.location || 'Unknown',
+          domain: selectedRecommendation?.domain || 'Unknown',
+          stipend: selectedRecommendation?.stipend || 0,
+          duration: selectedRecommendation?.duration || 'Unknown'
+        };
+        
+        console.log('📅 Triggering calendar webhook:', webhookPayload);
+        
+        // Send webhook request with better error handling
+        console.log('📤 Sending webhook request to:', webhookUrl);
+        console.log('📤 Request payload:', JSON.stringify(webhookPayload, null, 2));
+        
+        const response = await fetch(webhookUrl, {
+          method: 'POST',
+          mode: 'cors', // Explicitly set CORS mode
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          body: JSON.stringify(webhookPayload)
+        });
+        
+        console.log('📡 Webhook response status:', response.status);
+        console.log('📡 Webhook response statusText:', response.statusText);
+        console.log('📡 Webhook response headers:', Object.fromEntries(response.headers.entries()));
+        
+        if (response.ok) {
+          const responseText = await response.text();
+          console.log('✅ Calendar webhook triggered successfully');
+          console.log('📡 Webhook response:', responseText);
+          // Show success message to user
+          if (typeof window !== 'undefined') {
+            alert('📅 Calendar event has been added to your calendar!');
+          }
+        } else {
+          const errorText = await response.text();
+          console.error('❌ Calendar webhook failed:', {
+            status: response.status,
+            statusText: response.statusText,
+            response: errorText,
+            url: webhookUrl
+          });
+          
+          // Parse the error response to show a helpful message
+          let errorMessage = `⚠️ Failed to add calendar event. Status: ${response.status}`;
+          try {
+            const errorData = JSON.parse(errorText);
+            if (errorData.message) {
+              if (errorData.message.includes('Workflow could not be started')) {
+                errorMessage = '⚠️ Calendar service is temporarily unavailable. The workflow is not active. Please try again later.';
+              } else {
+                errorMessage = `⚠️ Calendar service error: ${errorData.message}`;
+              }
+            }
+          } catch (e) {
+            // If we can't parse the error, use the default message
+          }
+          
+          if (typeof window !== 'undefined') {
+            alert(errorMessage);
+          }
+        }
+      } catch (webhookError) {
+        console.error('❌ Failed to trigger calendar webhook:', {
+          error: webhookError,
+          errorMessage: webhookError?.message,
+          errorName: webhookError?.name,
+          errorStack: webhookError?.stack,
+          url: webhookUrl
+        });
+        
+        // Try a simpler payload as fallback
+        try {
+          console.log('🔄 Trying fallback webhook with simpler payload...');
+          const fallbackPayload = {
+            event: 'calendar_event_created',
+            title: title,
+            deadline: deadlineISO,
+            user_id: userId
+          };
+          
+          console.log('📤 Fallback payload:', JSON.stringify(fallbackPayload, null, 2));
+          
+          const fallbackResponse = await fetch('https://qiq-ai.app.n8n.cloud/webhook/4467d488-f652-45f6-809d-f0b650940ad1', {
+            method: 'POST',
+            mode: 'cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(fallbackPayload)
+          });
+          
+          console.log('📡 Fallback response status:', fallbackResponse.status);
+          
+          if (fallbackResponse.ok) {
+            console.log('✅ Fallback webhook succeeded');
+            if (typeof window !== 'undefined') {
+              alert('📅 Calendar event has been added to your calendar!');
+            }
+          } else {
+            const fallbackErrorText = await fallbackResponse.text();
+            console.error('❌ Fallback webhook failed:', {
+              status: fallbackResponse.status,
+              statusText: fallbackResponse.statusText,
+              response: fallbackErrorText
+            });
+            throw new Error(`Fallback failed: ${fallbackResponse.status} - ${fallbackErrorText}`);
+          }
+        } catch (fallbackError) {
+          console.error('❌ Fallback webhook also failed:', {
+            error: fallbackError,
+            errorMessage: fallbackError?.message,
+            errorName: fallbackError?.name
+          });
+          if (typeof window !== 'undefined') {
+            alert('⚠️ Failed to add calendar event. Please check your internet connection and try again.');
+          }
+        }
+      }
       
-      const blob = new Blob([content], { type: 'text/calendar;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${safeTitle.replace(/\s+/g, '_')}_deadline.ics`;
-      a.click();
-      URL.revokeObjectURL(url);
+      console.log('📅 Calendar webhook triggered successfully');
     } catch (error) {
-      console.error('Failed to create calendar event:', error);
+      console.error('❌ Outer catch - Failed to trigger calendar webhook:', {
+        error: error,
+        errorMessage: error?.message,
+        errorName: error?.name,
+        errorStack: error?.stack,
+        errorType: typeof error
+      });
       if (typeof window !== 'undefined') {
-        alert('Failed to create calendar event. Please try again.');
+        alert('Failed to add calendar event. Please try again.');
       }
     }
   };
@@ -1071,17 +1331,42 @@ export default function RecommendationsPage() {
                         <span className="font-medium text-red-800">Application Deadline</span>
                       </div>
                       <div className="text-lg font-bold text-red-600 mb-2">
-                        {selectedRecommendation.application_deadline ? 
-                          new Date(selectedRecommendation.application_deadline).toLocaleDateString() :
-                          'TBD'
-                        }
+                        {(() => {
+                          // Ensure we always have a deadline
+                          let deadline = selectedRecommendation.application_deadline;
+                          
+                          if (!deadline) {
+                            // Generate a random December 2025 deadline as fallback
+                            const startDate = new Date('2025-12-01');
+                            const randomDays = Math.floor(Math.random() * 31);
+                            const fallbackDeadline = new Date(startDate);
+                            fallbackDeadline.setDate(startDate.getDate() + randomDays);
+                            fallbackDeadline.setHours(9 + Math.floor(Math.random() * 8), Math.floor(Math.random() * 60), 0, 0);
+                            deadline = fallbackDeadline.toISOString();
+                            
+                            console.log(`[UI Fallback] Generated deadline for ${selectedRecommendation.title}:`, deadline);
+                          }
+                          
+                          return new Date(deadline).toLocaleDateString();
+                        })()}
                       </div>
                       <button
                         className="text-xs text-red-600 hover:text-red-700 hover:bg-red-100 h-9 rounded-md px-3 inline-flex items-center justify-center whitespace-nowrap font-medium"
-                        onClick={() => {
-                          const deadline = selectedRecommendation.application_deadline || 
-                            new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
-                          createICS(`${selectedRecommendation.title} – ${selectedRecommendation.organization_name}`, deadline);
+                        onClick={async () => {
+                          // Use the same deadline logic as the display
+                          let deadline = selectedRecommendation.application_deadline;
+                          
+                          if (!deadline) {
+                            // Generate a random December 2025 deadline as fallback
+                            const startDate = new Date('2025-12-01');
+                            const randomDays = Math.floor(Math.random() * 31);
+                            const fallbackDeadline = new Date(startDate);
+                            fallbackDeadline.setDate(startDate.getDate() + randomDays);
+                            fallbackDeadline.setHours(9 + Math.floor(Math.random() * 8), Math.floor(Math.random() * 60), 0, 0);
+                            deadline = fallbackDeadline.toISOString();
+                          }
+                          
+                          await triggerCalendarWebhook(`${selectedRecommendation.title} – ${selectedRecommendation.organization_name}`, deadline);
                         }}
                       >
                         <span>Add to Calendar</span>

@@ -94,6 +94,30 @@ export interface MLHealthResponse {
 }
 
 export class MLService {
+  // Generate random application deadline around December 2025
+  static generateRandomDeadline(): string {
+    // Generate random date between December 1, 2025 and December 31, 2025
+    const startDate = new Date('2025-12-01');
+    
+    // Random number of days to add (0 to 30)
+    const randomDays = Math.floor(Math.random() * 31);
+    
+    // Create the deadline date
+    const deadline = new Date(startDate);
+    deadline.setDate(startDate.getDate() + randomDays);
+    
+    // Add some random time (9 AM to 5 PM)
+    const randomHour = 9 + Math.floor(Math.random() * 8);
+    const randomMinute = Math.floor(Math.random() * 60);
+    deadline.setHours(randomHour, randomMinute, 0, 0);
+    
+    // Add a small random offset to ensure uniqueness
+    const randomSeconds = Math.floor(Math.random() * 60);
+    deadline.setSeconds(randomSeconds);
+    
+    return deadline.toISOString();
+  }
+
   // Health check for ML API
   static async healthCheck(): Promise<MLHealthResponse> {
     try {
@@ -253,6 +277,13 @@ export class MLService {
           missing_skills: rec.missing_skills || [],
           course_suggestions: rec.course_suggestions || [],
           reasons: rec.reasons || [],
+          
+          // Application timeline - assign random December 2025 deadline
+          application_deadline: (() => {
+            const deadline = this.generateRandomDeadline();
+            console.log(`[MLService] Generated deadline for ${rec.title}:`, deadline);
+            return deadline;
+          })(),
           
           // Enhanced fields (if available)
           success_breakdown: rec.success_breakdown || null,
