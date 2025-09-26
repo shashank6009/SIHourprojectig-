@@ -48,33 +48,53 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero Video Section */}
-      <section className="relative overflow-hidden">
-        <video
-          className="w-full h-[60vh] md:h-[70vh] object-cover"
-          src="/home.mp4"
-          autoPlay
-          loop
-          muted
-          playsInline
-          preload="metadata"
-          aria-label="PMIS hero video"
-        />
+      {/* Hero Image Section */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-gov-navy to-gov-blue">
+        <div className="w-full h-[60vh] md:h-[70vh] flex items-center justify-center">
+          <div className="text-center text-white px-4">
+            <h1 className="text-4xl md:text-6xl font-bold mb-4">
+              Prime Minister's Internship Scheme
+            </h1>
+            <p className="text-xl md:text-2xl mb-8 opacity-90">
+              Empowering Youth through Real-World Experience
+            </p>
+            <div className="flex justify-center">
+              <Image
+                src="/emblem.jpeg"
+                alt="Government of India Emblem"
+                width={120}
+                height={120}
+                className="rounded-lg shadow-lg"
+              />
+            </div>
+          </div>
+        </div>
       </section>
 
-      {/* Companies Video Section - No Gap */}
-      <section className="py-2 bg-white companies-video-section">
+      {/* Companies Showcase Section */}
+      <section className="py-4 bg-white">
         <div className="container mx-auto px-4 md:px-6">
-          <video
-            className="w-full h-16 md:h-20 lg:h-24 rounded-lg shadow-sm object-cover"
-            src="/companies.mp4"
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="metadata"
-            aria-label="Companies showcase video"
-          />
+          <div className="text-center mb-4">
+            <h2 className="text-2xl font-bold text-gov-navy mb-2">Partner Organizations</h2>
+            <p className="text-gray-600">Leading companies and government departments</p>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 items-center justify-items-center">
+            <div className="bg-gray-100 p-4 rounded-lg text-center">
+              <span className="text-sm font-semibold text-gov-navy">Government Departments</span>
+            </div>
+            <div className="bg-gray-100 p-4 rounded-lg text-center">
+              <span className="text-sm font-semibold text-gov-navy">PSUs</span>
+            </div>
+            <div className="bg-gray-100 p-4 rounded-lg text-center">
+              <span className="text-sm font-semibold text-gov-navy">Private Sector</span>
+            </div>
+            <div className="bg-gray-100 p-4 rounded-lg text-center">
+              <span className="text-sm font-semibold text-gov-navy">Startups</span>
+            </div>
+            <div className="bg-gray-100 p-4 rounded-lg text-center">
+              <span className="text-sm font-semibold text-gov-navy">NGOs</span>
+            </div>
+          </div>
         </div>
       </section>
 
