@@ -15,18 +15,7 @@ export function GovFooter({ language }: GovFooterProps) {
     setMounted(true);
   }, []);
 
-  if (!mounted) {
-    return (
-      <footer id="footer" className="bg-gov-navy text-white">
-        <div className="container mx-auto px-4 md:px-6 py-12">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gov-saffron mx-auto mb-4"></div>
-            <p className="text-sm text-gray-300">Loading footer...</p>
-          </div>
-        </div>
-      </footer>
-    );
-  }
+  // Render content immediately to avoid loading issues
 
   return (
     <footer id="footer" className="bg-gov-navy text-white">

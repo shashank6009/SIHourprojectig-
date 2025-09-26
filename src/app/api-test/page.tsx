@@ -3,6 +3,7 @@
 import { useState } from "react";
 // Remove Button to prevent hydration mismatch in test page
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { MLService } from "@/lib/mlService";
 import { CheckCircle, AlertCircle, RefreshCw } from "lucide-react";

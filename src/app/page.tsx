@@ -18,19 +18,7 @@ export default function HomePage() {
     setMounted(true);
   }, []);
 
-  // Prevent hydration mismatch by not rendering interactive elements until mounted
-  if (!mounted) {
-    return (
-      <div className="min-h-screen bg-white">
-        <div className="container mx-auto px-4 md:px-6 py-8">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gov-saffron mx-auto mb-4"></div>
-            <p className="text-lg text-gray-600">Loading...</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  // Render content immediately to avoid loading issues
 
   const fadeInUp = {
     initial: { opacity: 0, y: 20 },
