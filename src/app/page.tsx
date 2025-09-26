@@ -36,52 +36,77 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero Image Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-gov-navy to-gov-blue">
-        <div className="w-full h-[60vh] md:h-[70vh] flex items-center justify-center">
+      {/* Hero Video Section */}
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="w-full h-full object-cover"
+            poster="/emblem.jpeg"
+          >
+            <source src="/home.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+          <div className="absolute inset-0 bg-black bg-opacity-40"></div>
+        </div>
+        <div className="relative z-10 w-full h-[60vh] md:h-[70vh] flex items-center justify-center">
           <div className="text-center text-white px-4">
-            <h1 className="text-4xl md:text-6xl font-bold mb-4">
+            <motion.h1 
+              className="text-4xl md:text-6xl font-bold mb-4"
+              variants={fadeInUp}
+              initial="initial"
+              animate="animate"
+            >
               Prime Minister's Internship Scheme
-            </h1>
-            <p className="text-xl md:text-2xl mb-8 opacity-90">
+            </motion.h1>
+            <motion.p 
+              className="text-xl md:text-2xl mb-8 opacity-90"
+              variants={fadeInUp}
+              initial="initial"
+              animate="animate"
+            >
               Empowering Youth through Real-World Experience
-            </p>
-            <div className="flex justify-center">
-              <Image
-                src="/emblem.jpeg"
-                alt="Government of India Emblem"
-                width={120}
-                height={120}
-                className="rounded-lg shadow-lg"
-              />
-            </div>
+            </motion.p>
+            <motion.div 
+              className="pt-4 space-y-4"
+              variants={fadeInUp}
+              initial="initial"
+              animate="animate"
+            >
+              <button 
+                className="w-full sm:w-auto text-lg font-semibold h-11 px-8 bg-gov-saffron text-white hover:bg-secondary-600 shadow-sm hover:shadow-md transition-all duration-200 rounded-md inline-flex items-center justify-center"
+                aria-label="Apply Now for PM Internship Scheme"
+                onClick={() => { window.location.href = '/internship'; }}
+              >
+                <span>Apply Now</span>
+              </button>
+            </motion.div>
           </div>
         </div>
       </section>
 
-      {/* Companies Showcase Section */}
-      <section className="py-4 bg-white">
+      {/* Companies Video Section */}
+      <section className="relative bg-white py-8">
         <div className="container mx-auto px-4 md:px-6">
-          <div className="text-center mb-4">
-            <h2 className="text-2xl font-bold text-gov-navy mb-2">Partner Organizations</h2>
-            <p className="text-gray-600">Leading companies and government departments</p>
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold text-gov-navy mb-4">Partner Organizations</h2>
+            <p className="text-lg text-gray-600">Leading companies and government departments</p>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 items-center justify-items-center">
-            <div className="bg-gray-100 p-4 rounded-lg text-center">
-              <span className="text-sm font-semibold text-gov-navy">Government Departments</span>
-            </div>
-            <div className="bg-gray-100 p-4 rounded-lg text-center">
-              <span className="text-sm font-semibold text-gov-navy">PSUs</span>
-            </div>
-            <div className="bg-gray-100 p-4 rounded-lg text-center">
-              <span className="text-sm font-semibold text-gov-navy">Private Sector</span>
-            </div>
-            <div className="bg-gray-100 p-4 rounded-lg text-center">
-              <span className="text-sm font-semibold text-gov-navy">Startups</span>
-            </div>
-            <div className="bg-gray-100 p-4 rounded-lg text-center">
-              <span className="text-sm font-semibold text-gov-navy">NGOs</span>
-            </div>
+          <div className="relative w-full max-w-6xl mx-auto">
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="w-full h-auto rounded-lg shadow-lg"
+              poster="/emblem.jpeg"
+            >
+              <source src="/companies.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
           </div>
         </div>
       </section>
