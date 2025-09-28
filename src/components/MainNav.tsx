@@ -10,15 +10,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-// Replace shared Button with native button to avoid hydration mismatches
-import { type Language } from "@/lib/i18n";
+import { useTranslations } from "@/hooks/useTranslations";
 
-interface MainNavProps {
-  language: Language;
-}
-
-export function MainNav({}: MainNavProps) {
+export function MainNav() {
   const [mounted, setMounted] = useState(false);
+  const { t } = useTranslations();
 
   useEffect(() => {
     setMounted(true);
@@ -62,13 +58,13 @@ export function MainNav({}: MainNavProps) {
               href="/" 
               className="text-black hover:text-gov-saffron font-semibold text-sm md:text-base lg:text-lg transition-all duration-300 px-3 py-2 rounded-md hover:bg-white/20"
             >
-              Home
+              {t('nav.home', 'Home')}
             </Link>
             <Link 
               href="/internship" 
               className="text-black hover:text-gov-saffron font-semibold text-sm md:text-base lg:text-lg transition-all duration-300 px-3 py-2 rounded-md hover:bg-white/20"
             >
-              Intern
+              {t('nav.internship', 'Intern')}
             </Link>
             <Link 
               href="/internship/recommendations" 
@@ -81,7 +77,13 @@ export function MainNav({}: MainNavProps) {
               className="text-black hover:text-gov-saffron font-semibold text-sm md:text-base lg:text-lg transition-all duration-300 px-3 py-2 rounded-md hover:bg-white/20"
               key="dashboard-nav"
             >
-              Dashboard
+              {t('nav.dashboard', 'Dashboard')}
+            </Link>
+            <Link 
+              href="/copilot" 
+              className="text-black hover:text-gov-saffron font-semibold text-sm md:text-base lg:text-lg transition-all duration-300 px-3 py-2 rounded-md hover:bg-white/20"
+            >
+              Resume Builder
             </Link>
           </div>
           

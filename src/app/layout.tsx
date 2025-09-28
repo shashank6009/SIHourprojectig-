@@ -5,8 +5,29 @@ import { AppWrapper } from "@/components/AppWrapper";
 import { AuthProvider } from "@/components/AuthProvider";
 import { OfflineStatus } from "@/components/OfflineStatus";
 import { PWAInstaller } from "@/components/PWAInstaller";
+import { LocaleProvider } from "@/components/LocaleProvider";
 
-const notoSans = Noto_Sans({ subsets: ["latin"], display: "swap" });
+const notoSans = Noto_Sans({ 
+  subsets: ["latin", "latin-ext"], 
+  display: "swap",
+  variable: "--font-noto-sans",
+});
+
+// Add Noto Sans Tamil for Tamil locale
+const notoSansTamil = Noto_Sans({
+  subsets: ["tamil"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+  variable: "--font-noto-sans-tamil",
+});
+
+// Add Noto Sans Devanagari for Hindi locale
+const notoSansHindi = Noto_Sans({
+  subsets: ["devanagari"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+  variable: "--font-noto-sans-hindi",
+});
 
 export const metadata: Metadata = {
   title: "Prime Minister's Internship Scheme (PMIS)",
@@ -70,7 +91,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+        <html lang="en" className={`${notoSans.variable} ${notoSansTamil.variable} ${notoSansHindi.variable}`}>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
@@ -83,13 +104,15 @@ export default function RootLayout({
           Skip to content
         </a>
 
-        <AuthProvider>
-          <OfflineStatus />
-          <AppWrapper>
-            {children}
-          </AppWrapper>
-          <PWAInstaller />
-        </AuthProvider>
+        <LocaleProvider>
+          <AuthProvider>
+            <OfflineStatus />
+            <AppWrapper>
+              {children}
+            </AppWrapper>
+            <PWAInstaller />
+          </AuthProvider>
+        </LocaleProvider>
 
         {/* ElevenLabs ConvAI Widget */}
         <elevenlabs-convai agent-id="agent_9201k5sry698e14sf58cpbyfrdkx"></elevenlabs-convai>

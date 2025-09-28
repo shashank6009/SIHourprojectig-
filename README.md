@@ -5,11 +5,16 @@ A government-themed web portal for the PM Internship Scheme built with Next.js 1
 ## 🎯 Features
 
 - **Government-themed Design**: Professional UI following Indian government website standards
-- **Interactive Elements**: 
+- **Interactive Elements**:
   - Video backgrounds (home.mp4, companies.mp4)
   - Interactive hover areas on images
   - Smooth animations and transitions
-- **Resume Parsing**: 
+- **Resume Builder**:
+  - Streamlined single-flow resume creation process
+  - AI-powered content enhancement and optimization
+  - Real-time preview and professional templates
+  - One-click PDF export with ATS optimization
+- **Resume Parsing**:
   - Drag & drop resume upload
   - Automatic field extraction from PDF, DOCX, and TXT files
   - Manual text paste option
@@ -21,18 +26,31 @@ A government-themed web portal for the PM Internship Scheme built with Next.js 1
 
 ### Prerequisites
 
-- Node.js 18+ 
+- Node.js 18+
 - npm or yarn
+- OpenAI API key (for AI features) - [Get one here](https://platform.openai.com/)
+
+### API Key Setup
+
+For AI-powered features, you'll need to configure API keys. See [API_KEY_SETUP.md](./API_KEY_SETUP.md) for detailed instructions.
+
+**Quick Setup:**
+
+1. Copy `env.example` to `.env.local`
+2. Add your OpenAI API key: `OPENAI_API_KEY=sk-your-key-here`
+3. Restart the development server
 
 ### Installation
 
 1. Clone the repository:
+
 ```bash
 git clone https://github.com/shashank6009/SIHourprojectig-.git
 cd SIHourprojectig-
 ```
 
 2. Install dependencies:
+
 ```bash
 npm install
 # or
@@ -40,11 +58,13 @@ yarn install
 ```
 
 3. **Important**: Add video files
+
    - Place `home.mp4` in the `public/` directory
    - Place `companies.mp4` in the `public/` directory
    - These files are not included in the repository due to size limitations
 
 4. Run the development server:
+
 ```bash
 npm run dev
 # or
@@ -80,7 +100,7 @@ yarn dev
 
 ## 🎨 Design System
 
-- **Colors**: 
+- **Colors**:
   - Saffron (#FF9933)
   - White (#FFFFFF)
   - Green (#138808)
@@ -91,22 +111,27 @@ yarn dev
 ## 🔧 Configuration
 
 ### Environment Variables
+
 Create a `.env.local` file for any environment-specific configuration.
 
 ### Video Files
+
 Due to GitHub's file size limitations (100MB), video files must be added manually:
+
 1. Download/obtain `home.mp4` and `companies.mp4`
 2. Place them in the `public/` directory
 
 ## 📝 Resume Parsing
 
 The application supports:
+
 - PDF files (server-side parsing)
 - DOCX files (server-side parsing)
 - TXT files
 - Manual text paste
 
 Extracted fields include:
+
 - Personal information (name, email, phone, address)
 - Education details
 - Skills and certifications

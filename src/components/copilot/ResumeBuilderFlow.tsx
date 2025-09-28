@@ -1,0 +1,1232 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { http } from '@/lib/http';
+import { toast } from 'sonner';
+import { 
+  User, 
+  Briefcase, 
+  GraduationCap, 
+  Award, 
+  FileText, 
+  Download, 
+  Sparkles,
+  ArrowRight,
+  CheckCircle,
+  Loader2
+} from 'lucide-react';
+import AIAssistant from './AIAssistant';
+import A4Preview from './A4Preview';
+
+interface ResumeData {
+  personalInfo: {
+    fullName: string;
+    email: string;
+    phone: string;
+    location: string;
+    linkedin?: string;
+    github?: string;
+    portfolio?: string;
+  };
+  summary: string;
+  experience: Array<{
+    company: string;
+    position: string;
+    duration: string;
+    description: string;
+    achievements: string[];
+  }>;
+  education: Array<{
+    institution: string;
+    degree: string;
+    year: string;
+    gpa?: string;
+    relevant_courses?: string[];
+  }>;
+  skills: {
+    technical: string[];
+    soft: string[];
+    languages?: string[];
+  };
+  projects: Array<{
+    name: string;
+    description: string;
+    technologies: string[];
+    link?: string;
+  }>;
+  certifications?: Array<{
+    name: string;
+    issuer: string;
+    date: string;
+  }>;
+}
+
+interface StepProps {
+  data: ResumeData;
+  updateData: (updates: Partial<ResumeData>) => void;
+  onNext: () => void;
+  onPrevious: () => void;
+  isFirst: boolean;
+  isLast: boolean;
+}
+
+const steps = [
+  { id: 'personal', title: 'Personal Info', icon: User },
+  { id: 'summary', title: 'Professional Summary', icon: FileText },
+  { id: 'experience', title: 'Work Experience', icon: Briefcase },
+  { id: 'education', title: 'Education', icon: GraduationCap },
+  { id: 'skills', title: 'Skills', icon: Award },
+  { id: 'projects', title: 'Projects', icon: Sparkles },
+  { id: 'review', title: 'Review & Generate', icon: CheckCircle },
+];
+
+export default function ResumeBuilderFlow() {
+  const [currentStep, setCurrentStep] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [generatedResume, setGeneratedResume] = useState<any>(null);
+  const [showPreview, setShowPreview] = useState(false);
+  const [resumeData, setResumeData] = useState<ResumeData>({
+    personalInfo: {
+      fullName: '',
+      email: '',
+      phone: '',
+      location: '',
+    },
+    summary: '',
+    experience: [],
+    education: [],
+    skills: {
+      technical: [],
+      soft: [],
+      languages: [],
+    },
+    projects: [],
+    certifications: [],
+  });
+
+  const updateData = (updates: Partial<ResumeData>) => {
+    setResumeData(prev => ({ ...prev, ...updates }));
+  };
+
+  const handleSuggestion = (suggestion: string, type: 'text' | 'enhancement' | 'example') => {
+    // Handle AI suggestions - this could update the form or show examples
+    console.log('AI Suggestion:', suggestion, type);
+    // For now, we'll just log it. In a full implementation, this would update the form
+  };
+
+  const nextStep = () => {
+    if (currentStep < steps.length - 1) {
+      setCurrentStep(currentStep + 1);
+    }
+  };
+
+  const previousStep = () => {
+    if (currentStep > 0) {
+      setCurrentStep(currentStep - 1);
+    }
+  };
+
+  const generateResume = async () => {
+    console.log('Generate resume clicked, data:', resumeData);
+    setLoading(true);
+    try {
+      // Provide default values for required fields if they're empty
+      const dataToSend = {
+        personalInfo: {
+          fullName: resumeData.personalInfo.fullName || 'John Doe',
+          email: resumeData.personalInfo.email || 'john.doe@example.com',
+          phone: resumeData.personalInfo.phone || '+1 (555) 123-4567',
+          location: resumeData.personalInfo.location || 'San Francisco, CA',
+          ...(resumeData.personalInfo.linkedin && resumeData.personalInfo.linkedin.trim() && { linkedin: resumeData.personalInfo.linkedin }),
+          ...(resumeData.personalInfo.github && resumeData.personalInfo.github.trim() && { github: resumeData.personalInfo.github }),
+          ...(resumeData.personalInfo.portfolio && resumeData.personalInfo.portfolio.trim() && { portfolio: resumeData.personalInfo.portfolio }),
+        },
+        summary: resumeData.summary || 'Experienced professional seeking new opportunities.',
+        experience: resumeData.experience || [],
+        education: resumeData.education || [],
+        skills: {
+          technical: resumeData.skills?.technical || [],
+          soft: resumeData.skills?.soft || [],
+          languages: resumeData.skills?.languages || [],
+        },
+        projects: resumeData.projects || [],
+        certifications: resumeData.certifications || [],
+      };
+
+      console.log('Sending data:', dataToSend);
+
+      // Use AI to enhance and structure the resume
+      const response = await http.post('/api/resume/generate', {
+        resumeData: dataToSend,
+        enhanceWithAI: true,
+        targetRole: resumeData.personalInfo.fullName ? 'Software Engineer' : 'General',
+      });
+
+      console.log('API response:', response);
+      if (response.data) {
+        setGeneratedResume(response.data);
+        setShowPreview(true);
+        toast.success('Resume generated successfully! Preview is ready.');
+      }
+    } catch (error) {
+      console.error('Error generating resume:', error);
+      toast.error('Failed to generate resume. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const downloadResume = () => {
+    if (!generatedResume) return;
+    
+    try {
+      // Generate HTML content for the resume
+      const htmlContent = generateResumeHTML(generatedResume);
+      
+      // Create a blob and download it
+      const blob = new Blob([htmlContent], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      
+      // Create download link
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${generatedResume.personalInfo?.fullName || 'resume'}-resume.html`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      // Clean up the URL
+      URL.revokeObjectURL(url);
+      
+      toast.success('Resume downloaded successfully!');
+    } catch (error) {
+      console.error('Error downloading resume:', error);
+      toast.error('Failed to download resume. Please try again.');
+    }
+  };
+
+  const editResume = () => {
+    setShowPreview(false);
+    setGeneratedResume(null);
+  };
+
+  const generateResumeHTML = (resume: any) => {
+    return `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Resume - ${resume.personalInfo?.fullName || 'Resume'}</title>
+  <style>
+    body { 
+      font-family: Arial, sans-serif; 
+      font-size: 11px; 
+      line-height: 1.25; 
+      margin: 0; 
+      padding: 20px; 
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .header { 
+      text-align: center; 
+      margin-bottom: 30px; 
+      border-bottom: 2px solid #333;
+      padding-bottom: 20px;
+    }
+    .name { 
+      font-size: 24px; 
+      font-weight: bold; 
+      margin-bottom: 10px; 
+      color: #333;
+    }
+    .contact { 
+      color: #666; 
+      font-size: 14px;
+    }
+    .section { 
+      margin-bottom: 25px; 
+    }
+    .section-title { 
+      font-size: 18px; 
+      font-weight: bold; 
+      border-bottom: 2px solid #333; 
+      margin-bottom: 15px; 
+      color: #333;
+    }
+    .experience-item, .education-item, .project-item { 
+      margin-bottom: 15px; 
+    }
+    .company, .institution, .project-name { 
+      font-weight: bold; 
+      color: #333;
+    }
+    .position, .degree { 
+      font-style: italic; 
+      color: #666;
+    }
+    .duration, .year { 
+      color: #666; 
+      font-size: 12px;
+    }
+    .skills { 
+      display: flex; 
+      flex-wrap: wrap; 
+      gap: 5px; 
+    }
+    .skill { 
+      background: #f0f0f0; 
+      padding: 3px 8px; 
+      border-radius: 3px; 
+      font-size: 12px; 
+    }
+    .summary {
+      font-style: italic;
+      color: #555;
+      margin-bottom: 20px;
+    }
+    @media print { 
+      body { margin: 0; } 
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="name">${resume.personalInfo?.fullName || 'Your Name'}</div>
+    <div class="contact">
+      ${resume.personalInfo?.email || ''} | 
+      ${resume.personalInfo?.phone || ''} | 
+      ${resume.personalInfo?.location || ''}
+    </div>
+  </div>
+
+  ${resume.summary ? `
+  <div class="section">
+    <div class="section-title">Professional Summary</div>
+    <div class="summary">${resume.summary}</div>
+  </div>
+  ` : ''}
+
+  ${resume.experience && resume.experience.length > 0 ? `
+  <div class="section">
+    <div class="section-title">Experience</div>
+    ${resume.experience.map((exp: any) => `
+      <div class="experience-item">
+        <div class="company">${exp.company}</div>
+        <div class="position">${exp.position}</div>
+        <div class="duration">${exp.duration}</div>
+        <div>${exp.description}</div>
+        ${exp.achievements && exp.achievements.length > 0 ? `
+          <ul>
+            ${exp.achievements.map((achievement: string) => `<li>${achievement}</li>`).join('')}
+          </ul>
+        ` : ''}
+      </div>
+    `).join('')}
+  </div>
+  ` : ''}
+
+  ${resume.education && resume.education.length > 0 ? `
+  <div class="section">
+    <div class="section-title">Education</div>
+    ${resume.education.map((edu: any) => `
+      <div class="education-item">
+        <div class="institution">${edu.institution}</div>
+        <div class="degree">${edu.degree}</div>
+        <div class="year">${edu.year}</div>
+        ${edu.gpa ? `<div>GPA: ${edu.gpa}</div>` : ''}
+      </div>
+    `).join('')}
+  </div>
+  ` : ''}
+
+  ${resume.skills && (resume.skills.technical.length > 0 || resume.skills.soft.length > 0) ? `
+  <div class="section">
+    <div class="section-title">Skills</div>
+    ${resume.skills.technical.length > 0 ? `
+      <div><strong>Technical:</strong> ${resume.skills.technical.join(', ')}</div>
+    ` : ''}
+    ${resume.skills.soft.length > 0 ? `
+      <div><strong>Soft Skills:</strong> ${resume.skills.soft.join(', ')}</div>
+    ` : ''}
+  </div>
+  ` : ''}
+
+  ${resume.projects && resume.projects.length > 0 ? `
+  <div class="section">
+    <div class="section-title">Projects</div>
+    ${resume.projects.map((project: any) => `
+      <div class="project-item">
+        <div class="project-name">${project.name}</div>
+        <div>${project.description}</div>
+        ${project.technologies && project.technologies.length > 0 ? `
+          <div class="skills">
+            ${project.technologies.map((tech: string) => `<span class="skill">${tech}</span>`).join('')}
+          </div>
+        ` : ''}
+      </div>
+    `).join('')}
+  </div>
+  ` : ''}
+
+  ${resume.atsScore ? `
+  <div class="section">
+    <div class="section-title">ATS Score</div>
+    <div>Your resume has an ATS compatibility score of <strong>${resume.atsScore}%</strong></div>
+  </div>
+  ` : ''}
+</body>
+</html>
+    `;
+  };
+
+  const renderStep = () => {
+    const step = steps[currentStep];
+    const StepComponent = stepComponents[step.id as keyof typeof stepComponents];
+    
+    // Special handling for ReviewStep
+    if (step.id === 'review') {
+      return (
+        <ReviewStep
+          data={resumeData}
+          updateData={updateData}
+          onNext={nextStep}
+          onPrevious={previousStep}
+          isFirst={currentStep === 0}
+          isLast={currentStep === steps.length - 1}
+          onGenerate={generateResume}
+          loading={loading}
+        />
+      );
+    }
+    
+    return (
+      <StepComponent
+        data={resumeData}
+        updateData={updateData}
+        onNext={nextStep}
+        onPrevious={previousStep}
+        isFirst={currentStep === 0}
+        isLast={currentStep === steps.length - 1}
+      />
+    );
+  };
+
+  if (showPreview && generatedResume) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Resume Preview</h1>
+            <p className="text-gray-600">Review your generated resume before downloading</p>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex justify-center gap-4 mb-8">
+            <button
+              onClick={editResume}
+              className="bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 flex items-center gap-2 font-medium"
+            >
+              <FileText className="h-4 w-4" />
+              Edit Resume
+            </button>
+            <button
+              onClick={downloadResume}
+              className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 flex items-center gap-2 font-medium"
+            >
+              <Download className="h-4 w-4" />
+              Download Resume
+            </button>
+          </div>
+
+          {/* Resume Preview */}
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
+            <div 
+              className="resume-preview"
+              dangerouslySetInnerHTML={{ __html: generateResumeHTML(generatedResume) }}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-4xl mx-auto">
+      {/* Simplified Progress */}
+      <div className="mb-8">
+        <div className="flex items-center justify-center space-x-4 mb-4">
+          {steps.map((step, index) => {
+            const Icon = step.icon;
+            const isActive = index === currentStep;
+            const isCompleted = index < currentStep;
+            
+            return (
+              <div key={step.id} className="flex items-center">
+                <div className={`flex items-center justify-center w-10 h-10 rounded-full border-2 ${
+                  isActive ? 'border-blue-600 bg-blue-600 text-white' :
+                  isCompleted ? 'border-green-600 bg-green-600 text-white' :
+                  'border-gray-300 bg-white text-gray-500'
+                }`}>
+                  <Icon className="h-5 w-5" />
+                </div>
+                {index < steps.length - 1 && (
+                  <div className={`w-8 h-0.5 mx-2 ${
+                    isCompleted ? 'bg-green-600' : 'bg-gray-300'
+                  }`} />
+                )}
+              </div>
+            );
+          })}
+        </div>
+        <div className="text-center">
+          <h2 className="text-lg font-semibold text-gray-900">
+            {steps[currentStep]?.title}
+          </h2>
+          <p className="text-sm text-gray-600">
+            Step {currentStep + 1} of {steps.length}
+          </p>
+          {currentStep < steps.length - 1 && (
+            <button
+              onClick={() => setCurrentStep(steps.length - 1)}
+              className="mt-2 text-xs text-blue-600 hover:text-blue-800 underline"
+            >
+              Skip to Review (Test)
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+        <div className="p-8">
+          {renderStep()}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Step Components
+const PersonalInfoStep: React.FC<StepProps> = ({ data, updateData, onNext, isFirst }) => (
+  <div className="space-y-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">Full Name *</label>
+        <input
+          type="text"
+          value={data.personalInfo.fullName}
+          onChange={(e) => updateData({ 
+            personalInfo: { ...data.personalInfo, fullName: e.target.value }
+          })}
+          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          placeholder="John Doe"
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">Email *</label>
+        <input
+          type="email"
+          value={data.personalInfo.email}
+          onChange={(e) => updateData({ 
+            personalInfo: { ...data.personalInfo, email: e.target.value }
+          })}
+          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          placeholder="john@example.com"
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">Phone *</label>
+        <input
+          type="tel"
+          value={data.personalInfo.phone}
+          onChange={(e) => updateData({ 
+            personalInfo: { ...data.personalInfo, phone: e.target.value }
+          })}
+          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          placeholder="+1 (555) 123-4567"
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">Location *</label>
+        <input
+          type="text"
+          value={data.personalInfo.location}
+          onChange={(e) => updateData({ 
+            personalInfo: { ...data.personalInfo, location: e.target.value }
+          })}
+          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          placeholder="San Francisco, CA"
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">LinkedIn (optional)</label>
+        <input
+          type="url"
+          value={data.personalInfo.linkedin || ''}
+          onChange={(e) => {
+            const value = e.target.value.trim();
+            updateData({ 
+              personalInfo: { 
+                ...data.personalInfo, 
+                ...(value ? { linkedin: value } : {})
+              }
+            });
+          }}
+          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          placeholder="https://linkedin.com/in/johndoe"
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">GitHub (optional)</label>
+        <input
+          type="url"
+          value={data.personalInfo.github || ''}
+          onChange={(e) => {
+            const value = e.target.value.trim();
+            updateData({ 
+              personalInfo: { 
+                ...data.personalInfo, 
+                ...(value ? { github: value } : {})
+              }
+            });
+          }}
+          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          placeholder="https://github.com/johndoe"
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">Portfolio (optional)</label>
+        <input
+          type="url"
+          value={data.personalInfo.portfolio || ''}
+          onChange={(e) => {
+            const value = e.target.value.trim();
+            updateData({ 
+              personalInfo: { 
+                ...data.personalInfo, 
+                ...(value ? { portfolio: value } : {})
+              }
+            });
+          }}
+          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          placeholder="https://yourportfolio.com"
+        />
+      </div>
+    </div>
+    <div className="flex justify-end pt-6 border-t border-gray-200">
+      <button
+        onClick={onNext}
+        disabled={!data.personalInfo.fullName || !data.personalInfo.email || !data.personalInfo.phone || !data.personalInfo.location}
+        className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 font-medium"
+      >
+        Next <ArrowRight className="h-4 w-4" />
+      </button>
+    </div>
+  </div>
+);
+
+const SummaryStep: React.FC<StepProps> = ({ data, updateData, onNext, onPrevious, isFirst }) => (
+  <div className="space-y-6">
+    <div className="mb-4">
+      <label className="block text-sm font-medium text-gray-700 mb-2">
+        Write a compelling professional summary (2-3 sentences)
+      </label>
+      <textarea
+        value={data.summary}
+        onChange={(e) => updateData({ summary: e.target.value })}
+        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent h-32"
+        placeholder="Experienced software engineer with 5+ years of expertise in full-stack development. Passionate about building scalable web applications and leading cross-functional teams to deliver high-quality solutions."
+      />
+    </div>
+    <div className="flex justify-between pt-6 border-t border-gray-200">
+      <button
+        onClick={onPrevious}
+        className="bg-gray-200 text-gray-800 px-6 py-3 rounded-lg hover:bg-gray-300 font-medium"
+      >
+        Previous
+      </button>
+      <button
+        onClick={onNext}
+        disabled={!data.summary.trim()}
+        className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 font-medium"
+      >
+        Next <ArrowRight className="h-4 w-4" />
+      </button>
+    </div>
+  </div>
+);
+
+const ExperienceStep: React.FC<StepProps> = ({ data, updateData, onNext, onPrevious, isFirst }) => {
+  const addExperience = () => {
+    updateData({
+      experience: [...data.experience, {
+        company: '',
+        position: '',
+        duration: '',
+        description: '',
+        achievements: [],
+      }]
+    });
+  };
+
+  const updateExperience = (index: number, field: string, value: any) => {
+    const updated = [...data.experience];
+    updated[index] = { ...updated[index], [field]: value };
+    updateData({ experience: updated });
+  };
+
+  const removeExperience = (index: number) => {
+    const updated = data.experience.filter((_, i) => i !== index);
+    updateData({ experience: updated });
+  };
+
+  return (
+    <div>
+      <h2 className="text-2xl font-bold mb-6">Work Experience</h2>
+      {data.experience.map((exp, index) => (
+        <div key={index} className="border border-gray-200 rounded-lg p-6 mb-4">
+          <div className="flex justify-between items-start mb-4">
+            <h3 className="text-lg font-semibold">Experience {index + 1}</h3>
+            <button
+              onClick={() => removeExperience(index)}
+              className="text-red-600 hover:text-red-800"
+            >
+              Remove
+            </button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Company *</label>
+              <input
+                type="text"
+                value={exp.company}
+                onChange={(e) => updateExperience(index, 'company', e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Google"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Position *</label>
+              <input
+                type="text"
+                value={exp.position}
+                onChange={(e) => updateExperience(index, 'position', e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Senior Software Engineer"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Duration *</label>
+              <input
+                type="text"
+                value={exp.duration}
+                onChange={(e) => updateExperience(index, 'duration', e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Jan 2020 - Present"
+              />
+            </div>
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
+            <textarea
+              value={exp.description}
+              onChange={(e) => updateExperience(index, 'description', e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 h-24"
+              placeholder="Brief description of your role and responsibilities..."
+            />
+          </div>
+        </div>
+      ))}
+      
+      <button
+        onClick={addExperience}
+        className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 mb-6"
+      >
+        Add Experience
+      </button>
+      
+      <div className="flex justify-between">
+        <button
+          onClick={onPrevious}
+          className="bg-gray-200 text-gray-800 px-6 py-2 rounded-lg hover:bg-gray-300"
+        >
+          Previous
+        </button>
+        <button
+          onClick={onNext}
+          className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 flex items-center gap-2"
+        >
+          Next <ArrowRight className="h-4 w-4" />
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const EducationStep: React.FC<StepProps> = ({ data, updateData, onNext, onPrevious, isFirst }) => {
+  const addEducation = () => {
+    updateData({
+      education: [...data.education, {
+        institution: '',
+        degree: '',
+        year: '',
+        gpa: '',
+        relevant_courses: [],
+      }]
+    });
+  };
+
+  const updateEducation = (index: number, field: string, value: any) => {
+    const updated = [...data.education];
+    updated[index] = { ...updated[index], [field]: value };
+    updateData({ education: updated });
+  };
+
+  const removeEducation = (index: number) => {
+    const updated = data.education.filter((_, i) => i !== index);
+    updateData({ education: updated });
+  };
+
+  return (
+    <div>
+      <h2 className="text-2xl font-bold mb-6">Education</h2>
+      {data.education.map((edu, index) => (
+        <div key={index} className="border border-gray-200 rounded-lg p-6 mb-4">
+          <div className="flex justify-between items-start mb-4">
+            <h3 className="text-lg font-semibold">Education {index + 1}</h3>
+            <button
+              onClick={() => removeEducation(index)}
+              className="text-red-600 hover:text-red-800"
+            >
+              Remove
+            </button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Institution *</label>
+              <input
+                type="text"
+                value={edu.institution}
+                onChange={(e) => updateEducation(index, 'institution', e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Stanford University"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Degree *</label>
+              <input
+                type="text"
+                value={edu.degree}
+                onChange={(e) => updateEducation(index, 'degree', e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Bachelor of Science in Computer Science"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Year *</label>
+              <input
+                type="text"
+                value={edu.year}
+                onChange={(e) => updateEducation(index, 'year', e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="2020"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">GPA (optional)</label>
+              <input
+                type="text"
+                value={edu.gpa}
+                onChange={(e) => updateEducation(index, 'gpa', e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="3.8/4.0"
+              />
+            </div>
+          </div>
+        </div>
+      ))}
+      
+      <button
+        onClick={addEducation}
+        className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 mb-6"
+      >
+        Add Education
+      </button>
+      
+      <div className="flex justify-between">
+        <button
+          onClick={onPrevious}
+          className="bg-gray-200 text-gray-800 px-6 py-2 rounded-lg hover:bg-gray-300"
+        >
+          Previous
+        </button>
+        <button
+          onClick={onNext}
+          className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 flex items-center gap-2"
+        >
+          Next <ArrowRight className="h-4 w-4" />
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const SkillsStep: React.FC<StepProps> = ({ data, updateData, onNext, onPrevious, isFirst }) => {
+  const addSkill = (category: 'technical' | 'soft' | 'languages') => {
+    const skill = prompt(`Add a ${category} skill:`);
+    if (skill && skill.trim()) {
+      updateData({
+        skills: {
+          ...data.skills,
+          [category]: [...data.skills[category], skill.trim()]
+        }
+      });
+    }
+  };
+
+  const removeSkill = (category: 'technical' | 'soft' | 'languages', index: number) => {
+    const updated = [...data.skills[category]];
+    updated.splice(index, 1);
+    updateData({
+      skills: {
+        ...data.skills,
+        [category]: updated
+      }
+    });
+  };
+
+  return (
+    <div>
+      <h2 className="text-2xl font-bold mb-6">Skills</h2>
+      
+      <div className="space-y-6">
+        <div>
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-semibold">Technical Skills</h3>
+            <button
+              onClick={() => addSkill('technical')}
+              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 text-sm"
+            >
+              Add Skill
+            </button>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {data.skills.technical.map((skill, index) => (
+              <span
+                key={index}
+                className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm flex items-center gap-2"
+              >
+                {skill}
+                <button
+                  onClick={() => removeSkill('technical', index)}
+                  className="text-blue-600 hover:text-blue-800"
+                >
+                  ×
+                </button>
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-semibold">Soft Skills</h3>
+            <button
+              onClick={() => addSkill('soft')}
+              className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 text-sm"
+            >
+              Add Skill
+            </button>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {data.skills.soft.map((skill, index) => (
+              <span
+                key={index}
+                className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm flex items-center gap-2"
+              >
+                {skill}
+                <button
+                  onClick={() => removeSkill('soft', index)}
+                  className="text-green-600 hover:text-green-800"
+                >
+                  ×
+                </button>
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-semibold">Languages</h3>
+            <button
+              onClick={() => addSkill('languages')}
+              className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 text-sm"
+            >
+              Add Language
+            </button>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {data.skills.languages?.map((skill, index) => (
+              <span
+                key={index}
+                className="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm flex items-center gap-2"
+              >
+                {skill}
+                <button
+                  onClick={() => removeSkill('languages', index)}
+                  className="text-purple-600 hover:text-purple-800"
+                >
+                  ×
+                </button>
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+      
+      <div className="flex justify-between mt-8">
+        <button
+          onClick={onPrevious}
+          className="bg-gray-200 text-gray-800 px-6 py-2 rounded-lg hover:bg-gray-300"
+        >
+          Previous
+        </button>
+        <button
+          onClick={onNext}
+          className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 flex items-center gap-2"
+        >
+          Next <ArrowRight className="h-4 w-4" />
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const ProjectsStep: React.FC<StepProps> = ({ data, updateData, onNext, onPrevious, isFirst }) => {
+  const addProject = () => {
+    updateData({
+      projects: [...data.projects, {
+        name: '',
+        description: '',
+        technologies: [],
+        link: '',
+      }]
+    });
+  };
+
+  const updateProject = (index: number, field: string, value: any) => {
+    const updated = [...data.projects];
+    updated[index] = { ...updated[index], [field]: value };
+    updateData({ projects: updated });
+  };
+
+  const removeProject = (index: number) => {
+    const updated = data.projects.filter((_, i) => i !== index);
+    updateData({ projects: updated });
+  };
+
+  const addTechnology = (projectIndex: number) => {
+    const tech = prompt('Add a technology:');
+    if (tech && tech.trim()) {
+      const updated = [...data.projects];
+      updated[projectIndex].technologies = [...updated[projectIndex].technologies, tech.trim()];
+      updateData({ projects: updated });
+    }
+  };
+
+  const removeTechnology = (projectIndex: number, techIndex: number) => {
+    const updated = [...data.projects];
+    updated[projectIndex].technologies = updated[projectIndex].technologies.filter((_, i) => i !== techIndex);
+    updateData({ projects: updated });
+  };
+
+  return (
+    <div>
+      <h2 className="text-2xl font-bold mb-6">Projects</h2>
+      {data.projects.map((project, index) => (
+        <div key={index} className="border border-gray-200 rounded-lg p-6 mb-4">
+          <div className="flex justify-between items-start mb-4">
+            <h3 className="text-lg font-semibold">Project {index + 1}</h3>
+            <button
+              onClick={() => removeProject(index)}
+              className="text-red-600 hover:text-red-800"
+            >
+              Remove
+            </button>
+          </div>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Project Name *</label>
+              <input
+                type="text"
+                value={project.name}
+                onChange={(e) => updateProject(index, 'name', e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="E-commerce Platform"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Description *</label>
+              <textarea
+                value={project.description}
+                onChange={(e) => updateProject(index, 'description', e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 h-24"
+                placeholder="Built a full-stack e-commerce platform with React and Node.js..."
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Technologies</label>
+              <div className="flex flex-wrap gap-2 mb-2">
+                {project.technologies.map((tech, techIndex) => (
+                  <span
+                    key={techIndex}
+                    className="bg-gray-100 text-gray-800 px-2 py-1 rounded text-sm flex items-center gap-1"
+                  >
+                    {tech}
+                    <button
+                      onClick={() => removeTechnology(index, techIndex)}
+                      className="text-gray-600 hover:text-gray-800"
+                    >
+                      ×
+                    </button>
+                  </span>
+                ))}
+              </div>
+              <button
+                onClick={() => addTechnology(index)}
+                className="bg-gray-600 text-white px-3 py-1 rounded text-sm hover:bg-gray-700"
+              >
+                Add Technology
+              </button>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Link (optional)</label>
+              <input
+                type="url"
+                value={project.link}
+                onChange={(e) => updateProject(index, 'link', e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="https://github.com/username/project"
+              />
+            </div>
+          </div>
+        </div>
+      ))}
+      
+      <button
+        onClick={addProject}
+        className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 mb-6"
+      >
+        Add Project
+      </button>
+      
+      <div className="flex justify-between">
+        <button
+          onClick={onPrevious}
+          className="bg-gray-200 text-gray-800 px-6 py-2 rounded-lg hover:bg-gray-300"
+        >
+          Previous
+        </button>
+        <button
+          onClick={onNext}
+          className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 flex items-center gap-2"
+        >
+          Next <ArrowRight className="h-4 w-4" />
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const ReviewStep: React.FC<StepProps & { onGenerate: () => void; loading: boolean }> = ({ data, updateData, onNext, onPrevious, isFirst, onGenerate, loading }) => {
+
+  return (
+    <div>
+      <h2 className="text-2xl font-bold mb-6">Review & Generate Resume</h2>
+      
+      <div className="bg-gray-50 p-6 rounded-lg mb-6">
+        <h3 className="text-lg font-semibold mb-4">Resume Preview</h3>
+        <div className="space-y-4">
+          <div>
+            <h4 className="font-medium">{data.personalInfo.fullName}</h4>
+            <div className="text-sm text-gray-600">
+              {data.personalInfo.email} • {data.personalInfo.phone} • {data.personalInfo.location}
+            </div>
+          </div>
+          
+          {data.summary && (
+            <div>
+              <h4 className="font-medium">Summary</h4>
+              <p className="text-sm text-gray-700">{data.summary}</p>
+            </div>
+          )}
+          
+          {data.experience.length > 0 && (
+            <div>
+              <h4 className="font-medium">Experience ({data.experience.length})</h4>
+              <div className="text-sm text-gray-600">
+                {data.experience.map(exp => `${exp.position} at ${exp.company}`).join(', ')}
+              </div>
+            </div>
+          )}
+          
+          {data.education.length > 0 && (
+            <div>
+              <h4 className="font-medium">Education ({data.education.length})</h4>
+              <div className="text-sm text-gray-600">
+                {data.education.map(edu => `${edu.degree} from ${edu.institution}`).join(', ')}
+              </div>
+            </div>
+          )}
+          
+          <div>
+            <h4 className="font-medium">Skills</h4>
+            <div className="text-sm text-gray-600">
+              Technical: {data.skills.technical.length} • 
+              Soft: {data.skills.soft.length} • 
+              Languages: {data.skills.languages?.length || 0}
+            </div>
+          </div>
+          
+          {data.projects.length > 0 && (
+            <div>
+              <h4 className="font-medium">Projects ({data.projects.length})</h4>
+              <div className="text-sm text-gray-600">
+                {data.projects.map(proj => proj.name).join(', ')}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+      
+      <div className="flex justify-between">
+        <button
+          onClick={onPrevious}
+          className="bg-gray-200 text-gray-800 px-6 py-2 rounded-lg hover:bg-gray-300"
+        >
+          Previous
+        </button>
+        <button
+          onClick={onGenerate}
+          disabled={loading}
+          className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+        >
+          {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+          {loading ? 'Generating...' : 'Generate Resume with AI'}
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const stepComponents = {
+  personal: PersonalInfoStep,
+  summary: SummaryStep,
+  experience: ExperienceStep,
+  education: EducationStep,
+  skills: SkillsStep,
+  projects: ProjectsStep,
+  review: ReviewStep,
+};

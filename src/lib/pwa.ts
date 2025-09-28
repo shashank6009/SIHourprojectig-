@@ -6,8 +6,22 @@ export async function registerServiceWorker(): Promise<ServiceWorkerRegistration
     return null;
   }
 
+  // Skip service worker registration in development mode to prevent errors
+  if (process.env.NODE_ENV === 'development') {
+    console.log('[PWA] Service Worker registration skipped in development mode');
+    return null;
+  }
+
   try {
     console.log('[PWA] Registering Service Worker...');
+    
+    // Check if service worker file exists before registering
+    const swResponse = await fetch('/sw.js', { method: 'HEAD' });
+    if (!swResponse.ok) {
+      console.warn('[PWA] Service Worker file not found, skipping registration');
+      return null;
+    }
+
     const registration = await navigator.serviceWorker.register('/sw.js', {
       scope: '/',
       updateViaCache: 'none'
@@ -39,7 +53,7 @@ export async function registerServiceWorker(): Promise<ServiceWorkerRegistration
 
     return registration;
   } catch (error) {
-    console.error('[PWA] Service Worker registration failed:', error);
+    console.warn('[PWA] Service Worker registration failed (this is normal in development):', error.message);
     return null;
   }
 }
@@ -148,25 +162,54 @@ export async function getInstallPrompt(): Promise<unknown> {
   });
 }
 
+// Clean up service workers in development
+export async function cleanupServiceWorkers(): Promise<void> {
+  if (typeof window === 'undefined' || !('serviceWorker' in navigator)) {
+    return;
+  }
+
+  try {
+    const registrations = await navigator.serviceWorker.getRegistrations();
+    for (const registration of registrations) {
+      await registration.unregister();
+      console.log('[PWA] Unregistered service worker:', registration.scope);
+    }
+  } catch (error) {
+    console.warn('[PWA] Failed to cleanup service workers:', error.message);
+  }
+}
+
 // Initialize PWA features
 export function initializePWA(): void {
   if (typeof window === 'undefined') return;
 
-  // Register service worker
+  // Log PWA initialization
+  console.log('[PWA] Initializing PWA features...');
+  
+  // In development, clean up any existing service workers to prevent errors
+  if (process.env.NODE_ENV === 'development') {
+    cleanupServiceWorkers();
+  }
+  
+  // Register service worker (will be skipped in development)
   registerServiceWorker();
 
-  // Check for updates periodically
-  setInterval(checkForUpdates, 30 * 60 * 1000); // Every 30 minutes
+  // Only set up update checking in production
+  if (process.env.NODE_ENV === 'production') {
+    // Check for updates periodically
+    setInterval(checkForUpdates, 30 * 60 * 1000); // Every 30 minutes
 
-  // Handle app lifecycle events
-  document.addEventListener('visibilitychange', () => {
-    if (!document.hidden) {
-      checkForUpdates();
-    }
-  });
+    // Handle app lifecycle events
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) {
+        checkForUpdates();
+      }
+    });
+  }
 
   // Log PWA status
   console.log('[PWA] Initialized');
+  console.log('[PWA] Environment:', process.env.NODE_ENV);
   console.log('[PWA] Standalone mode:', isStandalone());
   console.log('[PWA] PWA installed:', isPWAInstalled());
 }
