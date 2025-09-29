@@ -1,0 +1,12 @@
+# Netlify redirects for Next.js internationalization
+
+# Redirect root to default locale
+/ /en 302
+
+# Handle locale-specific routes
+/en/* /en/:splat 200
+/ta/* /ta/:splat 200
+/hi/* /hi/:splat 200
+
+# Fallback for SPA routing
+/* /en/index.html 200
