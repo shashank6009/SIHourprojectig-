@@ -1,11 +1,9 @@
 import { NextResponse } from "next/server";
-import fs from 'fs';
-import path from 'path';
 
 // Ensure Node.js runtime for pdf-parse/mammoth (required for Buffer operations)
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
-export const maxDuration = 30; // Allow up to 30 seconds for PDF processing
+export const maxDuration = 60; // Increase timeout for PDF processing
 
 export async function POST(req: Request) {
   try {
@@ -53,42 +51,88 @@ export async function POST(req: Request) {
       try {
         console.log('Server: Parsing PDF...');
         
-        // Try to import pdf-parse
-        const pdfParse = (await import("pdf-parse")).default;
+        // Try to import pdf-parse with dynamic import safety
+        let pdfParse;
+        try {
+          const pdfParseModule = await import("pdf-parse");
+          pdfParse = pdfParseModule.default || pdfParseModule;
+          console.log('Server: pdf-parse module loaded successfully');
+        } catch (importError) {
+          console.error('Server: Failed to import pdf-parse:', importError);
+          throw new Error('PDF parsing library not available in this environment');
+        }
         
-        // Use options to make parsing more robust
-        const options = {
-          normalizeWhitespace: false,
-          disableCombineTextItems: false
-        };
+        // Validate buffer before parsing
+        if (!buffer || buffer.length === 0) {
+          throw new Error('Empty or invalid PDF buffer');
+        }
         
-        const data = await pdfParse(buffer, options);
+        console.log('Server: Buffer size:', buffer.length, 'bytes');
+        
+        // Try multiple parsing approaches for better reliability
+        let data;
+        
+        // First attempt: Standard parsing
+        try {
+          console.log('Server: Attempting standard PDF parsing...');
+          const options = {
+            max: 0, // No page limit
+          };
+          data = await pdfParse(buffer, options);
+        } catch (standardError) {
+          console.log('Server: Standard parsing failed, trying alternative approach...');
+          
+          // Second attempt: Simple parsing without options
+          try {
+            data = await pdfParse(buffer);
+          } catch (simpleError) {
+            console.log('Server: Simple parsing also failed');
+            throw standardError; // Throw the original error
+          }
+        }
+        
         text = data?.text || "";
+        console.log('Server: PDF parsed successfully, text length:', text.length);
         
-        console.log('Server: PDF parsed, text length:', text.length);
+        // Validate extracted text
+        if (!text || text.trim().length === 0) {
+          console.log('Server: PDF parsing succeeded but no text extracted');
+          throw new Error('No text could be extracted from the PDF - it may contain only images or be corrupted');
+        }
+        
       } catch (pdfError: unknown) {
         console.error('Server: PDF parsing error:', pdfError);
+        console.error('Server: Error details:', {
+          name: pdfError instanceof Error ? pdfError.name : 'Unknown',
+          message: pdfError instanceof Error ? pdfError.message : 'Unknown error',
+          stack: pdfError instanceof Error ? pdfError.stack : 'No stack trace'
+        });
         
         // Provide more specific error information
-        let errorMessage = "Failed to process resume: ";
+        let errorMessage = "Failed to process PDF resume: ";
         if (pdfError instanceof Error) {
-          if (pdfError.message.includes('Cannot read property') || pdfError.message.includes('undefined')) {
-            errorMessage += "PDF parsing library initialization failed. ";
-          } else if (pdfError.message.includes('Invalid PDF')) {
+          if (pdfError.message.includes('library not available')) {
+            errorMessage += "PDF processing is temporarily unavailable on the server. ";
+          } else if (pdfError.message.includes('Cannot read property') || pdfError.message.includes('undefined')) {
+            errorMessage += "PDF parsing library error. ";
+          } else if (pdfError.message.includes('Invalid PDF') || pdfError.message.includes('corrupted')) {
             errorMessage += "Invalid or corrupted PDF file. ";
           } else if (pdfError.message.includes('password')) {
             errorMessage += "Password-protected PDF detected. ";
+          } else if (pdfError.message.includes('No text could be extracted')) {
+            errorMessage += "PDF appears to contain only images or no readable text. ";
           } else {
-            errorMessage += `PDF parsing error: ${pdfError.message}. `;
+            errorMessage += `PDF processing error: ${pdfError.message}. `;
           }
         } else {
-          errorMessage += "Unknown PDF parsing error. ";
+          errorMessage += "Unknown PDF processing error. ";
         }
         
-        errorMessage += "Please try:\n1. Use the 'Paste Resume Text' option below\n2. Convert PDF to Word/TXT format\n3. Fill the form manually";
+        errorMessage += "\n\nPlease try:\n• Use the 'Paste Resume Text' option below\n• Convert PDF to Word/TXT format\n• Ensure PDF is not password-protected\n• Use a PDF with selectable text (not scanned images)";
         
         return NextResponse.json({ 
-          error: errorMessage
+          error: errorMessage,
+          type: 'PDF_PROCESSING_ERROR'
         }, { status: 422 });
       }
     } else if (contentType.includes("wordprocessingml")) {
