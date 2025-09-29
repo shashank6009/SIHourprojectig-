@@ -3,6 +3,9 @@
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
+// This ensures the page is generated for all locales
+export const dynamic = 'force-static';
+
 export default function HomePage() {
   const router = useRouter();
 

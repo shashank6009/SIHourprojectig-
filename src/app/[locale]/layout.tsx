@@ -1,6 +1,11 @@
 import { notFound } from 'next/navigation';
 import { locales } from '../../../i18n/routing';
 
+// Generate static params for all locales
+export function generateStaticParams() {
+  return locales.map((locale) => ({ locale }));
+}
+
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   return {
