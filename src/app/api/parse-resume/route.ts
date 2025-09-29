@@ -9,6 +9,8 @@ export const dynamic = 'force-dynamic';
 export async function POST(req: Request) {
   try {
     console.log('Server: API endpoint called');
+    console.log('Server: Environment check - Node.js runtime:', typeof process !== 'undefined');
+    console.log('Server: Current working directory:', process.cwd());
     
     const form = await req.formData();
     const file = form.get("file");
@@ -51,17 +53,42 @@ export async function POST(req: Request) {
     if (contentType.includes("pdf")) {
       try {
         console.log('Server: Parsing PDF...');
+        console.log('Server: Attempting to import pdf-parse...');
         
         const pdfParse = (await import("pdf-parse")).default;
+        console.log('Server: pdf-parse imported successfully');
+        
+        console.log('Server: Processing buffer of size:', buffer.length);
         const data = await pdfParse(buffer);
         text = data?.text || "";
         
-        console.log('Server: PDF parsed, text length:', text.length);
+        console.log('Server: PDF parsed successfully, text length:', text.length);
       } catch (pdfError: unknown) {
         console.error('Server: PDF parsing error:', pdfError);
-        return NextResponse.json({ 
-          error: "Failed to process resume: Failed to parse PDF. The file might be corrupted, password-protected, or in an unsupported format. Please use the text paste option." 
-        }, { status: 422 });
+        console.error('Server: Error details:', {
+          message: pdfError instanceof Error ? pdfError.message : 'Unknown error',
+          stack: pdfError instanceof Error ? pdfError.stack : 'No stack trace',
+          type: typeof pdfError
+        });
+        
+        // Provide more specific error messages
+        let errorMessage = "Failed to process resume: ";
+        if (pdfError instanceof Error) {
+          if (pdfError.message.includes('Invalid PDF')) {
+            errorMessage += "Invalid PDF format. Please ensure the file is a valid PDF.";
+          } else if (pdfError.message.includes('encrypted')) {
+            errorMessage += "PDF is password-protected. Please remove password protection and try again.";
+          } else if (pdfError.message.includes('ENOENT')) {
+            errorMessage += "PDF processing dependency issue. Please use the text paste option.";
+          } else {
+            errorMessage += "Failed to parse PDF. The file might be corrupted, password-protected, or in an unsupported format.";
+          }
+        } else {
+          errorMessage += "Unknown PDF processing error.";
+        }
+        errorMessage += " Please use the text paste option.";
+        
+        return NextResponse.json({ error: errorMessage }, { status: 422 });
       }
     } else if (contentType.includes("wordprocessingml")) {
       try {
