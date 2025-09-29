@@ -418,6 +418,31 @@ export default function RecommendationsPage() {
     console.log('Calendar functionality disabled to prevent downloads');
   };
 
+  // Prevent any downloads on this page
+  useEffect(() => {
+    const preventDownloads = (e: Event) => {
+      const target = e.target as HTMLElement;
+      // Prevent any downloads by checking for download attributes or blob URLs
+      if (target.tagName === 'A') {
+        const anchor = target as HTMLAnchorElement;
+        if (anchor.download || anchor.href.startsWith('blob:') || anchor.href.startsWith('data:')) {
+          e.preventDefault();
+          e.stopPropagation();
+          console.log('Prevented download:', anchor.href);
+          alert('Downloads have been disabled on this page.');
+          return false;
+        }
+      }
+    };
+
+    // Add event listener to catch any download attempts
+    document.addEventListener('click', preventDownloads, true);
+    
+    return () => {
+      document.removeEventListener('click', preventDownloads, true);
+    };
+  }, []);
+
   // Compare helpers
   const toggleCompare = (id: string) => {
     setCompareIds((prev) => {
