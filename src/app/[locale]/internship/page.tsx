@@ -149,10 +149,6 @@ export default function InternshipPage() {
         const formData = new FormData();
         formData.append('file', file);
         
-        // API routes don't work in static export - show message instead
-        alert('Resume parsing is not available in the static version. Please use the text paste option below.');
-        return;
-        
         const response = await fetch('/api/parse-resume', {
           method: 'POST',
           body: formData
