@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { ChevronDown, FileText, Camera, ThumbsUp, BookOpen } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,7 +15,13 @@ import { useTranslations } from "@/hooks/useTranslations";
 
 export function MainNav() {
   const [mounted, setMounted] = useState(false);
+  const pathname = usePathname();
   const { t } = useTranslations();
+  
+  // Get current locale from pathname
+  const currentLocale = mounted 
+    ? (pathname.startsWith('/ta') ? 'ta' : pathname.startsWith('/hi') ? 'hi' : 'en')
+    : 'en';
 
   useEffect(() => {
     setMounted(true);
@@ -55,19 +62,19 @@ export function MainNav() {
           {/* Center - Navigation Links with generous spacing */}
           <div className="flex items-center space-x-8 md:space-x-12 lg:space-x-16">
             <Link 
-              href="/" 
+              href={`/${currentLocale}`}
               className="text-black hover:text-gov-saffron font-semibold text-sm md:text-base lg:text-lg transition-all duration-300 px-3 py-2 rounded-md hover:bg-white/20"
             >
               {t('nav.home', 'Home')}
             </Link>
             <Link 
-              href="/internship" 
+              href={`/${currentLocale}/internship`}
               className="text-black hover:text-gov-saffron font-semibold text-sm md:text-base lg:text-lg transition-all duration-300 px-3 py-2 rounded-md hover:bg-white/20"
             >
               {t('nav.internship', 'Intern')}
             </Link>
             <Link 
-              href="/internship/recommendations" 
+              href={`/${currentLocale}/internship/recommendations`}
               className="text-black hover:text-gov-saffron font-semibold text-sm md:text-base lg:text-lg transition-all duration-300 px-3 py-2 rounded-md hover:bg-white/20"
             >
               Recommendations

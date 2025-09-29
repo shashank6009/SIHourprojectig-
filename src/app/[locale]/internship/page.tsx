@@ -535,7 +535,8 @@ export default function InternshipPage() {
       }
 
       // Navigate to recommendations page
-      router.push('/internship/recommendations');
+      const currentLocale = window.location.pathname.split('/')[1] || 'en';
+      router.push(`/${currentLocale}/internship/recommendations`);
       
     } catch (error) {
       console.error('Failed to process application:', error);

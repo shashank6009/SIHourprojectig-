@@ -25,7 +25,8 @@ export default function ConsentStep() {
     if (!consent) return;
     // In production, call API to trigger ML recommendation generation
     clearWizard();
-    router.push("/internship/recommendations");
+    const currentLocale = window.location.pathname.split('/')[1] || 'en';
+    router.push(`/${currentLocale}/internship/recommendations`);
   };
 
   return (

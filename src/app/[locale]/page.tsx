@@ -65,7 +65,8 @@ export default function HomePage() {
                   aria-label="Apply Now for PM Internship Scheme"
                   onClick={() => {
                     if (typeof window !== 'undefined') {
-                      router.push('/internship');
+                      const currentLocale = window.location.pathname.split('/')[1] || 'en';
+                      router.push(`/${currentLocale}/internship`);
                     }
                   }}
                 >
