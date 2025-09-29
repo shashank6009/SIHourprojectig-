@@ -52,50 +52,50 @@ export function MainNav() {
         />
         
         {/* Navigation content overlay with improved spacing */}
-        <div className="absolute inset-0 flex items-center justify-between px-6 md:px-8 lg:px-12">
+        <div className="absolute inset-0 flex items-center justify-between px-2 sm:px-4 md:px-6 lg:px-8 xl:px-12">
           
           {/* Left side - Logo/Branding area with more space */}
-          <div className="flex-1 flex items-center">
+          <div className="flex-1 flex items-center min-w-0">
             {/* Space for logos - they're part of the background image */}
           </div>
           
-          {/* Center - Navigation Links with generous spacing */}
-          <div className="flex items-center space-x-8 md:space-x-12 lg:space-x-16">
+          {/* Center - Navigation Links with adaptive spacing */}
+          <div className="flex items-center space-x-2 sm:space-x-4 md:space-x-6 lg:space-x-8 xl:space-x-12">
             <Link 
               href={`/${currentLocale}`}
-              className="text-black hover:text-gov-saffron font-semibold text-sm md:text-base lg:text-lg transition-all duration-300 px-3 py-2 rounded-md hover:bg-white/20"
+              className="text-black hover:text-gov-saffron font-semibold text-xs sm:text-sm md:text-base lg:text-lg transition-all duration-300 px-1 sm:px-2 md:px-3 py-2 rounded-md hover:bg-white/20 whitespace-nowrap"
             >
               {t('nav.home', 'Home')}
             </Link>
             <Link 
               href={`/${currentLocale}/internship`}
-              className="text-black hover:text-gov-saffron font-semibold text-sm md:text-base lg:text-lg transition-all duration-300 px-3 py-2 rounded-md hover:bg-white/20"
+              className="text-black hover:text-gov-saffron font-semibold text-xs sm:text-sm md:text-base lg:text-lg transition-all duration-300 px-1 sm:px-2 md:px-3 py-2 rounded-md hover:bg-white/20 whitespace-nowrap"
             >
               {t('nav.internship', 'Intern')}
             </Link>
             <Link 
               href={`/${currentLocale}/internship/recommendations`}
-              className="text-black hover:text-gov-saffron font-semibold text-sm md:text-base lg:text-lg transition-all duration-300 px-3 py-2 rounded-md hover:bg-white/20"
+              className="text-black hover:text-gov-saffron font-semibold text-xs sm:text-sm md:text-base lg:text-lg transition-all duration-300 px-1 sm:px-2 md:px-3 py-2 rounded-md hover:bg-white/20 whitespace-nowrap"
             >
               {t('nav.recommendations', 'Recommendations')}
             </Link>
             <Link 
               href="/dashboard" 
-              className="text-black hover:text-gov-saffron font-semibold text-sm md:text-base lg:text-lg transition-all duration-300 px-3 py-2 rounded-md hover:bg-white/20"
+              className="text-black hover:text-gov-saffron font-semibold text-xs sm:text-sm md:text-base lg:text-lg transition-all duration-300 px-1 sm:px-2 md:px-3 py-2 rounded-md hover:bg-white/20 whitespace-nowrap"
               key="dashboard-nav"
             >
               {t('nav.dashboard', 'Dashboard')}
             </Link>
             <Link 
               href="/copilot" 
-              className="text-black hover:text-gov-saffron font-semibold text-sm md:text-base lg:text-lg transition-all duration-300 px-3 py-2 rounded-md hover:bg-white/20"
+              className="text-black hover:text-gov-saffron font-semibold text-xs sm:text-sm md:text-base lg:text-lg transition-all duration-300 px-1 sm:px-2 md:px-3 py-2 rounded-md hover:bg-white/20 whitespace-nowrap"
             >
               {t('nav.resumeBuilder', 'Resume Builder')}
             </Link>
           </div>
           
           {/* Right side - Action buttons with better spacing */}
-          <div className="flex-1 flex items-center justify-end space-x-4 md:space-x-6">
+          <div className="flex-1 flex items-center justify-end space-x-2 sm:space-x-4 md:space-x-6 min-w-0">
             {/* Menu button with improved styling */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
