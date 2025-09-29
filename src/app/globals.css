@@ -99,8 +99,8 @@
 /* Fixed menu button positioning to prevent revealing hidden elements */
 .menu-button-fixed {
   position: absolute;
-  top: 50%;
-  right: 1rem;
+  top: calc(50% + 1cm); /* Move 1cm down from center */
+  right: calc(1rem + 3cm); /* Move 3cm more to the left */
   transform: translateY(-50%);
   z-index: 50;
 }

@@ -154,7 +154,6 @@ export function MainNav() {
               </Link>
             </div>
         </div>
-        </div>
       </div>
     </nav>
   );
