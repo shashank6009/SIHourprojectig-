@@ -155,22 +155,6 @@ export default function RootLayout({
                 return originalOpen.call(this, url, ...args);
               };
               
-              // Override location.href for blob/data URLs
-              const originalLocationHref = window.location.href;
-              Object.defineProperty(window.location, 'href', {
-                get() {
-                  return originalLocationHref;
-                },
-                set(value) {
-                  if (typeof value === 'string' && (value.includes('blob:') || value.includes('data:'))) {
-                    console.log('🚫 LOCATION.HREF DOWNLOAD BLOCKED:', value);
-                    alert('Download functionality has been disabled.');
-                    return;
-                  }
-                  window.location.assign(value);
-                }
-              });
-              
               console.log('✅ Global download prevention activated');
             });
           `

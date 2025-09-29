@@ -104,7 +104,7 @@ export function MainNav() {
         <div className="menu-button-fixed">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="bg-gov-saffron hover:bg-gov-saffron/90 text-white font-medium text-xs md:text-sm px-4 py-2.5 shadow-lg rounded-lg inline-flex items-center transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5">
+                <button className="bg-gov-saffron hover:bg-gov-saffron/90 text-white font-medium text-xs md:text-sm px-6 py-3.5 shadow-lg rounded-lg inline-flex items-center transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5">
                   <span className="inline-flex items-center gap-2">Menu<ChevronDown className="h-3 w-3" /></span>
                 </button>
               </DropdownMenuTrigger>
