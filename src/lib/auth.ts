@@ -72,11 +72,16 @@ export const authOptions: NextAuthOptions = {
       }
     })
   ],
-  secret: process.env.NEXTAUTH_SECRET || "fallback-secret-for-development",
+  secret: process.env.NEXTAUTH_SECRET || "fallback-secret-for-development-12345",
+  pages: {
+    signIn: '/login',
+    error: '/login',
+  },
   session: {
     strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
+  debug: process.env.NODE_ENV === 'development',
   callbacks: {
     async jwt({ token, user, account, profile }) {
       // Store user data in token

@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { ChevronDown, FileText, Camera, ThumbsUp, BookOpen } from "lucide-react";
+import { ChevronDown, FileText, Camera, ThumbsUp, BookOpen, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   DropdownMenu,
   DropdownMenuContent,

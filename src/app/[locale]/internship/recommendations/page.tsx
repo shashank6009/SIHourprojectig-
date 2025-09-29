@@ -447,33 +447,12 @@ export default function RecommendationsPage() {
           `📅 Add to Calendar?\n\n` +
           `Event: ${title}\n` +
           `Deadline: ${dt.toLocaleDateString()}\n\n` +
-          `Note: This will download a calendar file to your device.`
+          `Note: Manual calendar instructions will be provided.`
         );
         
         if (confirmed) {
-          // Generate calendar file locally - no network requests
-          try {
-            const calendarUrl = `data:text/calendar;charset=utf8,BEGIN:VCALENDAR
-VERSION:2.0
-BEGIN:VEVENT
-DTSTART:${dt.toISOString().replace(/[-:]/g, '').split('.')[0]}Z
-SUMMARY:${title}
-DESCRIPTION:Application deadline for ${title}
-END:VEVENT
-END:VCALENDAR`;
-            
-            const link = document.createElement('a');
-            link.href = calendarUrl;
-            link.download = `${title.replace(/[^a-zA-Z0-9]/g, '_')}_deadline.ics`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            
-            alert('📅 Calendar file downloaded! Open it to add to your calendar.');
-          } catch (calendarError) {
-            console.log('Calendar file generation failed, showing manual instructions');
-            alert(`📅 Please manually add to your calendar:\n\nTitle: ${title}\nDate: ${dt.toLocaleDateString()}\nTime: ${dt.toLocaleTimeString()}`);
-          }
+          // Just show manual instructions instead of downloading files
+          alert(`📅 Please manually add to your calendar:\n\nTitle: ${title}\nDate: ${dt.toLocaleDateString()}\nTime: ${dt.toLocaleTimeString()}\n\nNote: Automatic calendar downloads have been disabled.`);
         }
       }
     } catch (error) {

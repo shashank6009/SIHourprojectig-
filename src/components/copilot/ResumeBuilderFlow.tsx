@@ -179,30 +179,8 @@ export default function ResumeBuilderFlow() {
   const downloadResume = () => {
     if (!generatedResume) return;
     
-    try {
-      // Generate HTML content for the resume
-      const htmlContent = generateResumeHTML(generatedResume);
-      
-      // Create a blob and download it
-      const blob = new Blob([htmlContent], { type: 'text/html' });
-      const url = URL.createObjectURL(blob);
-      
-      // Create download link
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `${generatedResume.personalInfo?.fullName || 'resume'}-resume.html`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      
-      // Clean up the URL
-      URL.revokeObjectURL(url);
-      
-      toast.success('Resume downloaded successfully!');
-    } catch (error) {
-      console.error('Error downloading resume:', error);
-      toast.error('Failed to download resume. Please try again.');
-    }
+    // Disable download functionality
+    toast.error('Download functionality has been disabled. Please copy the resume content manually if needed.');
   };
 
   const editResume = () => {

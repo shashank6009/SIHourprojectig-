@@ -131,9 +131,9 @@ export default function ReportsPage() {
   };
 
   const downloadReport = (reportId: string) => {
-    // In a real application, this would trigger the actual download
-    console.log(`Downloading report: ${reportId}`);
-    // You could call an API endpoint here to get the actual file
+    // Download functionality disabled
+    alert('Report download functionality has been disabled.');
+    console.log(`Download requested for report: ${reportId} (disabled)`);
   };
 
   const getStatusBadge = (status: string) => {

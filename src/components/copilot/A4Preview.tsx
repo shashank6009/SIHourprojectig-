@@ -63,31 +63,8 @@ export default function A4Preview({ resumeData, selectedTemplate, zoom, onZoomCh
   };
 
   const handleDownload = async () => {
-    try {
-      const response = await fetch('/api/resume/export', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          resumeData,
-          template: selectedTemplate,
-          format: 'pdf',
-        }),
-      });
-
-      const data = await response.json();
-      if (data.data?.downloadUrl) {
-        const link = document.createElement('a');
-        link.href = data.data.downloadUrl;
-        link.download = `${resumeData.personalInfo?.fullName || 'resume'}-resume.pdf`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      }
-    } catch (error) {
-      console.error('Error downloading resume:', error);
-    }
+    // Disable download functionality
+    alert('Download functionality has been disabled. Please use the print option or copy content manually if needed.');
   };
 
   return (
