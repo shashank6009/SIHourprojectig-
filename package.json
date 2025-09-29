@@ -11,7 +11,10 @@
     "lint": "eslint",
     "lint:production": "eslint --config .eslintrc.production.json",
     "clear-cache": "node clear-cache.js",
-    "fresh-start": "node clear-cache.js && npm run dev"
+    "fresh-start": "node clear-cache.js && npm run dev",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d .next",
+    "export": "next build"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.10.0",

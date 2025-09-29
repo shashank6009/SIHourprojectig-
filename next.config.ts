@@ -5,21 +5,10 @@ const withNextIntl = createNextIntlPlugin('./i18n/request.ts');
 
 const nextConfig: NextConfig = {
   /* config options here */
-  turbopack: {
-    root: process.cwd(),
-  },
-  // Disable caching in development
-  generateEtags: process.env.NODE_ENV !== 'development',
-  // Make the project deployable quickly even if there are ESLint/TS issues
-  // We'll revisit and tighten these once critical paths are stable
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  typescript: {
-    // Allow production builds to succeed even if there are type errors
-    ignoreBuildErrors: true,
-  },
+  // GitHub Pages configuration
+  trailingSlash: true,
   images: {
+    unoptimized: true, // Better for GitHub Pages
     remotePatterns: [
       {
         protocol: 'https',
@@ -41,12 +30,24 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  turbopack: {
+    root: process.cwd(),
+  },
+  // Disable caching in development
+  generateEtags: process.env.NODE_ENV !== 'development',
+  // Make the project deployable quickly even if there are ESLint/TS issues
+  // We'll revisit and tighten these once critical paths are stable
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    // Allow production builds to succeed even if there are type errors
+    ignoreBuildErrors: true,
+  },
   // Performance optimizations
   poweredByHeader: false,
   reactStrictMode: true,
   compress: true,
-  // Enable static optimization
-  trailingSlash: false,
   // Optimize bundle
   webpack: (config, { dev, isServer }) => {
     if (!dev && !isServer) {
