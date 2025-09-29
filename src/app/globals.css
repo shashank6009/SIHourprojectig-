@@ -56,25 +56,25 @@
   --foreground: 0 0 0;
 }
 
-/* Font size scaling with navigation adjustments */
+/* Font size scaling with navigation following body text */
 [data-text-size="small"] { 
   font-size: 0.875rem; 
   --nav-font-scale: 0.875;
-  --nav-spacing: 0.75rem;
+  --nav-spacing: 0.5rem;
   --nav-padding: 0.5rem;
 }
 
 [data-text-size="normal"] {
   --nav-font-scale: 1;
-  --nav-spacing: 1rem;
+  --nav-spacing: 0.75rem;
   --nav-padding: 0.75rem;
 }
 
 [data-text-size="large"] { 
   font-size: 1.125rem; 
-  --nav-font-scale: 0.875; /* Keep nav text smaller when body text is large */
-  --nav-spacing: 0.5rem;
-  --nav-padding: 0.25rem;
+  --nav-font-scale: 1.125; /* Navigation text scales UP with body text */
+  --nav-spacing: 0.5rem; /* Tighter spacing for larger text */
+  --nav-padding: 0.5rem;
 }
 
 /* Navigation responsive to font scaling */
@@ -85,20 +85,26 @@
 }
 
 .nav-adaptive-spacing {
-  gap: var(--nav-spacing, 1rem);
+  gap: var(--nav-spacing, 0.75rem);
 }
 
-/* Ensure Tamil text doesn't overflow even with large font sizes */
+/* Ensure Tamil text scales properly but doesn't overflow */
 [lang="ta"] .nav-adaptive,
 .nav-adaptive [lang="ta"] {
-  font-size: calc(var(--nav-font-scale, 1) * 0.9rem);
-  letter-spacing: -0.01em;
+  font-size: calc(var(--nav-font-scale, 1) * 0.95rem);
+  letter-spacing: -0.02em; /* Tighter letter spacing for Tamil */
 }
 
-/* Better responsive behavior for navigation at different text sizes */
+/* Fixed menu button positioning to prevent revealing hidden elements */
+.menu-button-fixed {
+  position: relative;
+  z-index: 50;
+}
+
+/* Mobile responsive behavior */
 @media (max-width: 768px) {
   [data-text-size="large"] .nav-adaptive {
-    font-size: calc(var(--nav-font-scale, 1) * 0.8rem);
+    font-size: calc(var(--nav-font-scale, 1) * 0.9rem);
   }
   
   [data-text-size="large"] .nav-adaptive-spacing {

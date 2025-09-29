@@ -51,16 +51,16 @@ export function MainNav() {
           priority
         />
         
-        {/* Navigation content overlay with improved spacing */}
+        {/* Navigation content overlay - Three column layout */}
         <div className="absolute inset-0 flex items-center justify-between px-2 sm:px-4 md:px-6 lg:px-8 xl:px-12">
           
-          {/* Left side - Logo/Branding area with more space */}
-          <div className="flex-1 flex items-center min-w-0">
+          {/* Left side - Logo/Branding area */}
+          <div className="flex-1 flex items-center justify-start min-w-0 max-w-xs">
             {/* Space for logos - they're part of the background image */}
           </div>
           
           {/* Center - Navigation Links with adaptive font scaling */}
-          <div className="flex items-center nav-adaptive-spacing">
+          <div className="flex items-center nav-adaptive-spacing justify-center flex-shrink-0">
             <Link 
               href={`/${currentLocale}`}
               className="nav-adaptive text-black hover:text-gov-saffron font-semibold transition-all duration-300 py-2 rounded-md hover:bg-white/20 whitespace-nowrap"
@@ -94,9 +94,10 @@ export function MainNav() {
             </Link>
           </div>
           
-          {/* Right side - Action buttons with better spacing */}
-          <div className="flex-1 flex items-center justify-end space-x-2 sm:space-x-4 md:space-x-6 min-w-0">
-            {/* Menu button with improved styling */}
+          {/* Right side - Fixed position for menu button to maintain hiding functionality */}
+          <div className="flex-1 flex items-center justify-end min-w-0 max-w-xs relative">
+            {/* Fixed Menu Button - Position doesn't change to keep hiding background element */}
+            <div className="menu-button-fixed">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button className="bg-gov-saffron hover:bg-gov-saffron/90 text-white font-medium text-xs md:text-sm px-4 py-2.5 shadow-lg rounded-lg inline-flex items-center transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5">
@@ -140,13 +141,14 @@ export function MainNav() {
             </DropdownMenu>
             
             {/* Login Button - positioned over the Login button in the image */}
-            <div className="w-20 h-10">
+            <div className="w-20 h-10 ml-2">
               <Link 
                 href="/login" 
                 className="block w-full h-full"
                 aria-label="Login to PM Internship Portal"
               >
               </Link>
+            </div>
             </div>
           </div>
         </div>
