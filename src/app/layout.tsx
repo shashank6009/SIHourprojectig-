@@ -4,7 +4,6 @@ import "./globals.css";
 import { AppWrapper } from "@/components/AppWrapper";
 import { AuthProvider } from "@/components/AuthProvider";
 import { OfflineStatus } from "@/components/OfflineStatus";
-import { PWAInstaller } from "@/components/PWAInstaller";
 import { LocaleProvider } from "@/components/LocaleProvider";
 
 const notoSans = Noto_Sans({ 
@@ -110,9 +109,72 @@ export default function RootLayout({
             <AppWrapper>
               {children}
             </AppWrapper>
-            <PWAInstaller />
           </AuthProvider>
         </LocaleProvider>
+
+        {/* Global download prevention script */}
+        <script dangerouslySetInnerHTML={{
+          __html: `
+            document.addEventListener('DOMContentLoaded', function() {
+              // Nuclear download prevention
+              const preventDownloads = (e) => {
+                const target = e.target;
+                if (target.tagName === 'A') {
+                  const anchor = target;
+                  if (anchor.download || anchor.href.includes('blob:') || anchor.href.includes('data:') || anchor.href.includes('download')) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    e.stopImmediatePropagation();
+                    console.log('🚫 DOWNLOAD BLOCKED:', anchor.href);
+                    alert('Download functionality has been disabled on this site.');
+                    return false;
+                  }
+                }
+                // Block any programmatic blob/data URL navigation
+                if (target.click && (target.href?.includes('blob:') || target.href?.includes('data:'))) {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  console.log('🚫 PROGRAMMATIC DOWNLOAD BLOCKED');
+                  return false;
+                }
+              };
+              
+              // Add multiple levels of download prevention
+              document.addEventListener('click', preventDownloads, true);
+              document.addEventListener('mousedown', preventDownloads, true);
+              document.addEventListener('auxclick', preventDownloads, true);
+              
+              // Override window.open for blob/data URLs
+              const originalOpen = window.open;
+              window.open = function(url, ...args) {
+                if (typeof url === 'string' && (url.includes('blob:') || url.includes('data:'))) {
+                  console.log('🚫 WINDOW.OPEN DOWNLOAD BLOCKED:', url);
+                  alert('Download functionality has been disabled.');
+                  return null;
+                }
+                return originalOpen.call(this, url, ...args);
+              };
+              
+              // Override location.href for blob/data URLs
+              const originalLocationHref = window.location.href;
+              Object.defineProperty(window.location, 'href', {
+                get() {
+                  return originalLocationHref;
+                },
+                set(value) {
+                  if (typeof value === 'string' && (value.includes('blob:') || value.includes('data:'))) {
+                    console.log('🚫 LOCATION.HREF DOWNLOAD BLOCKED:', value);
+                    alert('Download functionality has been disabled.');
+                    return;
+                  }
+                  window.location.assign(value);
+                }
+              });
+              
+              console.log('✅ Global download prevention activated');
+            });
+          `
+        }} />
 
         {/* ElevenLabs ConvAI Widget */}
         <elevenlabs-convai agent-id="agent_9201k5sry698e14sf58cpbyfrdkx"></elevenlabs-convai>
