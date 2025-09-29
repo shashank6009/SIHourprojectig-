@@ -33,10 +33,9 @@ yarn-error.log*
 .next/
 out/
 
-# Large video files (exceeding GitHub's 100MB limit)
-public/home.mp4
-public/companies.mp4
-*.mp4
+# Video files now small enough for git (under 5MB each)
+# public/home.mp4 - INCLUDED (3.3MB)
+# public/companies.mp4 - INCLUDED (under 5MB)
 
 # IDE
 .vscode/
