@@ -2,6 +2,7 @@
   "name": "pmis-portal",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://shashank6009.github.io/SIHourprojectig-",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "ESLINT_CONFIG_FILE=.eslintrc.production.json next build --turbopack",
@@ -68,6 +69,7 @@
     "autoprefixer": "^10.4.20",
     "eslint": "^9",
     "eslint-config-next": "15.5.2",
+    "gh-pages": "^6.3.0",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.13",
     "typescript": "^5"
