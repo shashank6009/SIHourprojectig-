@@ -51,11 +51,11 @@ export function MainNav() {
           priority
         />
         
-        {/* Navigation content overlay - Three column layout */}
-        <div className="absolute inset-0 flex items-center justify-between px-2 sm:px-4 md:px-6 lg:px-8 xl:px-12">
+        {/* Navigation content overlay - Left and center content */}
+        <div className="absolute inset-0 flex items-center px-2 sm:px-4 md:px-6 lg:px-8 xl:px-12">
           
           {/* Left side - Logo/Branding area */}
-          <div className="flex-1 flex items-center justify-start min-w-0 max-w-xs">
+          <div className="flex-1 flex items-center justify-start min-w-0">
             {/* Space for logos - they're part of the background image */}
           </div>
           
@@ -94,10 +94,14 @@ export function MainNav() {
             </Link>
           </div>
           
-          {/* Right side - Fixed position for menu button to maintain hiding functionality */}
-          <div className="flex-1 flex items-center justify-end min-w-0 max-w-xs relative">
-            {/* Fixed Menu Button - Position doesn't change to keep hiding background element */}
-            <div className="menu-button-fixed">
+          {/* Spacer for right side balance */}
+          <div className="flex-1 min-w-0">
+            {/* This creates balance but menu button is positioned absolutely */}
+          </div>
+        </div>
+        
+        {/* Absolutely positioned menu button - always stays on top of Login */}
+        <div className="menu-button-fixed">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button className="bg-gov-saffron hover:bg-gov-saffron/90 text-white font-medium text-xs md:text-sm px-4 py-2.5 shadow-lg rounded-lg inline-flex items-center transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5">
@@ -149,8 +153,7 @@ export function MainNav() {
               >
               </Link>
             </div>
-            </div>
-          </div>
+        </div>
         </div>
       </div>
     </nav>
