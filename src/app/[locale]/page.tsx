@@ -1,13 +1,35 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import Image from "next/image";
-
-// This ensures the page is generated for all locales
-export const dynamic = 'force-static';
+import { useEffect, useState } from "react";
 
 export default function HomePage() {
   const router = useRouter();
+  const pathname = usePathname();
+  const [mounted, setMounted] = useState(false);
+  
+  // Get current locale from pathname
+  const currentLocale = mounted 
+    ? (pathname.startsWith('/ta') ? 'ta' : pathname.startsWith('/hi') ? 'hi' : 'en')
+    : 'en';
+  
+  // Get language-specific image
+  const getLanguageImage = () => {
+    switch (currentLocale) {
+      case 'ta':
+        return '/lang/1.png';
+      case 'hi':
+        return '/lang/6.png';
+      case 'en':
+      default:
+        return '/lang/7.png';
+    }
+  };
+  
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <div className="min-h-screen bg-white">
@@ -70,6 +92,30 @@ export default function HomePage() {
               <source src="/companies.mp4" type="video/mp4" />
               Your browser does not support the video tag.
             </video>
+          </div>
+        </div>
+      </section>
+
+      {/* Language-specific Image Section */}
+      <section className="relative bg-white py-8">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="relative w-full max-w-6xl mx-auto">
+            {mounted && (
+              <Image
+                src={getLanguageImage()}
+                alt={`PM Internship Scheme - ${currentLocale.toUpperCase()}`}
+                width={1200}
+                height={600}
+                className="w-full h-auto rounded-lg shadow-lg"
+                priority={false}
+              />
+            )}
+            {/* Fallback for SSR */}
+            {!mounted && (
+              <div className="w-full h-96 bg-gray-100 rounded-lg shadow-lg flex items-center justify-center">
+                <div className="text-gray-500">Loading...</div>
+              </div>
+            )}
           </div>
         </div>
       </section>
