@@ -52,43 +52,15 @@ export async function POST(req: Request) {
       try {
         console.log('Server: Parsing PDF...');
         
-        // Create a temporary workaround for the pdf-parse test file issue
-        const testFilePath = path.join(process.cwd(), './test/data/05-versions-space.pdf');
-        const testDir = path.dirname(testFilePath);
-        
-        // Create the directory and dummy file if they don't exist
-        if (!fs.existsSync(testDir)) {
-          fs.mkdirSync(testDir, { recursive: true });
-        }
-        if (!fs.existsSync(testFilePath)) {
-          fs.writeFileSync(testFilePath, 'dummy');
-        }
-        
         const pdfParse = (await import("pdf-parse")).default;
         const data = await pdfParse(buffer);
         text = data?.text || "";
         
-        // Clean up the dummy file
-        try {
-          fs.unlinkSync(testFilePath);
-          if (fs.existsSync(testDir)) {
-            fs.rmSync(testDir, { recursive: true, force: true });
-          }
-        } catch {
-          // Ignore cleanup errors
-        }
-        
         console.log('Server: PDF parsed, text length:', text.length);
       } catch (pdfError: unknown) {
         console.error('Server: PDF parsing error:', pdfError);
-        // Check if it's the test file error and provide a better message
-        if (pdfError instanceof Error && pdfError.message?.includes('ENOENT') && pdfError.message?.includes('05-versions-space.pdf')) {
-          return NextResponse.json({ 
-            error: "PDF processing is temporarily unavailable. Please use the 'Paste Resume Text' option instead." 
-          }, { status: 422 });
-        }
         return NextResponse.json({ 
-          error: "Failed to parse PDF. The file might be corrupted, password-protected, or in an unsupported format. Please try the text paste option." 
+          error: "Failed to process resume: Failed to parse PDF. The file might be corrupted, password-protected, or in an unsupported format. Please use the text paste option." 
         }, { status: 422 });
       }
     } else if (contentType.includes("wordprocessingml")) {

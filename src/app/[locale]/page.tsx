@@ -11,6 +11,15 @@ export default function HomePage() {
       {/* Hero Video Section */}
       <section className="relative overflow-hidden h-[60vh] md:h-[70vh]">
         <div className="absolute inset-0 z-0">
+          {/* Fallback background image if video fails to load */}
+          <div 
+            className="w-full h-full bg-cover bg-center bg-no-repeat"
+            style={{
+              backgroundImage: "url('/emblem.jpeg')",
+              backgroundSize: 'cover',
+              backgroundPosition: 'center'
+            }}
+          />
           <video
             autoPlay
             muted
@@ -18,6 +27,10 @@ export default function HomePage() {
             playsInline
             className="w-full h-full object-cover"
             poster="/emblem.jpeg"
+            onError={(e) => {
+              console.log('Video failed to load, using poster image');
+              e.currentTarget.style.display = 'none';
+            }}
           >
             <source src="/home.mp4" type="video/mp4" />
             Your browser does not support the video tag.
@@ -40,6 +53,16 @@ export default function HomePage() {
               playsInline
               className="w-full h-auto rounded-lg shadow-lg"
               poster="/emblem.jpeg"
+              onError={(e) => {
+                console.log('Companies video failed to load');
+                e.currentTarget.style.display = 'none';
+                // Show fallback image
+                const fallback = document.createElement('img');
+                fallback.src = '/emblem.jpeg';
+                fallback.className = 'w-full h-auto rounded-lg shadow-lg';
+                fallback.alt = 'Partner Organizations';
+                e.currentTarget.parentNode?.appendChild(fallback);
+              }}
             >
               <source src="/companies.mp4" type="video/mp4" />
               Your browser does not support the video tag.
