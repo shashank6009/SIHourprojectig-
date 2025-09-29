@@ -3,25 +3,21 @@
 import { useState } from "react";
 import { ChevronDown, Minus, Plus, Monitor } from "lucide-react";
 import Image from "next/image";
-// Replaced shared Button with native buttons to avoid hydration issues
-import { i18n, type Language } from "@/lib/i18n";
+import { useTranslations } from "@/hooks/useTranslations";
+import { SimpleLanguageSwitcher } from './LanguageSwitcher';
 
 interface GovHeaderTopProps {
-  language: Language;
-  onLanguageChange: (lang: Language) => void;
   onTextSizeChange: (size: "small" | "normal" | "large") => void;
   onContrastChange: (highContrast: boolean) => void;
 }
 
 export function GovHeaderTop({
-  language,
-  onLanguageChange,
   onTextSizeChange,
   onContrastChange,
 }: GovHeaderTopProps) {
   const [textSize, setTextSize] = useState<"small" | "normal" | "large">("normal");
   const [highContrast, setHighContrast] = useState(false);
-  const strings = i18n[language];
+  const { t } = useTranslations();
 
   const handleTextSizeChange = (size: "small" | "normal" | "large") => {
     setTextSize(size);
@@ -48,22 +44,16 @@ export function GovHeaderTop({
                 height={40}
                 className="rounded-sm"
               />
-              <span className="hidden sm:inline text-lg font-medium">{strings.governmentOfIndia}</span>
-            </div>
-            <div className="hidden md:inline text-gray-200 text-lg">|</div>
-            <span className="hidden md:inline text-lg">{strings.ministryOfCorporateAffairs}</span>
+                  <span className="hidden sm:inline text-lg font-medium">{t('footer.govIndia', 'Government of India')}</span>
+                </div>
+                <div className="hidden md:inline text-gray-200 text-lg">|</div>
+                <span className="hidden md:inline text-lg">Ministry of Corporate Affairs</span>
           </div>
 
           {/* Right side - Accessibility controls */}
           <div className="flex items-center space-x-6">
-            {/* Language selector - simplified to avoid hydration issues */}
-            <button 
-              className="text-white hover:bg-gray-600 text-base h-9 rounded-md px-3 inline-flex items-center justify-center whitespace-nowrap"
-              onClick={() => onLanguageChange(language === "en" ? "hi" : "en")}
-              aria-label="Change language"
-            >
-              <span className="inline-flex items-center gap-1">{strings.language}<ChevronDown className="ml-1 h-4 w-4" /></span>
-            </button>
+            {/* Language selector */}
+            <SimpleLanguageSwitcher />
 
             {/* Text size controls */}
             <div className="flex items-center space-x-2">
@@ -92,7 +82,7 @@ export function GovHeaderTop({
               onClick={handleContrastChange}
               aria-label="Toggle contrast"
             >
-              <span className="inline-flex items-center gap-2"><Monitor className="h-5 w-5" /> {strings.contrast}</span>
+              <span className="inline-flex items-center gap-2"><Monitor className="h-5 w-5" /> Contrast</span>
             </button>
           </div>
         </div>

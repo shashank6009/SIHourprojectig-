@@ -303,75 +303,13 @@ export default function RecommendationsPage() {
     loadRecommendations();
   }, [session]);
 
-  // Test webhook connectivity
-  const testWebhook = async () => {
-    try {
-      const testPayload = { test: true, timestamp: new Date().toISOString() };
-      console.log('🧪 Testing webhook connectivity...');
-      console.log('🧪 Test payload:', JSON.stringify(testPayload, null, 2));
-      
-      const response = await fetch('https://qiq-ai.app.n8n.cloud/webhook/4467d488-f652-45f6-809d-f0b650940ad1', {
-        method: 'POST',
-        mode: 'cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(testPayload)
-      });
-      
-      console.log('🧪 Webhook test response status:', response.status);
-      console.log('🧪 Webhook test response statusText:', response.statusText);
-      console.log('🧪 Webhook test response headers:', Object.fromEntries(response.headers.entries()));
-      
-      const responseText = await response.text();
-      console.log('🧪 Webhook test response body:', responseText);
-      
-      return response.ok;
-    } catch (error) {
-      console.error('🧪 Webhook test failed:', {
-        error: error,
-        errorMessage: error?.message,
-        errorName: error?.name,
-        errorStack: error?.stack
-      });
-      return false;
-    }
-  };
-
-  // Simple webhook test function
-  const simpleWebhookTest = async () => {
-    console.log('🔬 Simple webhook test starting...');
-    try {
-      const response = await fetch('https://qiq-ai.app.n8n.cloud/webhook/4467d488-f652-45f6-809d-f0b650940ad1', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ simple: 'test' })
-      });
-      console.log('🔬 Simple test result:', response.status, response.statusText);
-      return response.ok;
-    } catch (err) {
-      console.log('🔬 Simple test error:', err);
-      return false;
-    }
-  };
+  // Webhook test functions completely removed to prevent console errors
 
   // Client-side mounting
   useEffect(() => {
     setMounted(true);
     console.log('🚀 Recommendations page mounted - random December 2025 deadlines will be generated!');
-    console.log('📅 Webhook integration active: https://qiq-ai.app.n8n.cloud/webhook/4467d488-f652-45f6-809d-f0b650940ad1');
-    
-    // Test webhook connectivity on page load
-    testWebhook();
-    simpleWebhookTest();
-    
-    // Also test with a simple GET request to see if the URL is reachable
-    fetch('https://qiq-ai.app.n8n.cloud/webhook/4467d488-f652-45f6-809d-f0b650940ad1', {
-      method: 'GET',
-      mode: 'cors'
-    }).then(response => {
-      console.log('🌐 GET test response:', response.status, response.statusText);
-    }).catch(error => {
-      console.error('🌐 GET test failed:', error);
-    });
+    console.log('📅 Calendar integration available (webhook disabled for now)');
   }, []);
 
   // Apply filters and sorting
@@ -496,147 +434,52 @@ export default function RecommendationsPage() {
         return;
       }
       
-      // Trigger webhook for calendar event creation
-      try {
-        const webhookUrl = 'https://qiq-ai.app.n8n.cloud/webhook/4467d488-f652-45f6-809d-f0b650940ad1';
-        const webhookPayload = {
-          event: 'calendar_event_created',
-          title: title,
-          deadline: deadlineISO,
-          deadline_formatted: dt.toLocaleDateString(),
-          user_id: userId,
-          timestamp: new Date().toISOString(),
-          source: 'pmis_internship_portal',
-          organization: selectedRecommendation?.organization_name || 'Unknown',
-          location: selectedRecommendation?.location || 'Unknown',
-          domain: selectedRecommendation?.domain || 'Unknown',
-          stipend: selectedRecommendation?.stipend || 0,
-          duration: selectedRecommendation?.duration || 'Unknown'
-        };
+      // Calendar integration - no network requests, only local file generation
+      console.log('📅 Calendar integration requested for:', {
+        title,
+        deadline: dt.toLocaleDateString(),
+        note: 'Local calendar file generation only - no network requests'
+      });
+      
+      // Show a fallback message instead of making network requests
+      if (typeof window !== 'undefined') {
+        const confirmed = confirm(
+          `📅 Add to Calendar?\n\n` +
+          `Event: ${title}\n` +
+          `Deadline: ${dt.toLocaleDateString()}\n\n` +
+          `Note: This will download a calendar file to your device.`
+        );
         
-        console.log('📅 Triggering calendar webhook:', webhookPayload);
-        
-        // Send webhook request with better error handling
-        console.log('📤 Sending webhook request to:', webhookUrl);
-        console.log('📤 Request payload:', JSON.stringify(webhookPayload, null, 2));
-        
-        const response = await fetch(webhookUrl, {
-          method: 'POST',
-          mode: 'cors', // Explicitly set CORS mode
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-          body: JSON.stringify(webhookPayload)
-        });
-        
-        console.log('📡 Webhook response status:', response.status);
-        console.log('📡 Webhook response statusText:', response.statusText);
-        console.log('📡 Webhook response headers:', Object.fromEntries(response.headers.entries()));
-        
-        if (response.ok) {
-          const responseText = await response.text();
-          console.log('✅ Calendar webhook triggered successfully');
-          console.log('📡 Webhook response:', responseText);
-          // Show success message to user
-          if (typeof window !== 'undefined') {
-            alert('📅 Calendar event has been added to your calendar!');
-          }
-        } else {
-          const errorText = await response.text();
-          console.error('❌ Calendar webhook failed:', {
-            status: response.status,
-            statusText: response.statusText,
-            response: errorText,
-            url: webhookUrl
-          });
-          
-          // Parse the error response to show a helpful message
-          let errorMessage = `⚠️ Failed to add calendar event. Status: ${response.status}`;
+        if (confirmed) {
+          // Generate calendar file locally - no network requests
           try {
-            const errorData = JSON.parse(errorText);
-            if (errorData.message) {
-              if (errorData.message.includes('Workflow could not be started')) {
-                errorMessage = '⚠️ Calendar service is temporarily unavailable. The workflow is not active. Please try again later.';
-              } else {
-                errorMessage = `⚠️ Calendar service error: ${errorData.message}`;
-              }
-            }
-          } catch (e) {
-            // If we can't parse the error, use the default message
-          }
-          
-          if (typeof window !== 'undefined') {
-            alert(errorMessage);
-          }
-        }
-      } catch (webhookError) {
-        console.error('❌ Failed to trigger calendar webhook:', {
-          error: webhookError,
-          errorMessage: webhookError?.message,
-          errorName: webhookError?.name,
-          errorStack: webhookError?.stack,
-          url: webhookUrl
-        });
-        
-        // Try a simpler payload as fallback
-        try {
-          console.log('🔄 Trying fallback webhook with simpler payload...');
-          const fallbackPayload = {
-            event: 'calendar_event_created',
-            title: title,
-            deadline: deadlineISO,
-            user_id: userId
-          };
-          
-          console.log('📤 Fallback payload:', JSON.stringify(fallbackPayload, null, 2));
-          
-          const fallbackResponse = await fetch('https://qiq-ai.app.n8n.cloud/webhook/4467d488-f652-45f6-809d-f0b650940ad1', {
-            method: 'POST',
-            mode: 'cors',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(fallbackPayload)
-          });
-          
-          console.log('📡 Fallback response status:', fallbackResponse.status);
-          
-          if (fallbackResponse.ok) {
-            console.log('✅ Fallback webhook succeeded');
-            if (typeof window !== 'undefined') {
-              alert('📅 Calendar event has been added to your calendar!');
-            }
-          } else {
-            const fallbackErrorText = await fallbackResponse.text();
-            console.error('❌ Fallback webhook failed:', {
-              status: fallbackResponse.status,
-              statusText: fallbackResponse.statusText,
-              response: fallbackErrorText
-            });
-            throw new Error(`Fallback failed: ${fallbackResponse.status} - ${fallbackErrorText}`);
-          }
-        } catch (fallbackError) {
-          console.error('❌ Fallback webhook also failed:', {
-            error: fallbackError,
-            errorMessage: fallbackError?.message,
-            errorName: fallbackError?.name
-          });
-          if (typeof window !== 'undefined') {
-            alert('⚠️ Failed to add calendar event. Please check your internet connection and try again.');
+            const calendarUrl = `data:text/calendar;charset=utf8,BEGIN:VCALENDAR
+VERSION:2.0
+BEGIN:VEVENT
+DTSTART:${dt.toISOString().replace(/[-:]/g, '').split('.')[0]}Z
+SUMMARY:${title}
+DESCRIPTION:Application deadline for ${title}
+END:VEVENT
+END:VCALENDAR`;
+            
+            const link = document.createElement('a');
+            link.href = calendarUrl;
+            link.download = `${title.replace(/[^a-zA-Z0-9]/g, '_')}_deadline.ics`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            alert('📅 Calendar file downloaded! Open it to add to your calendar.');
+          } catch (calendarError) {
+            console.log('Calendar file generation failed, showing manual instructions');
+            alert(`📅 Please manually add to your calendar:\n\nTitle: ${title}\nDate: ${dt.toLocaleDateString()}\nTime: ${dt.toLocaleTimeString()}`);
           }
         }
       }
-      
-      console.log('📅 Calendar webhook triggered successfully');
     } catch (error) {
-      console.error('❌ Outer catch - Failed to trigger calendar webhook:', {
-        error: error,
-        errorMessage: error?.message,
-        errorName: error?.name,
-        errorStack: error?.stack,
-        errorType: typeof error
-      });
+      console.log('Calendar integration error (handled gracefully):', error?.message);
       if (typeof window !== 'undefined') {
-        alert('Failed to add calendar event. Please try again.');
+        alert('Please manually add this deadline to your calendar.');
       }
     }
   };
