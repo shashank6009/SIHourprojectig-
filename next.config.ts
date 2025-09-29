@@ -5,10 +5,10 @@ const withNextIntl = createNextIntlPlugin('./i18n/request.ts');
 
 const nextConfig: NextConfig = {
   /* config options here */
-  // GitHub Pages configuration
+  // Deployment configuration
   trailingSlash: true,
   images: {
-    unoptimized: true, // Better for GitHub Pages
+    unoptimized: true, // Better compatibility
     remotePatterns: [
       {
         protocol: 'https',
