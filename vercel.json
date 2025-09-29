@@ -10,7 +10,7 @@
       ]
     },
     {
-      "source": "/public/(.*\\.(mp4|webm|mov))",
+      "source": "/(.*\\.(mp4|webm|mov))",
       "headers": [
         {
           "key": "Content-Type",
