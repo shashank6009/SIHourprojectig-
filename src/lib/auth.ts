@@ -16,8 +16,10 @@ const demoUsers = [
 
 export const authOptions: NextAuthOptions = {
   providers: [
-    // Google OAuth Provider - Conditionally enabled
-    ...(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET ? [
+    // Google OAuth Provider - Only if properly configured
+    ...(process.env.GOOGLE_CLIENT_ID && 
+       process.env.GOOGLE_CLIENT_SECRET && 
+       process.env.GOOGLE_CLIENT_ID !== 'your-google-client-id' ? [
       GoogleProvider({
         clientId: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -75,13 +77,17 @@ export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET || "fallback-secret-for-development-12345",
   pages: {
     signIn: '/login',
+    signOut: '/login',
     error: '/login',
   },
   session: {
     strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60, // 30 days
+    updateAge: 24 * 60 * 60, // 24 hours
   },
   debug: process.env.NODE_ENV === 'development',
+  trustHost: true, // Add this for development
+  useSecureCookies: process.env.NODE_ENV === 'production',
   callbacks: {
     async jwt({ token, user, account, profile }) {
       // Store user data in token
