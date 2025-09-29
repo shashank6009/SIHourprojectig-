@@ -33,91 +33,23 @@ export async function registerServiceWorker(): Promise<ServiceWorkerRegistration
       if (newWorker) {
         newWorker.addEventListener('statechange', () => {
           if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-            console.log('[PWA] New service worker available');
-            // Show update notification
-            showUpdateNotification();
+            console.log('[PWA] New content available, please refresh');
+            // You could show a notification here
           }
         });
       }
     });
 
-    // Handle successful registration
-    if (registration.installing) {
-      console.log('[PWA] Service Worker installing');
-    } else if (registration.waiting) {
-      console.log('[PWA] Service Worker installed, waiting');
-      showUpdateNotification();
-    } else if (registration.active) {
-      console.log('[PWA] Service Worker active');
-    }
-
+    console.log('[PWA] Service Worker registered successfully:', registration.scope);
     return registration;
   } catch (error) {
-    console.warn('[PWA] Service Worker registration failed (this is normal in development):', error.message);
+    console.error('[PWA] Service Worker registration failed:', error);
     return null;
   }
 }
 
-export function showUpdateNotification(): void {
-  // Create a simple update notification
-  const notification = document.createElement('div');
-  notification.innerHTML = `
-    <div style="
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: #fff;
-      border: 1px solid #ff6600;
-      border-radius: 8px;
-      padding: 16px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      z-index: 1000;
-      max-width: 300px;
-    ">
-      <h4 style="margin: 0 0 8px 0; color: #0B3D91; font-size: 14px; font-weight: 600;">
-        Update Available
-      </h4>
-      <p style="margin: 0 0 12px 0; color: #666; font-size: 13px;">
-        A new version of the PM Internship Portal is available.
-      </p>
-      <button onclick="window.location.reload()" style="
-        background: #ff6600;
-        color: white;
-        border: none;
-        padding: 8px 16px;
-        border-radius: 4px;
-        font-size: 12px;
-        cursor: pointer;
-        margin-right: 8px;
-      ">
-        Update Now
-      </button>
-      <button onclick="this.parentElement.parentElement.remove()" style="
-        background: transparent;
-        color: #666;
-        border: 1px solid #ddd;
-        padding: 8px 16px;
-        border-radius: 4px;
-        font-size: 12px;
-        cursor: pointer;
-      ">
-        Later
-      </button>
-    </div>
-  `;
-  
-  document.body.appendChild(notification);
-
-  // Auto-remove after 10 seconds
-  setTimeout(() => {
-    if (notification.parentElement) {
-      notification.parentElement.removeChild(notification);
-    }
-  }, 10000);
-}
-
 export async function checkForUpdates(): Promise<void> {
-  if (!('serviceWorker' in navigator)) return;
+  if (typeof window === 'undefined' || !('serviceWorker' in navigator)) return;
 
   try {
     const registration = await navigator.serviceWorker.getRegistration();
@@ -126,43 +58,117 @@ export async function checkForUpdates(): Promise<void> {
       console.log('[PWA] Checked for updates');
     }
   } catch (error) {
-    console.error('[PWA] Update check failed:', error);
+    console.error('[PWA] Error checking for updates:', error);
   }
 }
 
 export function isStandalone(): boolean {
   if (typeof window === 'undefined') return false;
-  
-  return (
-    window.matchMedia('(display-mode: standalone)').matches ||
-    (window.navigator as Record<string, unknown>).standalone === true ||
-    document.referrer.includes('android-app://')
-  );
+  return window.matchMedia('(display-mode: standalone)').matches ||
+         (window.navigator as any).standalone === true;
 }
 
 export function isPWAInstalled(): boolean {
   return isStandalone();
 }
 
-export async function getInstallPrompt(): Promise<unknown> {
-  return new Promise((resolve) => {
-    const handleBeforeInstallPrompt = (e: Event) => {
-      e.preventDefault();
-      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-      resolve(e);
-    };
+export async function requestPersistentStorage(): Promise<boolean> {
+  if (typeof window === 'undefined' || !('storage' in navigator && 'persist' in navigator.storage)) {
+    return false;
+  }
 
-    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+  try {
+    const isPersistent = await navigator.storage.persist();
+    console.log(`[PWA] Persistent storage: ${isPersistent ? 'granted' : 'denied'}`);
+    return isPersistent;
+  } catch (error) {
+    console.error('[PWA] Error requesting persistent storage:', error);
+    return false;
+  }
+}
 
-    // Timeout after 5 seconds
-    setTimeout(() => {
-      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-      resolve(null);
-    }, 5000);
+export async function getStorageEstimate(): Promise<StorageEstimate | null> {
+  if (typeof window === 'undefined' || !('storage' in navigator && 'estimate' in navigator.storage)) {
+    return null;
+  }
+
+  try {
+    const estimate = await navigator.storage.estimate();
+    console.log('[PWA] Storage estimate:', estimate);
+    return estimate;
+  } catch (error) {
+    console.error('[PWA] Error getting storage estimate:', error);
+    return null;
+  }
+}
+
+// Handle PWA install prompt
+let deferredPrompt: any = null;
+
+export function setupInstallPrompt(): void {
+  if (typeof window === 'undefined') return;
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    console.log('[PWA] Install prompt available');
+  });
+
+  window.addEventListener('appinstalled', () => {
+    console.log('[PWA] App was installed');
+    deferredPrompt = null;
   });
 }
 
-<<<<<<< HEAD
+export async function showInstallPrompt(): Promise<boolean> {
+  if (!deferredPrompt) {
+    console.log('[PWA] Install prompt not available');
+    return false;
+  }
+
+  try {
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    console.log(`[PWA] Install prompt outcome: ${outcome}`);
+    deferredPrompt = null;
+    return outcome === 'accepted';
+  } catch (error) {
+    console.error('[PWA] Error showing install prompt:', error);
+    return false;
+  }
+}
+
+export function canInstall(): boolean {
+  return deferredPrompt !== null;
+}
+
+// Check if device supports PWA features
+export function getPWACapabilities(): {
+  serviceWorker: boolean;
+  pushNotifications: boolean;
+  backgroundSync: boolean;
+  persistentStorage: boolean;
+  installPrompt: boolean;
+} {
+  if (typeof window === 'undefined') {
+    return {
+      serviceWorker: false,
+      pushNotifications: false,
+      backgroundSync: false,
+      persistentStorage: false,
+      installPrompt: false
+    };
+  }
+
+  return {
+    serviceWorker: 'serviceWorker' in navigator,
+    pushNotifications: 'PushManager' in window,
+    backgroundSync: 'serviceWorker' in navigator && 'sync' in window.ServiceWorkerRegistration.prototype,
+    persistentStorage: 'storage' in navigator && 'persist' in navigator.storage,
+    installPrompt: 'BeforeInstallPromptEvent' in window || deferredPrompt !== null
+  };
+}
+
 // Clear all caches (useful for development)
 export async function clearAllCaches(): Promise<void> {
   if (typeof window === 'undefined') return;
@@ -177,16 +183,7 @@ export async function clearAllCaches(): Promise<void> {
       console.log('[PWA] All caches cleared');
     }
 
-    // Unregister all service workers
-    if ('serviceWorker' in navigator) {
-      const registrations = await navigator.serviceWorker.getRegistrations();
-      await Promise.all(
-        registrations.map(registration => registration.unregister())
-      );
-      console.log('[PWA] All service workers unregistered');
-    }
-
-    // Clear localStorage and sessionStorage
+    // Clear browser storage
     localStorage.clear();
     sessionStorage.clear();
     console.log('[PWA] Local storage cleared');
@@ -195,7 +192,9 @@ export async function clearAllCaches(): Promise<void> {
     window.location.reload();
   } catch (error) {
     console.error('[PWA] Error clearing caches:', error);
-=======
+  }
+}
+
 // Clean up service workers in development
 export async function cleanupServiceWorkers(): Promise<void> {
   if (typeof window === 'undefined' || !('serviceWorker' in navigator)) {
@@ -209,8 +208,7 @@ export async function cleanupServiceWorkers(): Promise<void> {
       console.log('[PWA] Unregistered service worker:', registration.scope);
     }
   } catch (error) {
-    console.warn('[PWA] Failed to cleanup service workers:', error.message);
->>>>>>> 4af2ca6c83c6d38e1f9c610a998fd9fc40af728f
+    console.error('[PWA] Error cleaning up service workers:', error);
   }
 }
 
@@ -218,7 +216,6 @@ export async function cleanupServiceWorkers(): Promise<void> {
 export function initializePWA(): void {
   if (typeof window === 'undefined') return;
 
-<<<<<<< HEAD
   // Clear caches in development mode
   if (process.env.NODE_ENV === 'development') {
     // Add a global function to clear caches manually
@@ -226,8 +223,6 @@ export function initializePWA(): void {
     console.log('[PWA] Development mode: Use clearCaches() to clear all caches');
   }
 
-  // Register service worker
-=======
   // Log PWA initialization
   console.log('[PWA] Initializing PWA features...');
   
@@ -237,7 +232,6 @@ export function initializePWA(): void {
   }
   
   // Register service worker (will be skipped in development)
->>>>>>> 4af2ca6c83c6d38e1f9c610a998fd9fc40af728f
   registerServiceWorker();
 
   // Only set up update checking in production
@@ -251,11 +245,16 @@ export function initializePWA(): void {
         checkForUpdates();
       }
     });
+
+    // Set up install prompt
+    setupInstallPrompt();
+
+    // Request persistent storage
+    requestPersistentStorage();
   }
 
   // Log PWA status
-  console.log('[PWA] Initialized');
-  console.log('[PWA] Environment:', process.env.NODE_ENV);
   console.log('[PWA] Standalone mode:', isStandalone());
   console.log('[PWA] PWA installed:', isPWAInstalled());
+  console.log('[PWA] Capabilities:', getPWACapabilities());
 }
