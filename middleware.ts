@@ -9,7 +9,10 @@ export default createMiddleware({
   defaultLocale,
   
   // Always show locale prefix
-  localePrefix: 'always'
+  localePrefix: 'always',
+  
+  // Redirect to default locale if no locale is provided
+  localeDetection: true
 });
 
 export const config = {

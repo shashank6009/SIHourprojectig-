@@ -30,32 +30,14 @@ export function LanguageSwitcher() {
       console.log('Switching locale from', locale, 'to', newLocale);
       console.log('Current pathname:', pathname);
 
-      // Navigate to the new locale
-      let newPath = pathname;
-      
-      // Remove current locale prefix
-      if (pathname.startsWith('/ta/')) {
-        newPath = pathname.replace('/ta', '');
-      } else if (pathname.startsWith('/hi/')) {
-        newPath = pathname.replace('/hi', '');
-      } else if (pathname.startsWith('/en/')) {
-        newPath = pathname.replace('/en', '');
-      }
-      
-      console.log('Path after removing locale:', newPath);
-      
-      // Add new locale prefix - always add prefix for all languages
-      newPath = `/${newLocale}${newPath}`;
-      
-      // Handle root path
-      if (newPath === `/${newLocale}`) {
-        // This is the home page for the locale
-        newPath = `/${newLocale}`;
-      }
+      // For development, let's use a simpler approach
+      // Just redirect to the home page of the new locale
+      const newPath = `/${newLocale}`;
       
       console.log('Final new path:', newPath);
       
-      router.push(newPath);
+      // Use window.location for more reliable navigation
+      window.location.href = newPath;
       setIsOpen(false);
     });
   };
@@ -199,32 +181,14 @@ export function SimpleLanguageSwitcher() {
       console.log('Simple switcher: changing from', currentLocale, 'to', newLocale);
       console.log('Current pathname:', pathname);
 
-      // Navigate to the new locale
-      let newPath = pathname;
-      
-      // Remove current locale prefix
-      if (pathname.startsWith('/ta/')) {
-        newPath = pathname.replace('/ta', '');
-      } else if (pathname.startsWith('/hi/')) {
-        newPath = pathname.replace('/hi', '');
-      } else if (pathname.startsWith('/en/')) {
-        newPath = pathname.replace('/en', '');
-      }
-      
-      console.log('Path after removing locale:', newPath);
-      
-      // Add new locale prefix - always add prefix for all languages
-      newPath = `/${newLocale}${newPath}`;
-      
-      // Handle root path
-      if (newPath === `/${newLocale}`) {
-        // This is the home page for the locale
-        newPath = `/${newLocale}`;
-      }
+      // For development, let's use a simpler approach
+      // Just redirect to the home page of the new locale
+      const newPath = `/${newLocale}`;
       
       console.log('Final new path:', newPath);
       
-      router.push(newPath);
+      // Use window.location for more reliable navigation
+      window.location.href = newPath;
     });
   };
 
