@@ -29,6 +29,19 @@ export default function HomePage() {
   
   useEffect(() => {
     setMounted(true);
+    
+    // Production video loading timeout
+    if (typeof window !== 'undefined') {
+      const videoTimeout = setTimeout(() => {
+        const video = document.querySelector('video[src*="home.mp4"]') as HTMLVideoElement;
+        if (video && video.readyState < 2) {
+          console.warn('⏰ HOME VIDEO: Loading timeout, hiding video');
+          video.style.display = 'none';
+        }
+      }, 5000); // 5 second timeout
+      
+      return () => clearTimeout(videoTimeout);
+    }
   }, []);
 
   return (
@@ -37,48 +50,57 @@ export default function HomePage() {
       <section className="relative overflow-hidden h-[60vh] md:h-[70vh]">
         <div className="absolute inset-0 z-0">
           {/* ALWAYS VISIBLE VIDEO - NO CONDITIONS */}
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="auto"
-            className="w-full h-full object-cover absolute inset-0 z-20"
-            poster="/emblem.jpeg"
-            style={{ 
-              display: 'block !important',
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              zIndex: 20
-            }}
-            onError={(e) => {
-              console.error('🔥 HOME VIDEO ERROR:', {
-                code: e.currentTarget.error?.code,
-                message: e.currentTarget.error?.message,
-                src: e.currentTarget.currentSrc,
-                networkState: e.currentTarget.networkState,
-                readyState: e.currentTarget.readyState
-              });
-            }}
-            onLoadStart={() => console.log('🚀 HOME VIDEO: Starting to load')}
-            onLoadedMetadata={() => console.log('📋 HOME VIDEO: Metadata loaded')}
-            onLoadedData={() => console.log('💿 HOME VIDEO: Data loaded')}
-            onCanPlay={() => console.log('✅ HOME VIDEO: Ready to play')}
-            onPlay={() => console.log('▶️ HOME VIDEO: PLAYING NOW!')}
-            onTimeUpdate={(e) => {
-              if (!window.videoPlaying && e.currentTarget.currentTime > 0) {
-                console.log('⏰ HOME VIDEO: Actually playing at', e.currentTarget.currentTime);
-                window.videoPlaying = true;
-              }
-            }}
-          >
-            <source src="/home.mp4" type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
+          {mounted && (
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="auto"
+              className="w-full h-full object-cover absolute inset-0 z-20"
+              poster="/emblem.jpeg"
+              style={{ 
+                display: 'block !important',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                zIndex: 20
+              }}
+              onError={(e) => {
+                console.error('🔥 HOME VIDEO ERROR:', {
+                  code: e.currentTarget.error?.code,
+                  message: e.currentTarget.error?.message,
+                  src: e.currentTarget.currentSrc,
+                  networkState: e.currentTarget.networkState,
+                  readyState: e.currentTarget.readyState
+                });
+                // Hide video on error and show fallback
+                e.currentTarget.style.display = 'none';
+              }}
+              onLoadStart={() => console.log('🚀 HOME VIDEO: Starting to load')}
+              onLoadedMetadata={() => console.log('📋 HOME VIDEO: Metadata loaded')}
+              onLoadedData={() => console.log('💿 HOME VIDEO: Data loaded')}
+              onCanPlay={(e) => {
+                console.log('✅ HOME VIDEO: Ready to play');
+                // Ensure video is visible when it can play
+                e.currentTarget.style.display = 'block';
+                e.currentTarget.style.zIndex = '20';
+              }}
+              onPlay={() => console.log('▶️ HOME VIDEO: PLAYING NOW!')}
+              onTimeUpdate={(e) => {
+                if (!window.videoPlaying && e.currentTarget.currentTime > 0) {
+                  console.log('⏰ HOME VIDEO: Actually playing at', e.currentTarget.currentTime);
+                  window.videoPlaying = true;
+                }
+              }}
+            >
+              <source src="/home.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          )}
           
           {/* Fallback background (lower z-index) */}
           <div 
