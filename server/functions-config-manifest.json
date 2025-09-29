@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "functions": {
+    "/api/parse-resume": {
+      "maxDuration": 120
+    }
+  }
+}

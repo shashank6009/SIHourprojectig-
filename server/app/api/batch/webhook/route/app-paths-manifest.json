@@ -1,0 +1,3 @@
+{
+  "/api/batch/webhook/route": "app/api/batch/webhook/route.js"
+}

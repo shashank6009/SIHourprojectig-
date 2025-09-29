@@ -1,0 +1,3 @@
+{
+  "/api/batch/ingest/route": "app/api/batch/ingest/route.js"
+}
