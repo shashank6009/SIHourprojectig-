@@ -36,73 +36,59 @@ export default function HomePage() {
       {/* Hero Video Section */}
       <section className="relative overflow-hidden h-[60vh] md:h-[70vh]">
         <div className="absolute inset-0 z-0">
-          {/* Fallback background image if video fails to load */}
+          {/* ALWAYS VISIBLE VIDEO - NO CONDITIONS */}
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            className="w-full h-full object-cover absolute inset-0 z-20"
+            poster="/emblem.jpeg"
+            style={{ 
+              display: 'block !important',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              zIndex: 20
+            }}
+            onError={(e) => {
+              console.error('🔥 HOME VIDEO ERROR:', {
+                code: e.currentTarget.error?.code,
+                message: e.currentTarget.error?.message,
+                src: e.currentTarget.currentSrc,
+                networkState: e.currentTarget.networkState,
+                readyState: e.currentTarget.readyState
+              });
+            }}
+            onLoadStart={() => console.log('🚀 HOME VIDEO: Starting to load')}
+            onLoadedMetadata={() => console.log('📋 HOME VIDEO: Metadata loaded')}
+            onLoadedData={() => console.log('💿 HOME VIDEO: Data loaded')}
+            onCanPlay={() => console.log('✅ HOME VIDEO: Ready to play')}
+            onPlay={() => console.log('▶️ HOME VIDEO: PLAYING NOW!')}
+            onTimeUpdate={(e) => {
+              if (!window.videoPlaying && e.currentTarget.currentTime > 0) {
+                console.log('⏰ HOME VIDEO: Actually playing at', e.currentTarget.currentTime);
+                window.videoPlaying = true;
+              }
+            }}
+          >
+            <source src="/home.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+          
+          {/* Fallback background (lower z-index) */}
           <div 
-            className="w-full h-full bg-cover bg-center bg-no-repeat"
+            className="w-full h-full bg-cover bg-center bg-no-repeat absolute inset-0 z-10"
             style={{
               backgroundImage: "url('/emblem.jpeg')",
               backgroundSize: 'cover',
               backgroundPosition: 'center'
             }}
           />
-          {mounted && (
-            <video
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="auto"
-              className="w-full h-full object-cover"
-              poster="/emblem.jpeg"
-              onError={(e) => {
-                console.error('Home video failed to load:', e);
-                console.error('Video error details:', {
-                  currentSrc: e.currentTarget.currentSrc,
-                  networkState: e.currentTarget.networkState,
-                  readyState: e.currentTarget.readyState,
-                  error: e.currentTarget.error
-                });
-                console.log('Video failed to load, using poster image');
-                e.currentTarget.style.display = 'none';
-              }}
-              onLoadStart={() => {
-                console.log('Home video started loading');
-              }}
-              onCanPlay={() => {
-                console.log('Home video can play');
-                // Try to play manually if autoplay failed
-                const video = document.querySelector('video');
-                if (video) {
-                  video.play().catch(err => {
-                    console.log('Autoplay blocked, user interaction required:', err);
-                  });
-                }
-              }}
-              onLoadedData={() => {
-                console.log('Home video loaded data');
-              }}
-              onPlay={() => {
-                console.log('Home video started playing');
-              }}
-              onLoadedMetadata={() => {
-                console.log('Home video metadata loaded');
-              }}
-            >
-              <source src="/home.mp4" type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-          )}
-          {/* Show static background during SSR or if video fails */}
-          {!mounted && (
-            <div 
-              className="w-full h-full bg-cover bg-center bg-no-repeat"
-              style={{
-                backgroundImage: "url('/emblem.jpeg')",
-                backgroundSize: 'cover',
-                backgroundPosition: 'center'
-              }}
-            />
-          )}
         </div>
       </section>
 
