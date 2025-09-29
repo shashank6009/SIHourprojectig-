@@ -59,36 +59,36 @@ export function MainNav() {
             {/* Space for logos - they're part of the background image */}
           </div>
           
-          {/* Center - Navigation Links with adaptive spacing */}
-          <div className="flex items-center space-x-2 sm:space-x-4 md:space-x-6 lg:space-x-8 xl:space-x-12">
+          {/* Center - Navigation Links with adaptive font scaling */}
+          <div className="flex items-center nav-adaptive-spacing">
             <Link 
               href={`/${currentLocale}`}
-              className="text-black hover:text-gov-saffron font-semibold text-xs sm:text-sm md:text-base lg:text-lg transition-all duration-300 px-1 sm:px-2 md:px-3 py-2 rounded-md hover:bg-white/20 whitespace-nowrap"
+              className="nav-adaptive text-black hover:text-gov-saffron font-semibold transition-all duration-300 py-2 rounded-md hover:bg-white/20 whitespace-nowrap"
             >
               {t('nav.home', 'Home')}
             </Link>
             <Link 
               href={`/${currentLocale}/internship`}
-              className="text-black hover:text-gov-saffron font-semibold text-xs sm:text-sm md:text-base lg:text-lg transition-all duration-300 px-1 sm:px-2 md:px-3 py-2 rounded-md hover:bg-white/20 whitespace-nowrap"
+              className="nav-adaptive text-black hover:text-gov-saffron font-semibold transition-all duration-300 py-2 rounded-md hover:bg-white/20 whitespace-nowrap"
             >
               {t('nav.internship', 'Intern')}
             </Link>
             <Link 
               href={`/${currentLocale}/internship/recommendations`}
-              className="text-black hover:text-gov-saffron font-semibold text-xs sm:text-sm md:text-base lg:text-lg transition-all duration-300 px-1 sm:px-2 md:px-3 py-2 rounded-md hover:bg-white/20 whitespace-nowrap"
+              className="nav-adaptive text-black hover:text-gov-saffron font-semibold transition-all duration-300 py-2 rounded-md hover:bg-white/20 whitespace-nowrap"
             >
               {t('nav.recommendations', 'Recommendations')}
             </Link>
             <Link 
               href="/dashboard" 
-              className="text-black hover:text-gov-saffron font-semibold text-xs sm:text-sm md:text-base lg:text-lg transition-all duration-300 px-1 sm:px-2 md:px-3 py-2 rounded-md hover:bg-white/20 whitespace-nowrap"
+              className="nav-adaptive text-black hover:text-gov-saffron font-semibold transition-all duration-300 py-2 rounded-md hover:bg-white/20 whitespace-nowrap"
               key="dashboard-nav"
             >
               {t('nav.dashboard', 'Dashboard')}
             </Link>
             <Link 
               href="/copilot" 
-              className="text-black hover:text-gov-saffron font-semibold text-xs sm:text-sm md:text-base lg:text-lg transition-all duration-300 px-1 sm:px-2 md:px-3 py-2 rounded-md hover:bg-white/20 whitespace-nowrap"
+              className="nav-adaptive text-black hover:text-gov-saffron font-semibold transition-all duration-300 py-2 rounded-md hover:bg-white/20 whitespace-nowrap"
             >
               {t('nav.resumeBuilder', 'Resume Builder')}
             </Link>

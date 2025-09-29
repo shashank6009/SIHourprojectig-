@@ -56,5 +56,52 @@
   --foreground: 0 0 0;
 }
 
-[data-text-size="small"] { font-size: 0.875rem; }
-[data-text-size="large"] { font-size: 1.125rem; }
+/* Font size scaling with navigation adjustments */
+[data-text-size="small"] { 
+  font-size: 0.875rem; 
+  --nav-font-scale: 0.875;
+  --nav-spacing: 0.75rem;
+  --nav-padding: 0.5rem;
+}
+
+[data-text-size="normal"] {
+  --nav-font-scale: 1;
+  --nav-spacing: 1rem;
+  --nav-padding: 0.75rem;
+}
+
+[data-text-size="large"] { 
+  font-size: 1.125rem; 
+  --nav-font-scale: 0.875; /* Keep nav text smaller when body text is large */
+  --nav-spacing: 0.5rem;
+  --nav-padding: 0.25rem;
+}
+
+/* Navigation responsive to font scaling */
+.nav-adaptive {
+  font-size: calc(var(--nav-font-scale, 1) * 1rem);
+  padding-left: var(--nav-padding, 0.75rem);
+  padding-right: var(--nav-padding, 0.75rem);
+}
+
+.nav-adaptive-spacing {
+  gap: var(--nav-spacing, 1rem);
+}
+
+/* Ensure Tamil text doesn't overflow even with large font sizes */
+[lang="ta"] .nav-adaptive,
+.nav-adaptive [lang="ta"] {
+  font-size: calc(var(--nav-font-scale, 1) * 0.9rem);
+  letter-spacing: -0.01em;
+}
+
+/* Better responsive behavior for navigation at different text sizes */
+@media (max-width: 768px) {
+  [data-text-size="large"] .nav-adaptive {
+    font-size: calc(var(--nav-font-scale, 1) * 0.8rem);
+  }
+  
+  [data-text-size="large"] .nav-adaptive-spacing {
+    gap: 0.25rem;
+  }
+}
