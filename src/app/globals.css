@@ -99,10 +99,11 @@
 /* Fixed menu button positioning to prevent revealing hidden elements */
 .menu-button-fixed {
   position: absolute;
-  top: calc(50% + 1cm); /* Move 1cm down from center */
-  right: calc(1rem + 3cm); /* Move 3cm more to the left */
+  top: 55%; /* Percentage-based positioning relative to background */
+  right: 8%; /* Percentage-based positioning relative to background */
   transform: translateY(-50%);
   z-index: 50;
+  padding: 0.05cm; /* Extend button by 0.05cm on all sides */
 }
 
 /* Mobile responsive behavior */
