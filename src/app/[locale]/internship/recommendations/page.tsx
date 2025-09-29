@@ -7,7 +7,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { 
   MapPin, 
-  Calendar, 
   DollarSign, 
   Building2, 
   ExternalLink,
@@ -20,7 +19,8 @@ import {
   Lightbulb,
   BookOpen,
   X,
-  Search
+  Search,
+  Clock
 } from "lucide-react";
 import { MLService, type MLRecommendationsResponse, type InternshipRecommendation, type StudentProfile } from "@/lib/mlService";
 import { useSession } from "next-auth/react";
@@ -412,55 +412,10 @@ export default function RecommendationsPage() {
 
 
 
+  // Calendar functionality completely removed to prevent downloads
   const triggerCalendarWebhook = async (title: string, deadlineISO?: string | null) => {
-    // Only run on client-side
-    if (typeof window === 'undefined') {
-      return;
-    }
-    
-    if (!deadlineISO || !title) {
-      if (typeof window !== 'undefined') {
-        alert('Deadline information not available for this internship');
-      }
-      return;
-    }
-    
-    try {
-      const dt = new Date(deadlineISO);
-      if (isNaN(dt.getTime())) {
-        if (typeof window !== 'undefined') {
-          alert('Invalid deadline date');
-        }
-        return;
-      }
-      
-      // Calendar integration - no network requests, only local file generation
-      console.log('📅 Calendar integration requested for:', {
-        title,
-        deadline: dt.toLocaleDateString(),
-        note: 'Local calendar file generation only - no network requests'
-      });
-      
-      // Show a fallback message instead of making network requests
-      if (typeof window !== 'undefined') {
-        const confirmed = confirm(
-          `📅 Add to Calendar?\n\n` +
-          `Event: ${title}\n` +
-          `Deadline: ${dt.toLocaleDateString()}\n\n` +
-          `Note: Manual calendar instructions will be provided.`
-        );
-        
-        if (confirmed) {
-          // Just show manual instructions instead of downloading files
-          alert(`📅 Please manually add to your calendar:\n\nTitle: ${title}\nDate: ${dt.toLocaleDateString()}\nTime: ${dt.toLocaleTimeString()}\n\nNote: Automatic calendar downloads have been disabled.`);
-        }
-      }
-    } catch (error) {
-      console.log('Calendar integration error (handled gracefully):', error?.message);
-      if (typeof window !== 'undefined') {
-        alert('Please manually add this deadline to your calendar.');
-      }
-    }
+    // Calendar functionality disabled - no downloads
+    console.log('Calendar functionality disabled to prevent downloads');
   };
 
   // Compare helpers
@@ -915,7 +870,7 @@ export default function RecommendationsPage() {
                           <span>{selectedRecommendation.location}</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Calendar className="w-4 h-4 text-gray-500" />
+                          <Clock className="w-4 h-4 text-gray-500" />
                           <span>{selectedRecommendation.duration}</span>
                         </div>
                         <div className="flex items-center gap-2">
@@ -1047,7 +1002,7 @@ export default function RecommendationsPage() {
                                           {course.platform}
                                         </span>
                                         <span className="flex items-center gap-1">
-                                          <Calendar className="w-3 h-3" />
+                                          <Clock className="w-3 h-3" />
                                           {getCourseDuration(course.platform)}
                                         </span>
                                       </div>
@@ -1088,7 +1043,7 @@ export default function RecommendationsPage() {
                                           {course.platform}
                                         </span>
                                         <span className="flex items-center gap-1">
-                                          <Calendar className="w-3 h-3" />
+                                          <Clock className="w-3 h-3" />
                                           {getCourseDuration(course.platform)}
                                         </span>
                                       </div>
@@ -1213,7 +1168,7 @@ export default function RecommendationsPage() {
                     {/* Professional Application Deadline */}
                     <div className="bg-red-50 rounded-lg p-4 border border-red-200">
                       <div className="flex items-center gap-2 mb-2">
-                        <Calendar className="w-4 h-4 text-red-600" />
+                        <Clock className="w-4 h-4 text-red-600" />
                         <span className="font-medium text-red-800">Application Deadline</span>
                       </div>
                       <div className="text-lg font-bold text-red-600 mb-2">
@@ -1236,27 +1191,7 @@ export default function RecommendationsPage() {
                           return new Date(deadline).toLocaleDateString();
                         })()}
                       </div>
-                      <button
-                        className="text-xs text-red-600 hover:text-red-700 hover:bg-red-100 h-9 rounded-md px-3 inline-flex items-center justify-center whitespace-nowrap font-medium"
-                        onClick={async () => {
-                          // Use the same deadline logic as the display
-                          let deadline = selectedRecommendation.application_deadline;
-                          
-                          if (!deadline) {
-                            // Generate a random December 2025 deadline as fallback
-                            const startDate = new Date('2025-12-01');
-                            const randomDays = Math.floor(Math.random() * 31);
-                            const fallbackDeadline = new Date(startDate);
-                            fallbackDeadline.setDate(startDate.getDate() + randomDays);
-                            fallbackDeadline.setHours(9 + Math.floor(Math.random() * 8), Math.floor(Math.random() * 60), 0, 0);
-                            deadline = fallbackDeadline.toISOString();
-                          }
-                          
-                          await triggerCalendarWebhook(`${selectedRecommendation.title} – ${selectedRecommendation.organization_name}`, deadline);
-                        }}
-                      >
-                        <span>Add to Calendar</span>
-                      </button>
+                      {/* Calendar button removed to prevent downloads */}
                     </div>
                   </div>
                 </div>
