@@ -27,6 +27,9 @@ export function LanguageSwitcher() {
       // Set cookie for persistence
       document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=${60 * 60 * 24 * 180}; SameSite=Lax`;
 
+      console.log('Switching locale from', locale, 'to', newLocale);
+      console.log('Current pathname:', pathname);
+
       // Navigate to the new locale
       let newPath = pathname;
       
@@ -39,15 +42,18 @@ export function LanguageSwitcher() {
         newPath = pathname.replace('/en', '');
       }
       
-      // Add new locale prefix
-      if (newLocale !== 'en') {
-        newPath = `/${newLocale}${newPath}`;
-      }
+      console.log('Path after removing locale:', newPath);
+      
+      // Add new locale prefix - always add prefix for all languages
+      newPath = `/${newLocale}${newPath}`;
       
       // Handle root path
-      if (newPath === '') {
-        newPath = newLocale === 'en' ? '/' : `/${newLocale}`;
+      if (newPath === `/${newLocale}`) {
+        // This is the home page for the locale
+        newPath = `/${newLocale}`;
       }
+      
+      console.log('Final new path:', newPath);
       
       router.push(newPath);
       setIsOpen(false);
@@ -190,6 +196,9 @@ export function SimpleLanguageSwitcher() {
       // Set cookie for persistence
       document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=${60 * 60 * 24 * 180}; SameSite=Lax`;
 
+      console.log('Simple switcher: changing from', currentLocale, 'to', newLocale);
+      console.log('Current pathname:', pathname);
+
       // Navigate to the new locale
       let newPath = pathname;
       
@@ -202,15 +211,18 @@ export function SimpleLanguageSwitcher() {
         newPath = pathname.replace('/en', '');
       }
       
-      // Add new locale prefix
-      if (newLocale !== 'en') {
-        newPath = `/${newLocale}${newPath}`;
-      }
+      console.log('Path after removing locale:', newPath);
+      
+      // Add new locale prefix - always add prefix for all languages
+      newPath = `/${newLocale}${newPath}`;
       
       // Handle root path
-      if (newPath === '') {
-        newPath = newLocale === 'en' ? '/' : `/${newLocale}`;
+      if (newPath === `/${newLocale}`) {
+        // This is the home page for the locale
+        newPath = `/${newLocale}`;
       }
+      
+      console.log('Final new path:', newPath);
       
       router.push(newPath);
     });
