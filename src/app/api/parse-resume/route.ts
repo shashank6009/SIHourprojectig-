@@ -2,15 +2,14 @@ import { NextResponse } from "next/server";
 import fs from 'fs';
 import path from 'path';
 
-// Ensure Node.js runtime for pdf-parse/mammoth
+// Ensure Node.js runtime for pdf-parse/mammoth (required for Buffer operations)
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
+export const maxDuration = 30; // Allow up to 30 seconds for PDF processing
 
 export async function POST(req: Request) {
   try {
     console.log('Server: API endpoint called');
-    console.log('Server: Environment check - Node.js runtime:', typeof process !== 'undefined');
-    console.log('Server: Current working directory:', process.cwd());
     
     const form = await req.formData();
     const file = form.get("file");
@@ -53,42 +52,44 @@ export async function POST(req: Request) {
     if (contentType.includes("pdf")) {
       try {
         console.log('Server: Parsing PDF...');
-        console.log('Server: Attempting to import pdf-parse...');
         
+        // Try to import pdf-parse
         const pdfParse = (await import("pdf-parse")).default;
-        console.log('Server: pdf-parse imported successfully');
         
-        console.log('Server: Processing buffer of size:', buffer.length);
-        const data = await pdfParse(buffer);
+        // Use options to make parsing more robust
+        const options = {
+          normalizeWhitespace: false,
+          disableCombineTextItems: false
+        };
+        
+        const data = await pdfParse(buffer, options);
         text = data?.text || "";
         
-        console.log('Server: PDF parsed successfully, text length:', text.length);
+        console.log('Server: PDF parsed, text length:', text.length);
       } catch (pdfError: unknown) {
         console.error('Server: PDF parsing error:', pdfError);
-        console.error('Server: Error details:', {
-          message: pdfError instanceof Error ? pdfError.message : 'Unknown error',
-          stack: pdfError instanceof Error ? pdfError.stack : 'No stack trace',
-          type: typeof pdfError
-        });
         
-        // Provide more specific error messages
+        // Provide more specific error information
         let errorMessage = "Failed to process resume: ";
         if (pdfError instanceof Error) {
-          if (pdfError.message.includes('Invalid PDF')) {
-            errorMessage += "Invalid PDF format. Please ensure the file is a valid PDF.";
-          } else if (pdfError.message.includes('encrypted')) {
-            errorMessage += "PDF is password-protected. Please remove password protection and try again.";
-          } else if (pdfError.message.includes('ENOENT')) {
-            errorMessage += "PDF processing dependency issue. Please use the text paste option.";
+          if (pdfError.message.includes('Cannot read property') || pdfError.message.includes('undefined')) {
+            errorMessage += "PDF parsing library initialization failed. ";
+          } else if (pdfError.message.includes('Invalid PDF')) {
+            errorMessage += "Invalid or corrupted PDF file. ";
+          } else if (pdfError.message.includes('password')) {
+            errorMessage += "Password-protected PDF detected. ";
           } else {
-            errorMessage += "Failed to parse PDF. The file might be corrupted, password-protected, or in an unsupported format.";
+            errorMessage += `PDF parsing error: ${pdfError.message}. `;
           }
         } else {
-          errorMessage += "Unknown PDF processing error.";
+          errorMessage += "Unknown PDF parsing error. ";
         }
-        errorMessage += " Please use the text paste option.";
         
-        return NextResponse.json({ error: errorMessage }, { status: 422 });
+        errorMessage += "Please try:\n1. Use the 'Paste Resume Text' option below\n2. Convert PDF to Word/TXT format\n3. Fill the form manually";
+        
+        return NextResponse.json({ 
+          error: errorMessage
+        }, { status: 422 });
       }
     } else if (contentType.includes("wordprocessingml")) {
       try {
