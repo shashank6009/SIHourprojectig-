@@ -106,7 +106,7 @@ export default function InternshipPage() {
           console.log('Form auto-filled with profile data:', autoFillData);
         } else if (session?.user) {
           // If no profile exists, try to use Google data (only if session exists)
-          const googleData = GoogleDataExtractor.extractFromSession(session as Record<string, unknown>);
+          const googleData = GoogleDataExtractor.extractFromSession(session as any);
           
           if (googleData.email || googleData.firstName) {
             const googleFillData: ResumeData = {};
@@ -275,7 +275,7 @@ export default function InternshipPage() {
     sections.forEach(section => {
       const extracted = extractSection(text, section.keywords);
       if (extracted) {
-        (data as Record<string, unknown>)[section.key] = extracted;
+        (data as any)[section.key] = extracted;
         console.log(`Found ${section.key}:`, extracted.substring(0, 50) + '...');
       }
     });

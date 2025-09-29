@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { clearWizard, loadWizard, saveWizard } from "@/lib/internship";
 import { Bell, ShieldCheck, Rocket } from "lucide-react";
 import { useRouter } from "next/navigation";

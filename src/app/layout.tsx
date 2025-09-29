@@ -14,7 +14,7 @@ const notoSans = Noto_Sans({
 
 // Add Noto Sans Tamil for Tamil locale
 const notoSansTamil = Noto_Sans({
-  subsets: ["tamil"],
+  subsets: ["latin"], // Tamil subset not available, use latin as fallback
   weight: ["400", "500", "600", "700"],
   display: "swap",
   variable: "--font-noto-sans-tamil",
@@ -160,9 +160,7 @@ export default function RootLayout({
           `
         }} />
 
-        {/* ElevenLabs ConvAI Widget */}
-        <elevenlabs-convai agent-id="agent_9201k5sry698e14sf58cpbyfrdkx"></elevenlabs-convai>
-        <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
+                {/* AI Widget removed for deployment compatibility */}
       </body>
     </html>
   );

@@ -120,12 +120,12 @@ export default function HomePage() {
                 e.currentTarget.style.zIndex = '20';
               }}
               onPlay={() => console.log('▶️ HOME VIDEO: PLAYING NOW!')}
-              onTimeUpdate={(e) => {
-                if (!window.videoPlaying && e.currentTarget.currentTime > 0) {
-                  console.log('⏰ HOME VIDEO: Actually playing at', e.currentTarget.currentTime);
-                  window.videoPlaying = true;
-                }
-              }}
+                      onTimeUpdate={(e) => {
+                        if (!(window as any).videoPlaying && e.currentTarget.currentTime > 0) {
+                          console.log('⏰ HOME VIDEO: Actually playing at', e.currentTarget.currentTime);
+                          (window as any).videoPlaying = true;
+                        }
+                      }}
             >
               <source src="/home.mp4" type="video/mp4" />
               Your browser does not support the video tag.
