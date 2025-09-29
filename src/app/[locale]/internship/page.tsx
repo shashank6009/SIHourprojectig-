@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { parseFileClientSide } from '@/lib/clientPdfParser';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -143,33 +144,24 @@ export default function InternshipPage() {
         // Simple text file - just read it
         text = await file.text();
         console.log('Read text file, length:', text.length);
-      } else if (file.type === 'application/pdf' || file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-        // For PDF and DOCX, try server-side parsing
-        console.log('Attempting server-side parsing...');
-        const formData = new FormData();
-        formData.append('file', file);
-        
-        const response = await fetch('/api/parse-resume', {
-          method: 'POST',
-          body: formData
-        });
-        
-        if (response.ok) {
-          const data = await response.json();
-          text = data.text || '';
-          console.log('Server parsing successful, text length:', text.length);
-        } else {
-          // Surface server error details
-          let serverMessage = '';
-          try {
-            const err = await response.json();
-            serverMessage = err?.error || '';
-          } catch {}
-          const msg = serverMessage || `Server parsing failed (HTTP ${response.status})`;
-          throw new Error(msg);
-        }
       } else {
-        throw new Error('Unsupported file type');
+        // Use client-side parsing for all other file types (PDF, DOCX, etc.)
+        // Only run in browser environment
+        if (typeof window === 'undefined') {
+          throw new Error('File parsing is only available in the browser. Please try again.');
+        }
+        
+        console.log('Attempting client-side parsing...');
+        
+        const parseResult = await parseFileClientSide(file);
+        
+        if (parseResult.success) {
+          text = parseResult.text;
+          console.log('Client-side parsing successful, text length:', text.length);
+        } else {
+          console.error('Client-side parsing failed:', parseResult.error);
+          throw new Error(parseResult.error || 'Failed to parse file');
+        }
       }
 
       if (!text || text.trim().length < 10) {
