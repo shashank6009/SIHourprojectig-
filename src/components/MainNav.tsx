@@ -77,7 +77,7 @@ export function MainNav() {
               href={`/${currentLocale}/internship/recommendations`}
               className="text-black hover:text-gov-saffron font-semibold text-sm md:text-base lg:text-lg transition-all duration-300 px-3 py-2 rounded-md hover:bg-white/20"
             >
-              Recommendations
+              {t('nav.recommendations', 'Recommendations')}
             </Link>
             <Link 
               href="/dashboard" 
@@ -90,7 +90,7 @@ export function MainNav() {
               href="/copilot" 
               className="text-black hover:text-gov-saffron font-semibold text-sm md:text-base lg:text-lg transition-all duration-300 px-3 py-2 rounded-md hover:bg-white/20"
             >
-              Resume Builder
+              {t('nav.resumeBuilder', 'Resume Builder')}
             </Link>
           </div>
           
