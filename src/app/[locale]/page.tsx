@@ -30,17 +30,47 @@ export default function HomePage() {
   useEffect(() => {
     setMounted(true);
     
-    // Production video loading timeout
+    // BULLETPROOF video loading for production
     if (typeof window !== 'undefined') {
-      const videoTimeout = setTimeout(() => {
-        const video = document.querySelector('video[src*="home.mp4"]') as HTMLVideoElement;
-        if (video && video.readyState < 2) {
-          console.warn('⏰ HOME VIDEO: Loading timeout, hiding video');
-          video.style.display = 'none';
-        }
-      }, 5000); // 5 second timeout
+      let videoLoadAttempts = 0;
+      const maxAttempts = 3;
       
-      return () => clearTimeout(videoTimeout);
+      const tryLoadVideo = () => {
+        const video = document.querySelector('video[src*="home.mp4"]') as HTMLVideoElement;
+        if (video) {
+          videoLoadAttempts++;
+          console.log(`🎬 VIDEO ATTEMPT ${videoLoadAttempts}:`, {
+            readyState: video.readyState,
+            networkState: video.networkState,
+            currentSrc: video.currentSrc
+          });
+          
+          // Force reload if not loaded after 3 seconds
+          const reloadTimeout = setTimeout(() => {
+            if (video.readyState < 2 && videoLoadAttempts < maxAttempts) {
+              console.log('🔄 RELOADING VIDEO...');
+              video.load(); // Force reload
+              tryLoadVideo(); // Try again
+            } else if (video.readyState < 2) {
+              console.warn('❌ VIDEO FAILED - Using fallback');
+              video.style.display = 'none';
+            }
+          }, 3000);
+          
+          // Clear timeout if video loads successfully
+          video.addEventListener('loadeddata', () => {
+            console.log('✅ VIDEO LOADED SUCCESSFULLY');
+            clearTimeout(reloadTimeout);
+          }, { once: true });
+        }
+      };
+      
+      // Start trying to load video after mount
+      const initialTimeout = setTimeout(tryLoadVideo, 100);
+      
+      return () => {
+        clearTimeout(initialTimeout);
+      };
     }
   }, []);
 

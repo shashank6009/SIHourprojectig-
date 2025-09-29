@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 // Ensure Node.js runtime for pdf-parse/mammoth (required for Buffer operations)
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
-export const maxDuration = 60; // Increase timeout for PDF processing
+export const maxDuration = 120; // Maximum timeout for complex PDFs
 
 export async function POST(req: Request) {
   try {
@@ -51,15 +51,38 @@ export async function POST(req: Request) {
       try {
         console.log('Server: Parsing PDF...');
         
-        // Try to import pdf-parse with dynamic import safety
+        // BULLETPROOF pdf-parse loading with multiple attempts
         let pdfParse;
-        try {
-          const pdfParseModule = await import("pdf-parse");
-          pdfParse = pdfParseModule.default || pdfParseModule;
-          console.log('Server: pdf-parse module loaded successfully');
-        } catch (importError) {
-          console.error('Server: Failed to import pdf-parse:', importError);
-          throw new Error('PDF parsing library not available in this environment');
+        let importAttempts = 0;
+        const maxImportAttempts = 3;
+        
+        while (importAttempts < maxImportAttempts) {
+          try {
+            importAttempts++;
+            console.log(`Server: pdf-parse import attempt ${importAttempts}...`);
+            
+            const pdfParseModule = await import("pdf-parse");
+            pdfParse = pdfParseModule.default || pdfParseModule;
+            
+            // Verify the function is callable
+            if (typeof pdfParse !== 'function') {
+              throw new Error('pdf-parse is not a function');
+            }
+            
+            console.log('Server: pdf-parse module loaded and verified successfully');
+            break;
+            
+          } catch (importError) {
+            console.error(`Server: pdf-parse import attempt ${importAttempts} failed:`, importError);
+            
+            if (importAttempts >= maxImportAttempts) {
+              console.error('Server: All pdf-parse import attempts failed');
+              throw new Error('PDF parsing library cannot be loaded in this environment - please use text paste option');
+            }
+            
+            // Wait a bit before retrying
+            await new Promise(resolve => setTimeout(resolve, 100));
+          }
         }
         
         // Validate buffer before parsing
