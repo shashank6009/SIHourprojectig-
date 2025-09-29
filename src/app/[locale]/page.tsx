@@ -45,21 +45,54 @@ export default function HomePage() {
               backgroundPosition: 'center'
             }}
           />
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="w-full h-full object-cover"
-            poster="/emblem.jpeg"
-            onError={(e) => {
-              console.log('Video failed to load, using poster image');
-              e.currentTarget.style.display = 'none';
-            }}
-          >
-            <source src="/home.mp4" type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
+          {mounted && (
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="auto"
+              className="w-full h-full object-cover"
+              poster="/emblem.jpeg"
+              onError={(e) => {
+                console.error('Home video failed to load:', e);
+                console.error('Video error details:', {
+                  currentSrc: e.currentTarget.currentSrc,
+                  networkState: e.currentTarget.networkState,
+                  readyState: e.currentTarget.readyState,
+                  error: e.currentTarget.error
+                });
+                console.log('Video failed to load, using poster image');
+                e.currentTarget.style.display = 'none';
+              }}
+              onLoadStart={() => {
+                console.log('Home video started loading');
+              }}
+              onCanPlay={() => {
+                console.log('Home video can play');
+              }}
+              onLoadedData={() => {
+                console.log('Home video loaded data');
+              }}
+              onPlay={() => {
+                console.log('Home video started playing');
+              }}
+            >
+              <source src="/home.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          )}
+          {/* Show static background during SSR or if video fails */}
+          {!mounted && (
+            <div 
+              className="w-full h-full bg-cover bg-center bg-no-repeat"
+              style={{
+                backgroundImage: "url('/emblem.jpeg')",
+                backgroundSize: 'cover',
+                backgroundPosition: 'center'
+              }}
+            />
+          )}
         </div>
       </section>
 
