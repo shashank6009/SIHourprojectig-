@@ -8,7 +8,9 @@
     "build:strict": "next build --turbopack",
     "start": "next start",
     "lint": "eslint",
-    "lint:production": "eslint --config .eslintrc.production.json"
+    "lint:production": "eslint --config .eslintrc.production.json",
+    "clear-cache": "node clear-cache.js",
+    "fresh-start": "node clear-cache.js && npm run dev"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.10.0",

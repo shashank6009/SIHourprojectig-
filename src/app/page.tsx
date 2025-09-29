@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,15 +10,8 @@ import { i18n, type Language } from "@/lib/i18n";
 
 export default function HomePage() {
   const [language] = useState<Language>("en");
-  const [mounted, setMounted] = useState(false);
   const strings = i18n[language];
   const router = useRouter();
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  // Render content immediately to avoid loading issues
 
   const fadeInUp = {
     initial: { opacity: 0, y: 20 },
@@ -37,7 +30,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Video Section */}
-      <section className="relative overflow-hidden">
+      <section className="relative overflow-hidden h-[60vh] md:h-[70vh]">
         <div className="absolute inset-0 z-0">
           <video
             autoPlay
@@ -50,41 +43,6 @@ export default function HomePage() {
             <source src="/home.mp4" type="video/mp4" />
             Your browser does not support the video tag.
           </video>
-          <div className="absolute inset-0 bg-black bg-opacity-40"></div>
-        </div>
-        <div className="relative z-10 w-full h-[60vh] md:h-[70vh] flex items-center justify-center">
-          <div className="text-center text-white px-4">
-            <motion.h1 
-              className="text-4xl md:text-6xl font-bold mb-4"
-              variants={fadeInUp}
-              initial="initial"
-              animate="animate"
-            >
-              Prime Minister's Internship Scheme
-            </motion.h1>
-            <motion.p 
-              className="text-xl md:text-2xl mb-8 opacity-90"
-              variants={fadeInUp}
-              initial="initial"
-              animate="animate"
-            >
-              Empowering Youth through Real-World Experience
-            </motion.p>
-            <motion.div 
-              className="pt-4 space-y-4"
-              variants={fadeInUp}
-              initial="initial"
-              animate="animate"
-            >
-              <button 
-                className="w-full sm:w-auto text-lg font-semibold h-11 px-8 bg-gov-saffron text-white hover:bg-secondary-600 shadow-sm hover:shadow-md transition-all duration-200 rounded-md inline-flex items-center justify-center"
-                aria-label="Apply Now for PM Internship Scheme"
-                onClick={() => { window.location.href = '/internship'; }}
-              >
-                <span>Apply Now</span>
-              </button>
-            </motion.div>
-          </div>
         </div>
       </section>
 
@@ -460,7 +418,11 @@ export default function HomePage() {
                 <button 
                   className="w-full sm:w-auto text-lg font-semibold h-11 px-8 bg-gov-saffron text-white hover:bg-secondary-600 shadow-sm hover:shadow-md transition-all duration-200 rounded-md inline-flex items-center justify-center"
                   aria-label="Apply Now for PM Internship Scheme"
-                  onClick={() => router.push('/internship')}
+                  onClick={() => {
+                    if (typeof window !== 'undefined') {
+                      router.push('/internship');
+                    }
+                  }}
                 >
                   <span>{strings.applyNow}</span>
                 </button>

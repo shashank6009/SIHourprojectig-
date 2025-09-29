@@ -6,6 +6,12 @@ export async function registerServiceWorker(): Promise<ServiceWorkerRegistration
     return null;
   }
 
+  // Skip service worker in development to avoid port conflicts
+  if (process.env.NODE_ENV === 'development') {
+    console.log('[PWA] Service Worker disabled in development mode');
+    return null;
+  }
+
   try {
     console.log('[PWA] Registering Service Worker...');
     const registration = await navigator.serviceWorker.register('/sw.js', {
@@ -148,9 +154,51 @@ export async function getInstallPrompt(): Promise<unknown> {
   });
 }
 
+// Clear all caches (useful for development)
+export async function clearAllCaches(): Promise<void> {
+  if (typeof window === 'undefined') return;
+
+  try {
+    // Clear service worker caches
+    if ('caches' in window) {
+      const cacheNames = await caches.keys();
+      await Promise.all(
+        cacheNames.map(cacheName => caches.delete(cacheName))
+      );
+      console.log('[PWA] All caches cleared');
+    }
+
+    // Unregister all service workers
+    if ('serviceWorker' in navigator) {
+      const registrations = await navigator.serviceWorker.getRegistrations();
+      await Promise.all(
+        registrations.map(registration => registration.unregister())
+      );
+      console.log('[PWA] All service workers unregistered');
+    }
+
+    // Clear localStorage and sessionStorage
+    localStorage.clear();
+    sessionStorage.clear();
+    console.log('[PWA] Local storage cleared');
+
+    // Force reload to ensure fresh state
+    window.location.reload();
+  } catch (error) {
+    console.error('[PWA] Error clearing caches:', error);
+  }
+}
+
 // Initialize PWA features
 export function initializePWA(): void {
   if (typeof window === 'undefined') return;
+
+  // Clear caches in development mode
+  if (process.env.NODE_ENV === 'development') {
+    // Add a global function to clear caches manually
+    (window as any).clearCaches = clearAllCaches;
+    console.log('[PWA] Development mode: Use clearCaches() to clear all caches');
+  }
 
   // Register service worker
   registerServiceWorker();

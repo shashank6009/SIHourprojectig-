@@ -5,6 +5,8 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: process.cwd(),
   },
+  // Disable caching in development
+  generateEtags: process.env.NODE_ENV !== 'development',
   // Make the project deployable quickly even if there are ESLint/TS issues
   // We'll revisit and tighten these once critical paths are stable
   eslint: {
@@ -73,6 +75,8 @@ const nextConfig: NextConfig = {
   },
   // Headers for security and performance
   async headers() {
+    const isDev = process.env.NODE_ENV === 'development';
+    
     return [
       {
         source: '/(.*)',
@@ -93,6 +97,17 @@ const nextConfig: NextConfig = {
             key: 'X-XSS-Protection',
             value: '1; mode=block',
           },
+          // Disable caching in development
+          ...(isDev ? [{
+            key: 'Cache-Control',
+            value: 'no-cache, no-store, must-revalidate, proxy-revalidate, max-age=0',
+          }, {
+            key: 'Pragma',
+            value: 'no-cache',
+          }, {
+            key: 'Expires',
+            value: '0',
+          }] : []),
         ],
       },
       {
@@ -109,10 +124,28 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
+            value: isDev ? 'no-cache, no-store, must-revalidate' : 'public, max-age=31536000, immutable',
           },
         ],
       },
+      // Add cache busting for static assets in development
+      ...(isDev ? [{
+        source: '/(.*)\\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|mp4|webm|ogg)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'no-cache, no-store, must-revalidate',
+          },
+          {
+            key: 'Pragma',
+            value: 'no-cache',
+          },
+          {
+            key: 'Expires',
+            value: '0',
+          },
+        ],
+      }] : []),
     ];
   },
 };
