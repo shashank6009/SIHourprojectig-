@@ -70,12 +70,22 @@ export default function HomePage() {
               }}
               onCanPlay={() => {
                 console.log('Home video can play');
+                // Try to play manually if autoplay failed
+                const video = document.querySelector('video');
+                if (video) {
+                  video.play().catch(err => {
+                    console.log('Autoplay blocked, user interaction required:', err);
+                  });
+                }
               }}
               onLoadedData={() => {
                 console.log('Home video loaded data');
               }}
               onPlay={() => {
                 console.log('Home video started playing');
+              }}
+              onLoadedMetadata={() => {
+                console.log('Home video metadata loaded');
               }}
             >
               <source src="/home.mp4" type="video/mp4" />
